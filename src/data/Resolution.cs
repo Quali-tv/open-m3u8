@@ -1,30 +1,39 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
+// import java.util.Objects;
 
-import java.util.Objects;
+namespace M3U8Parser
+{
+    public class Resolution
+    {
+        public readonly int width;
+        public readonly int height;
 
-public class Resolution {
-    public final int width;
-    public final int height;
-
-    public Resolution(int width, int height) {
-        this.width = width;
-        this.height = height;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(height, width);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof Resolution)) {
-            return false;
+        public Resolution(int width, int height)
+        {
+            this.width = width;
+            this.height = height;
         }
 
-        Resolution other = (Resolution) o;
+        public override int GetHashCode()
+        {
+            // TODO: Implement
+            //return Objects.hash(height, width);
+            return 0;
+        }
 
-        return width == other.width &&
-               height == other.height;
+        public override bool Equals(object o)
+        {
+            if (!(o is Resolution))
+            {
+                return false;
+            }
+
+            Resolution other = (Resolution)o;
+
+            return width == other.width &&
+                   height == other.height;
+        }
     }
 }

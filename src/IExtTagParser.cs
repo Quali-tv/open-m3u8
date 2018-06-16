@@ -1,6 +1,11 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
 
-interface IExtTagParser extends LineParser {
-    String getTag();
-    boolean hasData();
+namespace M3U8Parser
+{
+    public interface IExtTagParser : LineParser
+    {
+        String getTag();
+        bool hasData();
+    }
 }

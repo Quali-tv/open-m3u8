@@ -1,8 +1,11 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
 
-interface AttributeWriter<T> {
-
-    String write(T attributes) throws ParseException;
-
-    boolean containsAttribute(T attributes);
+namespace M3U8Parser
+{
+    public interface AttributeWriter<T>
+    {
+        String write(T attributes); // throws ParseException;
+        bool containsAttribute(T attributes);
+    }
 }

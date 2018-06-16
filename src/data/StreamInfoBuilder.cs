@@ -1,17 +1,18 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+// package com.iheartradio.m3u8.data;
 
-import java.util.List;
+// import java.util.List;
 
-public interface StreamInfoBuilder {
-    public StreamInfoBuilder withBandwidth(int bandwidth);
-
-    public StreamInfoBuilder withAverageBandwidth(int averageBandwidth);
-
-    public StreamInfoBuilder withCodecs(List<String> codecs);
-
-    public StreamInfoBuilder withResolution(Resolution resolution);
-
-    public StreamInfoBuilder withFrameRate(float frameRate);
-
-    public StreamInfoBuilder withVideo(String video);
+namespace M3U8Parser
+{
+    public interface StreamInfoBuilder
+    {
+        StreamInfoBuilder withBandwidth(int bandwidth);
+        StreamInfoBuilder withAverageBandwidth(int averageBandwidth);
+        StreamInfoBuilder withCodecs(List<String> codecs);
+        StreamInfoBuilder withResolution(Resolution resolution);
+        StreamInfoBuilder withFrameRate(float frameRate);
+        StreamInfoBuilder withVideo(String video);
+    }
 }

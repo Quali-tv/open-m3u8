@@ -1,37 +1,46 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using Xunit;
+    // import com.iheartradio.m3u8.data.MediaPlaylist;
+    // import com.iheartradio.m3u8.data.TrackData;
 
-import com.iheartradio.m3u8.data.MediaPlaylist;
-import com.iheartradio.m3u8.data.TrackData;
+    // import org.junit.Test;
 
-import org.junit.Test;
+    // import java.io.ByteArrayInputStream;
+    // import java.io.InputStream;
+    // import java.util.Arrays;
+    // import java.util.List;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
+    // import static org.junit.Assert.*;
 
-import static org.junit.Assert.*;
+namespace M3U8Parser
+{
+    public class M3uParserTest
+    {
+        [Fact]
+        public void testParse() // throws Exception 
+        {
+            String absolute = "http://www.my.song/file1.mp3";
+            String relative = "user1/file2.mp3";
 
-public class M3uParserTest {
-    @Test
-    public void testParse() throws Exception {
-        final String absolute = "http://www.my.song/file1.mp3";
-        final String relative = "user1/file2.mp3";
+            String validData =
+                            "#some comment\n" +
+                            absolute + "\n" +
+                            "\n" +
+                            relative + "\n" +
+                            "\n";
 
-        final String validData =
-                        "#some comment\n" +
-                        absolute + "\n" +
-                        "\n" +
-                        relative + "\n" +
-                        "\n";
+            List<TrackData> expectedTracks = new List<TrackData>() {
+                    new TrackData.Builder().withUri(absolute).build(),
+                    new TrackData.Builder().withUri(relative).build()
+            };
 
-        final List<TrackData> expectedTracks = Arrays.asList(
-                new TrackData.Builder().withUri(absolute).build(),
-                new TrackData.Builder().withUri(relative).build());
+            Stream inputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(validData));
+            MediaPlaylist mediaPlaylist = new M3uParser(inputStream, Encoding.UTF_8).parse().getMediaPlaylist();
 
-        final InputStream inputStream = new ByteArrayInputStream(validData.getBytes("utf-8"));
-        final MediaPlaylist mediaPlaylist = new M3uParser(inputStream, Encoding.UTF_8).parse().getMediaPlaylist();
-
-        assertEquals(expectedTracks, mediaPlaylist.getTracks());
+            Assert.Equal(expectedTracks, mediaPlaylist.getTracks());
+        }
     }
 }

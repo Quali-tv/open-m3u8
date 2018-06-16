@@ -1,20 +1,20 @@
-package com.iheartradio.m3u8;
+using System; using System.Collections.Generic; using System.Text;  namespace M3U8Parser {
 
-import com.iheartradio.m3u8.data.Playlist;
-import com.iheartradio.m3u8.data.StartData;
+// import com.iheartradio.m3u8.data.Playlist;
+// import com.iheartradio.m3u8.data.StartData;
 
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 
-class ParseState implements IParseState<Playlist> {
-    static final int NONE = -1;
+public class ParseState : IParseState<Playlist> {
+    public const int NONE = -1;
 
-    public final Encoding encoding;
-    public final List<String> unknownTags = new ArrayList<>();
+    public readonly Encoding encoding;
+    public readonly List<String> unknownTags = new List<String>();
 
     private MasterParseState mMasterParseState;
     private MediaParseState mMediaParseState;
-    private boolean mIsExtended;
+    private bool mIsExtended;
     private int mCompatibilityVersion = NONE;
 
     public StartData startData;
@@ -23,7 +23,7 @@ class ParseState implements IParseState<Playlist> {
         this.encoding = encoding;
     }
 
-    public boolean isMaster() {
+    public bool isMaster() {
         return mMasterParseState != null;
     }
 
@@ -31,7 +31,8 @@ class ParseState implements IParseState<Playlist> {
         return mMasterParseState;
     }
 
-    public void setMaster() throws ParseException {
+    public void setMaster() //throws ParseException 
+    {
         if (isMedia()) {
             throw new ParseException(ParseExceptionType.MASTER_IN_MEDIA);
         }
@@ -41,7 +42,7 @@ class ParseState implements IParseState<Playlist> {
         }
     }
 
-    public boolean isMedia() {
+    public bool isMedia() {
         return mMediaParseState != null;
     }
 
@@ -49,13 +50,14 @@ class ParseState implements IParseState<Playlist> {
         return mMediaParseState;
     }
 
-    public void setMedia() throws ParseException {
+    public void setMedia() // throws ParseException 
+    {
         if (mMediaParseState == null) {
             mMediaParseState = new MediaParseState();
         }
     }
 
-    public boolean isExtended() {
+    public bool isExtended() {
         return mIsExtended;
     }
 
@@ -63,7 +65,8 @@ class ParseState implements IParseState<Playlist> {
         mIsExtended = true;
     }
     
-    public void setIsIframesOnly() throws ParseException {
+    public void setIsIframesOnly() // throws ParseException 
+    {
         if (isMaster()) {
             throw new ParseException(ParseExceptionType.MEDIA_IN_MASTER);
         }
@@ -79,9 +82,10 @@ class ParseState implements IParseState<Playlist> {
         mCompatibilityVersion = compatibilityVersion;
     }
 
-    @Override
-    public Playlist buildPlaylist() throws ParseException {
-        final Playlist.Builder playlistBuilder = new Playlist.Builder();
+
+    public Playlist buildPlaylist() // throws ParseException 
+    {
+        Playlist.Builder playlistBuilder = new Playlist.Builder();
 
         if (isMaster()) {
             playlistBuilder.withMasterPlaylist(buildInnerPlaylist(getMaster()));
@@ -98,10 +102,12 @@ class ParseState implements IParseState<Playlist> {
                 .build();
     }
 
-    private <T> T buildInnerPlaylist(PlaylistParseState<T> innerParseState) throws ParseException {
+    private T buildInnerPlaylist<T>(PlaylistParseState<T> innerParseState) // throws ParseException 
+    {
         return innerParseState
                 .setUnknownTags(unknownTags)
                 .setStartData(startData)
                 .buildPlaylist();
     }
+}
 }

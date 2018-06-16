@@ -1,6 +1,10 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
 
-
-interface AttributeParser<Builder> {
-    void parse(Attribute attribute, Builder builder, ParseState state) throws ParseException;
+namespace M3U8Parser
+{
+    public interface AttributeParser<Builder>
+    {
+        void parse(Attribute attribute, Builder builder, ParseState state); // throws ParseException;
+    }
 }

@@ -1,76 +1,135 @@
-package com.iheartradio.m3u8;
+using System;
+using System.IO;
+using System.Text;
+using Xunit;
+// import com.iheartradio.m3u8.data.Playlist;
+// import org.junit.Test;
 
-import com.iheartradio.m3u8.data.Playlist;
-import org.junit.Test;
+// import java.io.ByteArrayInputStream;
+// import java.io.ByteArrayOutputStream;
+// import java.io.IOException;
+// import java.io.InputStream;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+// import static com.iheartradio.m3u8.TestUtil.inputStreamFromResource;
+// import static com.iheartradio.m3u8.Constants.UTF_8_BOM_BYTES;
+// import static org.junit.Assert.*;
 
-import static com.iheartradio.m3u8.TestUtil.inputStreamFromResource;
-import static com.iheartradio.m3u8.Constants.UTF_8_BOM_BYTES;
-import static org.junit.Assert.*;
-
-public class ByteOrderMarkTest {
-    @Test
-    public void testParsingByteOrderMark() throws Exception {
-        try (final InputStream inputStream = wrapWithByteOrderMark(inputStreamFromResource("simpleMediaPlaylist.m3u8"))) {
-            final PlaylistParser playlistParser = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8);
-            final Playlist playlist = playlistParser.parse();
-            assertEquals(10, playlist.getMediaPlaylist().getTargetDuration());
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    @Test
-    public void testWritingByteOrderMark() throws Exception {
-        final Playlist playlist1;
-        final Playlist playlist2;
-        final String written;
-
-        try (final InputStream inputStream = inputStreamFromResource("simpleMediaPlaylist.m3u8")) {
-            playlist1 = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8).parse();
+namespace M3U8Parser
+{
+    public class ByteOrderMarkTest
+    {
+        [Fact]
+        public void testParsingByteOrderMark() // throws Exception 
+        {
+            using(Stream inputStream = wrapWithByteOrderMark(TestUtil.inputStreamFromResource("simpleMediaPlaylist.m3u8")))
+            {
+                PlaylistParser playlistParser = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8);
+                Playlist playlist = playlistParser.parse();
+                Assert.Equal(10, playlist.getMediaPlaylist().getTargetDuration());
+            }
         }
 
-        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-            final PlaylistWriter writer = new PlaylistWriter.Builder()
-                    .withOutputStream(os)
-                    .withFormat(Format.EXT_M3U)
-                    .withEncoding(Encoding.UTF_8)
-                    .useByteOrderMark()
-                    .build();
+        //@SuppressWarnings("deprecation")
+        [Fact]
+        public void testWritingByteOrderMark() // throws Exception 
+        {
+            Playlist playlist1 = null;
+            Playlist playlist2 = null;
+            String written = String.Empty;
 
-            writer.write(playlist1);
-            written = os.toString(Encoding.UTF_8.value);
+            using(Stream inputStream = TestUtil.inputStreamFromResource("simpleMediaPlaylist.m3u8"))
+            {
+                playlist1 = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8).parse();
+            }
+
+            using(var os = new MemoryStream())
+            {
+                PlaylistWriter writer = new PlaylistWriter.Builder()
+                        .withOutputStream(os)
+                        .withFormat(Format.EXT_M3U)
+                        .withEncoding(Encoding.UTF_8)
+                        .useByteOrderMark()
+                        .build();
+
+                writer.write(playlist1);
+                
+                // written = os.ToString(Encoding.UTF_8.value);
+                os.Position = 0;
+                using(var sr = new StreamReader(os, System.Text.Encoding.UTF8))
+                    written = sr.ReadToEnd();
+            }
+
+            Assert.Equal(Constants.UNICODE_BOM, written[0]);
+
+            using(Stream inputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(written)))
+            {
+                playlist2 = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8).parse();
+            }
+
+            Assert.Equal(playlist1, playlist2);
         }
 
-        assertEquals(Constants.UNICODE_BOM, written.charAt(0));
+        public class WrappedStream : Stream
+        {
+            private Stream _streamToWrap;
+            public WrappedStream(Stream streamToWrap)
+            {
+                _streamToWrap = streamToWrap;
+            }
 
-        try (final InputStream inputStream = new ByteArrayInputStream(written.getBytes(Encoding.UTF_8.value))) {
-            playlist2 = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8).parse();
-        }
+            private int mNumRead;
 
-        assertEquals(playlist1, playlist2);
-    }
+            public override bool CanRead => 
+                Constants.UTF_8_BOM_BYTES.Length > mNumRead || _streamToWrap.CanRead;
 
-    private static InputStream wrapWithByteOrderMark(final InputStream inputStream) {
-        return new InputStream() {
-            public int mNumRead;
+            public override bool CanSeek => _streamToWrap.CanSeek;
 
-            @Override
-            public int read() throws IOException {
-                if (UTF_8_BOM_BYTES.length > mNumRead) {
-                    return UTF_8_BOM_BYTES[mNumRead++];
-                } else {
-                    return inputStream.read();
+            public override bool CanWrite => false;
+
+            public override long Length => _streamToWrap.Length;
+
+            public override long Position { get => _streamToWrap.Position; set => _streamToWrap.Position = value; }
+
+            public override void Flush()
+            {
+                _streamToWrap.Flush();
+            }
+
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                if (count <= 0)
+                    return 0;
+                    
+                if (Constants.UTF_8_BOM_BYTES.Length > mNumRead)
+                {
+                    buffer[offset] = Constants.UTF_8_BOM_BYTES[mNumRead++];
+                    return 1;
+                }
+                else
+                {
+                    return _streamToWrap.Read(buffer, offset, count);
                 }
             }
 
-            @Override
-            public void close() throws IOException {
-                inputStream.close();
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                return _streamToWrap.Seek(offset, origin);
             }
-        };
+
+            public override void SetLength(long value)
+            {
+                _streamToWrap.SetLength(value);
+            }
+
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                _streamToWrap.Write(buffer, offset, count);
+            }
+        }
+
+        private static Stream wrapWithByteOrderMark(Stream inputStream)
+        {
+            return new WrappedStream(inputStream);
+        }
     }
 }

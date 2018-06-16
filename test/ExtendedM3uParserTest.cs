@@ -1,183 +1,203 @@
-package com.iheartradio.m3u8;
+using Xunit;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+// import com.iheartradio.m3u8.data.MediaData;
+// import com.iheartradio.m3u8.data.MediaPlaylist;
+// import com.iheartradio.m3u8.data.MediaType;
+// import com.iheartradio.m3u8.data.Playlist;
+// import com.iheartradio.m3u8.data.StreamInfo;
+// import com.iheartradio.m3u8.data.TrackData;
+// import com.iheartradio.m3u8.data.TrackInfo;
 
-import com.iheartradio.m3u8.data.MediaData;
-import com.iheartradio.m3u8.data.MediaPlaylist;
-import com.iheartradio.m3u8.data.MediaType;
-import com.iheartradio.m3u8.data.Playlist;
-import com.iheartradio.m3u8.data.StreamInfo;
-import com.iheartradio.m3u8.data.TrackData;
-import com.iheartradio.m3u8.data.TrackInfo;
+// import org.junit.Test;
 
-import org.junit.Test;
+// import java.io.ByteArrayInputStream;
+// import java.io.InputStream;
+// import java.util.ArrayList;
+// import java.util.Arrays;
+// import java.util.List;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+// import static com.iheartradio.m3u8.TestUtil.inputStreamFromResource;
+// import static org.junit.Assert.*;
 
-import static com.iheartradio.m3u8.TestUtil.inputStreamFromResource;
-import static org.junit.Assert.*;
+namespace M3U8Parser
+{
+    public class ExtendedM3uParserTest
+    {
+        // public ExtendedM3uParserTest()
+        // {
+        //     System.Text.Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        // }
 
-public class ExtendedM3uParserTest {
-    @Test
-    public void testParseMaster() throws Exception {
-        final List<MediaData> expectedMediaData = new ArrayList<MediaData>();
+        [Fact]
+        public void testParseMaster() // throws Exception 
+        {
+            List<MediaData> expectedMediaData = new List<MediaData>();
 
-        expectedMediaData.add(new MediaData.Builder()
-                .withType(MediaType.AUDIO)
-                .withGroupId("1234")
-                .withName("Foo")
-                .build());
+            expectedMediaData.Add(new MediaData.Builder()
+                    .withType(MediaType.AUDIO)
+                    .withGroupId("1234")
+                    .withName("Foo")
+                    .build());
 
-        final StreamInfo expectedStreamInfo = new StreamInfo.Builder()
-                .withBandwidth(500)
-                .build();
+            StreamInfo expectedStreamInfo = new StreamInfo.Builder()
+                    .withBandwidth(500)
+                    .build();
 
-        final String validData =
-                "#EXTM3U\n" +
-                        "#EXT-X-VERSION:2\n" +
-                        "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"1234\",NAME=\"Foo\"\n" +
-                        "#EXT-X-STREAM-INF:BANDWIDTH=500\n" +
-                        "http://foo.bar.com/\n" +
-                        "\n";
+            String validData =
+                    "#EXTM3U\n" +
+                            "#EXT-X-VERSION:2\n" +
+                            "#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID=\"1234\",NAME=\"Foo\"\n" +
+                            "#EXT-X-STREAM-INF:BANDWIDTH=500\n" +
+                            "http://foo.bar.com/\n" +
+                            "\n";
 
-        final InputStream inputStream = new ByteArrayInputStream(validData.getBytes("utf-8"));
-        final ExtendedM3uParser parser = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.STRICT);
+            Stream inputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(validData));
+            ExtendedM3uParser parser = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.STRICT);
 
-        assertTrue(parser.isAvailable());
+            Assert.True(parser.isAvailable());
 
-        final Playlist playlist = parser.parse();
+            Playlist playlist = parser.parse();
 
-        assertFalse(parser.isAvailable());
-        assertTrue(playlist.isExtended());
-        assertEquals(2, playlist.getCompatibilityVersion());
-        assertTrue(playlist.hasMasterPlaylist());
-        assertEquals(expectedMediaData, playlist.getMasterPlaylist().getMediaData());
-        assertEquals(expectedStreamInfo, playlist.getMasterPlaylist().getPlaylists().get(0).getStreamInfo());
-    }
+            Assert.False(parser.isAvailable());
+            Assert.True(playlist.isExtended());
+            Assert.Equal(2, playlist.getCompatibilityVersion());
+            Assert.True(playlist.hasMasterPlaylist());
+            Assert.Equal(expectedMediaData, playlist.getMasterPlaylist().getMediaData());
+            Assert.Equal(expectedStreamInfo, playlist.getMasterPlaylist().getPlaylists()[0].getStreamInfo());
+        }
 
-    @Test
-    public void testLenientParsing() throws Exception {
-        final String validData =
-                "#EXTM3U\n" +
-                        "#EXT-X-VERSION:2\n" +
-                        "#EXT-X-TARGETDURATION:60\n" +
-                        "#EXT-X-MEDIA-SEQUENCE:10\n" +
-                        "#EXT-FAXS-CM:MIIa4QYJKoZIhvcNAQcCoIIa0jCCGs4C...\n" +
-                        "#some comment\n" +
-                        "#EXTINF:120.0,title 1\n" +
-                        "http://www.my.song/file1.mp3\n" +
-                        "\n";
+        [Fact]
+        public void testLenientParsing() // throws Exception 
+        {
+            String validData =
+                    "#EXTM3U\n" +
+                            "#EXT-X-VERSION:2\n" +
+                            "#EXT-X-TARGETDURATION:60\n" +
+                            "#EXT-X-MEDIA-SEQUENCE:10\n" +
+                            "#EXT-FAXS-CM:MIIa4QYJKoZIhvcNAQcCoIIa0jCCGs4C...\n" +
+                            "#some comment\n" +
+                            "#EXTINF:120.0,title 1\n" +
+                            "http://www.my.song/file1.mp3\n" +
+                            "\n";
 
-        final InputStream inputStream = new ByteArrayInputStream(validData.getBytes("utf-8"));
-        final Playlist playlist = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.LENIENT).parse();
+            Stream inputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(validData));
+            Playlist playlist = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.LENIENT).parse();
 
-        assertTrue(playlist.isExtended());
-        assertTrue(playlist.getMediaPlaylist().hasUnknownTags());
-        assertTrue(playlist.getMediaPlaylist().getUnknownTags().get(0).length() > 0);
-    }
+            Assert.True(playlist.isExtended());
+            Assert.True(playlist.getMediaPlaylist().hasUnknownTags());
+            Assert.True(playlist.getMediaPlaylist().getUnknownTags()[0].Length > 0);
+        }
 
-    @Test
-    public void testParseMedia() throws Exception {
-        final String absolute = "http://www.my.song/file1.mp3";
-        final String relative = "user1/file2.mp3";
+        [Fact]
+        public void testParseMedia() // throws Exception 
+        {
+            String absolute = "http://www.my.song/file1.mp3";
+            String relative = "user1/file2.mp3";
 
-        final String validData =
-                "#EXTM3U\n" +
-                        "#EXT-X-VERSION:2\n" +
-                        "#EXT-X-TARGETDURATION:60\n" +
-                        "#EXT-X-MEDIA-SEQUENCE:10\n" +
-                        "#some comment\n" +
-                        "#EXTINF:120.0,title 1\n" +
-                        absolute + "\n" +
-                        "#EXTINF:100.0,title 2\n" +
-                        "#EXT-X-PROGRAM-DATE-TIME:2010-02-19T14:54:23.031+08:00\n" +
-                        "\n" +
-                        relative + "\n" +
-                        "\n";
+            String validData =
+                    "#EXTM3U\n" +
+                            "#EXT-X-VERSION:2\n" +
+                            "#EXT-X-TARGETDURATION:60\n" +
+                            "#EXT-X-MEDIA-SEQUENCE:10\n" +
+                            "#some comment\n" +
+                            "#EXTINF:120.0,title 1\n" +
+                            absolute + "\n" +
+                            "#EXTINF:100.0,title 2\n" +
+                            "#EXT-X-PROGRAM-DATE-TIME:2010-02-19T14:54:23.031+08:00\n" +
+                            "\n" +
+                            relative + "\n" +
+                            "\n";
 
-        final List<TrackData> expectedTracks = Arrays.asList(
+            List<TrackData> expectedTracks = new List<TrackData>() {
                 new TrackData.Builder().withUri(absolute).withTrackInfo(new TrackInfo(120, "title 1")).build(),
-                new TrackData.Builder().withUri(relative).withTrackInfo(new TrackInfo(100, "title 2")).withProgramDateTime("2010-02-19T14:54:23.031+08:00").build());
+                new TrackData.Builder().withUri(relative).withTrackInfo(new TrackInfo(100, "title 2")).withProgramDateTime("2010-02-19T14:54:23.031+08:00").build()};
 
-        final InputStream inputStream = new ByteArrayInputStream(validData.getBytes("utf-8"));
-        final Playlist playlist = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.STRICT).parse();
+            Stream inputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(validData));
+            Playlist playlist = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.STRICT).parse();
 
-        assertTrue(playlist.isExtended());
-        assertEquals(2, playlist.getCompatibilityVersion());
-        assertTrue(playlist.hasMediaPlaylist());
-        assertEquals(60, playlist.getMediaPlaylist().getTargetDuration());
-        assertEquals(10, playlist.getMediaPlaylist().getMediaSequenceNumber());
-        assertEquals(expectedTracks, playlist.getMediaPlaylist().getTracks());
-    }
+            Assert.True(playlist.isExtended());
+            Assert.Equal(2, playlist.getCompatibilityVersion());
+            Assert.True(playlist.hasMediaPlaylist());
+            Assert.Equal(60, playlist.getMediaPlaylist().getTargetDuration());
+            Assert.Equal(10, playlist.getMediaPlaylist().getMediaSequenceNumber());
+            Assert.Equal(expectedTracks, playlist.getMediaPlaylist().getTracks());
+        }
 
-    @Test
-    public void testParsingMultiplePlaylists() throws Exception {
-        try (final InputStream inputStream = inputStreamFromResource("twoMediaPlaylists.m3u8")) {
-            final PlaylistParser parser = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8);
+        [Fact]
+        public void testParsingMultiplePlaylists() // throws Exception 
+        {
+            using(Stream inputStream = TestUtil.inputStreamFromResource("twoMediaPlaylists.m3u8"))
+            {
+                PlaylistParser parser = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8);
 
-            assertTrue(parser.isAvailable());
+                Assert.True(parser.isAvailable());
 
-            final Playlist playlist1 = parser.parse();
+                Playlist playlist1 = parser.parse();
 
-            assertTrue(parser.isAvailable());
+                Assert.True(parser.isAvailable());
 
-            final Playlist playlist2 = parser.parse();
+                Playlist playlist2 = parser.parse();
 
-            assertFalse(parser.isAvailable());
+                Assert.False(parser.isAvailable());
 
-            List<TrackData> expected1 = Arrays.asList(
+                List<TrackData> expected1 = new List<TrackData>() {
                     makeTrackData("http://media.example.com/first.ts", 9.009f),
                     makeTrackData("http://media.example.com/second.ts", 9.009f),
-                    makeTrackData("http://media.example.com/third.ts", 3.003f));
+                    makeTrackData("http://media.example.com/third.ts", 3.003f)};
 
-            assertEquals(
-                    expected1,
-                    playlist1.getMediaPlaylist().getTracks());
+                var actual1 = playlist1.getMediaPlaylist().getTracks();
+                Assert.Equal(
+                        expected1,
+                        actual1);
 
-            assertEquals(
-                    Arrays.asList(
+                Assert.Equal(
+                        new List<TrackData>() {
                             makeTrackData("http://media.example.com/fourth.ts", 9.01f),
-                            makeTrackData("http://media.example.com/fifth.ts", 9.011f)),
-                    playlist2.getMediaPlaylist().getTracks());
+                            makeTrackData("http://media.example.com/fifth.ts", 9.011f)},
+                        playlist2.getMediaPlaylist().getTracks());
 
-            assertEquals(0, inputStream.available());
+                // Assert.Equal(0, inputStream.available()); // TODO: Why? And what's the c# equivalent
+            }
         }
-    }
 
-    @Test
-    public void testParseDiscontinuity() throws Exception {
-        final String absolute = "http://www.my.song/file1.mp3";
-        final String relative = "user1/file2.mp3";
+        [Fact]
+        public void testParseDiscontinuity() // throws Exception 
+        {
+            String absolute = "http://www.my.song/file1.mp3";
+            String relative = "user1/file2.mp3";
 
-        final String validData =
-                "#EXTM3U\n" +
-                        "#EXT-X-VERSION:2\n" +
-                        "#EXT-X-TARGETDURATION:60\n" +
-                        "#EXT-X-MEDIA-SEQUENCE:10\n" +
-                        "#some comment\n" +
-                        "#EXTINF:120.0,title 1\n" +
-                        absolute + "\n" +
-                        "#EXT-X-DISCONTINUITY\n" +
-                        "#EXTINF:100.0,title 2\n" +
-                        "\n" +
-                        relative + "\n" +
-                        "\n";
+            String validData =
+                    "#EXTM3U\n" +
+                            "#EXT-X-VERSION:2\n" +
+                            "#EXT-X-TARGETDURATION:60\n" +
+                            "#EXT-X-MEDIA-SEQUENCE:10\n" +
+                            "#some comment\n" +
+                            "#EXTINF:120.0,title 1\n" +
+                            absolute + "\n" +
+                            "#EXT-X-DISCONTINUITY\n" +
+                            "#EXTINF:100.0,title 2\n" +
+                            "\n" +
+                            relative + "\n" +
+                            "\n";
 
-        final InputStream inputStream = new ByteArrayInputStream(validData.getBytes("utf-8"));
-        final MediaPlaylist mediaPlaylist = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.STRICT).parse().getMediaPlaylist();
+            Stream inputStream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(validData));
+            MediaPlaylist mediaPlaylist = new ExtendedM3uParser(inputStream, Encoding.UTF_8, ParsingMode.STRICT).parse().getMediaPlaylist();
 
-        assertFalse(mediaPlaylist.getTracks().get(0).hasDiscontinuity());
-        assertTrue(mediaPlaylist.getTracks().get(1).hasDiscontinuity());
-        assertEquals(0, mediaPlaylist.getDiscontinuitySequenceNumber(0));
-        assertEquals(1, mediaPlaylist.getDiscontinuitySequenceNumber(1));
-    }
+            Assert.False(mediaPlaylist.getTracks()[0].hasDiscontinuity());
+            Assert.True(mediaPlaylist.getTracks()[1].hasDiscontinuity());
+            Assert.Equal(0, mediaPlaylist.getDiscontinuitySequenceNumber(0));
+            Assert.Equal(1, mediaPlaylist.getDiscontinuitySequenceNumber(1));
+        }
 
-    private static TrackData makeTrackData(String uri, float duration) {
-        return new TrackData.Builder()
-                .withTrackInfo(new TrackInfo(duration, null))
-                .withUri(uri)
-                .build();
+        private static TrackData makeTrackData(String uri, float duration)
+        {
+            return new TrackData.Builder()
+                    .withTrackInfo(new TrackInfo(duration, null))
+                    .withUri(uri)
+                    .build();
+        }
     }
 }

@@ -1,45 +1,58 @@
-package com.iheartradio.m3u8;
+using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Text;
+//import java.util.HashMap;
+//import java.util.Locale;
+//import java.util.Map;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+namespace M3U8Parser
+{
+    public class Extension
+    {
+        public static readonly Extension M3U = new Extension("m3u", Encoding.WINDOWS_1252);
+        public static readonly Extension M3U8 = new Extension("m3u8", Encoding.UTF_8);
 
-public enum Extension {
-    M3U("m3u", Encoding.WINDOWS_1252),
-    M3U8("m3u8", Encoding.UTF_8);
+        private static readonly Dictionary<String, Extension> sMap = new Dictionary<String, Extension>();
 
-    private static final Map<String, Extension> sMap = new HashMap<String, Extension>();
-
-    static {
-        for (Extension mediaType : Extension.values()) {
-            sMap.put(mediaType.value, mediaType);
+        static Extension()
+        {
+            sMap.Add(M3U.value, M3U);
+            sMap.Add(M3U8.value, M3U8);
         }
-    }
 
-    final String value;
-    final Encoding encoding;
+        public readonly String value;
+        public readonly Encoding encoding;
 
-    private Extension(String value, Encoding encoding) {
-        this.value = value;
-        this.encoding = encoding;
-    }
-
-    /**
-     * @return the extension for the given value if supported, if the extension is unsupported or null, null will be returned
-     */
-    public static Extension fromValue(String value) {
-        if (value == null) {
-            return null;
-        } else {
-            return sMap.get(value.toLowerCase(Locale.US));
+        private Extension(String value, Encoding encoding)
+        {
+            this.value = value;
+            this.encoding = encoding;
         }
-    }
 
-    public String getValue() {
-        return value;
-    }
+        /**
+         * @return the extension for the given value if supported, if the extension is unsupported or null, null will be returned
+         */
+        public static Extension fromValue(String value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+            else
+            {
+                return sMap[value.ToLower(CultureInfo.CurrentCulture)];
+            }
+        }
 
-    public Encoding getEncoding() {
-        return encoding;
+        public String getValue()
+        {
+            return value;
+        }
+
+        public Encoding getEncoding()
+        {
+            return encoding;
+        }
     }
 }

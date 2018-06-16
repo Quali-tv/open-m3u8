@@ -1,56 +1,54 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Text;
 
-import java.util.Objects;
+namespace M3U8Parser
+{
+//package com.iheartradio.m3u8.data;
+
+//import java.util.Objects;
 
 public class ByteRange {
-    private final long mSubRangeLength;
-    private final Long mOffset;
+    private readonly long mSubRangeLength;
+    private readonly long? mOffset;
 
-    public ByteRange(long subRangeLength, long offset) {
+    public ByteRange(long subRangeLength, long? offset) {
         this.mSubRangeLength = subRangeLength;
         this.mOffset = offset;
     }
 
-    public ByteRange(long subRangeLength, Long offset) {
-        this.mSubRangeLength = subRangeLength;
-        this.mOffset = offset;
-    }
-
-    public ByteRange(long subRangeLength) {
-        this(subRangeLength, null);
-    }
+    public ByteRange(long subRangeLength)  : this(subRangeLength, null)    {    }
 
     public long getSubRangeLength() {
         return mSubRangeLength;
     }
 
-    public Long getOffset() {
+    public long? getOffset() {
         return mOffset;
     }
 
-    public boolean hasOffset() {
+    public bool hasOffset() {
         return mOffset != null;
     }
 
-    @Override
-    public String toString() {
+    public override String ToString() {
         return "ByteRange{" +
                 "mSubRangeLength=" + mSubRangeLength +
                 ", mOffset=" + mOffset +
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public override bool Equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || GetType() != o.GetType()) return false;
         ByteRange byteRange = (ByteRange) o;
         return mSubRangeLength == byteRange.mSubRangeLength &&
-                Objects.equals(mOffset, byteRange.mOffset);
+                object.Equals(mOffset, byteRange.mOffset);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(mSubRangeLength, mOffset);
+    public override int GetHashCode() {
+        // TODO: Implement
+        //return Objects.hash(mSubRangeLength, mOffset);
+        return 0;
     }
+}
 }

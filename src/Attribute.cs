@@ -1,20 +1,23 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
 
-class Attribute {
-    public final String name;
-    public final String value;
+namespace M3U8Parser
+{
+    public class Attribute {
+        public readonly String name;
+        public readonly String value;
 
-    Attribute(String name, String value) {
-        this.name = name;
-        this.value = value;
-    }
+        public Attribute(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
 
-    @Override
-    public String toString() {
-        return new StringBuilder()
-                .append("(Attribute")
-                .append(" name=").append(name)
-                .append(" value=").append(value)
-                .append(")").toString();
+        public override string ToString() {
+            return new StringBuilder()
+                    .Append("(Attribute")
+                    .Append(" name=").Append(name)
+                    .Append(" value=").Append(value)
+                    .Append(")").ToString();
+        }
     }
 }

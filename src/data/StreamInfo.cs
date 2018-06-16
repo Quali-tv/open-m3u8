@@ -1,182 +1,30 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-import java.util.List;
-import java.util.Objects;
+// package com.iheartradio.m3u8.data;
 
-public class StreamInfo implements IStreamInfo {
-    public static final int NO_BANDWIDTH = -1;
+// import java.util.List;
+// import java.util.Objects;
+namespace M3U8Parser
+{
 
-    private final int mBandwidth;
-    private final int mAverageBandwidth;
-    private final List<String> mCodecs;
-    private final Resolution mResolution;
-    private final float mFrameRate;
-    private final String mAudio;
-    private final String mVideo;
-    private final String mSubtitles;
-    private final String mClosedCaptions;
 
-    private StreamInfo(
-            int bandwidth,
-            int averageBandwidth,
-            List<String> codecs,
-            Resolution resolution,
-            float frameRate,
-            String audio,
-            String video,
-            String subtitles,
-            String closedCaptions) {
-        mBandwidth = bandwidth;
-        mAverageBandwidth = averageBandwidth;
-        mCodecs = codecs;
-        mResolution = resolution;
-        mFrameRate = frameRate;
-        mAudio = audio;
-        mVideo = video;
-        mSubtitles = subtitles;
-        mClosedCaptions = closedCaptions;
-    }
+    public class StreamInfo : IStreamInfo
+    {
+        public const int NO_BANDWIDTH = -1;
 
-    @Override
-    public int getBandwidth() {
-        return mBandwidth;
-    }
+        private readonly int mBandwidth;
+        private readonly int mAverageBandwidth;
+        private readonly List<String> mCodecs;
+        private readonly Resolution mResolution;
+        private readonly float mFrameRate;
+        private readonly String mAudio;
+        private readonly String mVideo;
+        private readonly String mSubtitles;
+        private readonly String mClosedCaptions;
 
-    @Override
-    public boolean hasAverageBandwidth() {
-        return mAverageBandwidth != NO_BANDWIDTH;
-    }
-
-    @Override
-    public int getAverageBandwidth() {
-        return mAverageBandwidth;
-    }
-
-    @Override
-    public boolean hasCodecs() {
-        return mCodecs != null;
-    }
-
-    @Override
-    public List<String> getCodecs() {
-        return mCodecs;
-    }
-
-    @Override
-    public boolean hasResolution() {
-        return mResolution != null;
-    }
-
-    @Override
-    public Resolution getResolution() {
-        return mResolution;
-    }
-
-    @Override
-    public boolean hasFrameRate() {
-        return !Float.isNaN(mFrameRate);
-    }
-
-    @Override
-    public float getFrameRate() {
-        return mFrameRate;
-    }
-
-    public boolean hasAudio() {
-        return mAudio != null;
-    }
-
-    public String getAudio() {
-        return mAudio;
-    }
-
-    @Override
-    public boolean hasVideo() {
-        return mVideo != null;
-    }
-
-    @Override
-    public String getVideo() {
-        return mVideo;
-    }
-
-    public boolean hasSubtitles() {
-        return mSubtitles != null;
-    }
-
-    public String getSubtitles() {
-        return mSubtitles;
-    }
-
-    public boolean hasClosedCaptions() {
-        return mClosedCaptions != null;
-    }
-
-    public String getClosedCaptions() {
-        return mClosedCaptions;
-    }
-
-    public Builder buildUpon() {
-        return new Builder(
-                mBandwidth,
-                mAverageBandwidth,
-                mCodecs,
-                mResolution,
-                mFrameRate,
-                mAudio,
-                mVideo,
-                mSubtitles,
-                mClosedCaptions);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                mBandwidth,
-                mAverageBandwidth,
-                mCodecs,
-                mResolution,
-                mFrameRate,
-                mAudio,
-                mVideo,
-                mSubtitles,
-                mClosedCaptions);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof StreamInfo)) {
-            return false;
-        }
-
-        StreamInfo other = (StreamInfo) o;
-
-        return mBandwidth == other.mBandwidth &&
-               mAverageBandwidth == other.mAverageBandwidth &&
-               Objects.equals(mCodecs, other.mCodecs) &&
-               Objects.equals(mResolution, other.mResolution) &&
-               Objects.equals(mFrameRate, other.mFrameRate) &&
-               Objects.equals(mAudio, other.mAudio) &&
-               Objects.equals(mVideo, other.mVideo) &&
-               Objects.equals(mSubtitles, other.mSubtitles) &&
-               Objects.equals(mClosedCaptions, other.mClosedCaptions);
-    }
-
-    public static class Builder implements StreamInfoBuilder {
-        private int mBandwidth = NO_BANDWIDTH;
-        private int mAverageBandwidth = NO_BANDWIDTH;
-        private List<String> mCodecs;
-        private Resolution mResolution;
-        private float mFrameRate = Float.NaN;
-        private String mAudio;
-        private String mVideo;
-        private String mSubtitles;
-        private String mClosedCaptions;
-
-        public Builder() {
-        }
-
-        private Builder(
+        private StreamInfo(
                 int bandwidth,
                 int averageBandwidth,
                 List<String> codecs,
@@ -185,7 +33,8 @@ public class StreamInfo implements IStreamInfo {
                 String audio,
                 String video,
                 String subtitles,
-                String closedCaptions) {
+                String closedCaptions)
+        {
             mBandwidth = bandwidth;
             mAverageBandwidth = averageBandwidth;
             mCodecs = codecs;
@@ -197,59 +46,94 @@ public class StreamInfo implements IStreamInfo {
             mClosedCaptions = closedCaptions;
         }
 
-        @Override
-        public Builder withBandwidth(int bandwidth) {
-            mBandwidth = bandwidth;
-            return this;
+        public int getBandwidth()
+        {
+            return mBandwidth;
         }
 
-        @Override
-        public Builder withAverageBandwidth(int averageBandwidth) {
-            mAverageBandwidth = averageBandwidth;
-            return this;
+        public bool hasAverageBandwidth()
+        {
+            return mAverageBandwidth != NO_BANDWIDTH;
         }
 
-        @Override
-        public Builder withCodecs(List<String> codecs) {
-            mCodecs = codecs;
-            return this;
+        public int getAverageBandwidth()
+        {
+            return mAverageBandwidth;
         }
 
-        @Override
-        public Builder withResolution(Resolution resolution) {
-            mResolution = resolution;
-            return this;
+        public bool hasCodecs()
+        {
+            return mCodecs != null;
         }
 
-        @Override
-        public Builder withFrameRate(float frameRate) {
-            mFrameRate = frameRate;
-            return this;
+        public List<String> getCodecs()
+        {
+            return mCodecs;
         }
 
-        public Builder withAudio(String audio) {
-            mAudio = audio;
-            return this;
+        public bool hasResolution()
+        {
+            return mResolution != null;
         }
 
-        @Override
-        public Builder withVideo(String video) {
-            mVideo = video;
-            return this;
+        public Resolution getResolution()
+        {
+            return mResolution;
         }
 
-        public Builder withSubtitles(String subtitles) {
-            mSubtitles = subtitles;
-            return this;
+        public bool hasFrameRate()
+        {
+            return !float.IsNaN(mFrameRate);
         }
 
-        public Builder withClosedCaptions(String closedCaptions) {
-            mClosedCaptions = closedCaptions;
-            return this;
+        public float getFrameRate()
+        {
+            return mFrameRate;
         }
 
-        public StreamInfo build() {
-            return new StreamInfo(
+        public bool hasAudio()
+        {
+            return mAudio != null;
+        }
+
+        public String getAudio()
+        {
+            return mAudio;
+        }
+
+        public bool hasVideo()
+        {
+            return mVideo != null;
+        }
+
+        public String getVideo()
+        {
+            return mVideo;
+        }
+
+        public bool hasSubtitles()
+        {
+            return mSubtitles != null;
+        }
+
+        public String getSubtitles()
+        {
+            return mSubtitles;
+        }
+
+        public bool hasClosedCaptions()
+        {
+            return mClosedCaptions != null;
+        }
+
+        public String getClosedCaptions()
+        {
+            return mClosedCaptions;
+        }
+
+        public Builder buildUpon()
+        {
+            return new Builder(
                     mBandwidth,
                     mAverageBandwidth,
                     mCodecs,
@@ -259,6 +143,167 @@ public class StreamInfo implements IStreamInfo {
                     mVideo,
                     mSubtitles,
                     mClosedCaptions);
+        }
+
+        public override int GetHashCode()
+        {
+            // TODO: Implement
+            //return Objects.hash(
+            // mBandwidth,
+            // mAverageBandwidth,
+            // mCodecs,
+            // mResolution,
+            // mFrameRate,
+            // mAudio,
+            // mVideo,
+            // mSubtitles,
+            // mClosedCaptions);
+            return 0;
+        }
+
+        public override bool Equals(object o)
+        {
+            if (!(o is StreamInfo))
+            {
+                return false;
+            }
+
+            StreamInfo other = (StreamInfo)o;
+
+            return mBandwidth == other.mBandwidth &&
+                   mAverageBandwidth == other.mAverageBandwidth &&
+                   mCodecs.SequenceEquals(other.mCodecs) &&
+                   object.Equals(mResolution, other.mResolution) &&
+                   object.Equals(mFrameRate, other.mFrameRate) &&
+                   object.Equals(mAudio, other.mAudio) &&
+                   object.Equals(mVideo, other.mVideo) &&
+                   object.Equals(mSubtitles, other.mSubtitles) &&
+                   object.Equals(mClosedCaptions, other.mClosedCaptions);
+        }
+
+        public class Builder : StreamInfoBuilder
+        {
+            private int mBandwidth = NO_BANDWIDTH;
+            private int mAverageBandwidth = NO_BANDWIDTH;
+            private List<String> mCodecs;
+            private Resolution mResolution;
+            private float mFrameRate = float.NaN;
+            private String mAudio;
+            private String mVideo;
+            private String mSubtitles;
+            private String mClosedCaptions;
+
+            public Builder()
+            {
+            }
+
+            public Builder(
+                    int bandwidth,
+                    int averageBandwidth,
+                    List<String> codecs,
+                    Resolution resolution,
+                    float frameRate,
+                    String audio,
+                    String video,
+                    String subtitles,
+                    String closedCaptions)
+            {
+                mBandwidth = bandwidth;
+                mAverageBandwidth = averageBandwidth;
+                mCodecs = codecs;
+                mResolution = resolution;
+                mFrameRate = frameRate;
+                mAudio = audio;
+                mVideo = video;
+                mSubtitles = subtitles;
+                mClosedCaptions = closedCaptions;
+            }
+
+            public Builder withBandwidth(int bandwidth)
+            {
+                mBandwidth = bandwidth;
+                return this;
+            }
+
+            public Builder withAverageBandwidth(int averageBandwidth)
+            {
+                mAverageBandwidth = averageBandwidth;
+                return this;
+            }
+
+            public Builder withCodecs(List<String> codecs)
+            {
+                mCodecs = codecs;
+                return this;
+            }
+
+            public Builder withResolution(Resolution resolution)
+            {
+                mResolution = resolution;
+                return this;
+            }
+
+            public Builder withFrameRate(float frameRate)
+            {
+                mFrameRate = frameRate;
+                return this;
+            }
+
+            public Builder withAudio(String audio)
+            {
+                mAudio = audio;
+                return this;
+            }
+
+            public Builder withVideo(String video)
+            {
+                mVideo = video;
+                return this;
+            }
+
+            public Builder withSubtitles(String subtitles)
+            {
+                mSubtitles = subtitles;
+                return this;
+            }
+
+            public Builder withClosedCaptions(String closedCaptions)
+            {
+                mClosedCaptions = closedCaptions;
+                return this;
+            }
+
+            public StreamInfo build()
+            {
+                return new StreamInfo(
+                        mBandwidth,
+                        mAverageBandwidth,
+                        mCodecs,
+                        mResolution,
+                        mFrameRate,
+                        mAudio,
+                        mVideo,
+                        mSubtitles,
+                        mClosedCaptions);
+            }
+
+            StreamInfoBuilder StreamInfoBuilder.withBandwidth(int bandwidth) 
+                => this.withBandwidth(bandwidth);
+            
+            StreamInfoBuilder StreamInfoBuilder.withAverageBandwidth(int averageBandwidth) 
+                => this.withAverageBandwidth(averageBandwidth);
+
+            StreamInfoBuilder StreamInfoBuilder.withCodecs(List<string> codecs) 
+                => this.withCodecs(codecs);
+
+            StreamInfoBuilder StreamInfoBuilder.withResolution(Resolution resolution) 
+                => this.withResolution(resolution);
+
+            StreamInfoBuilder StreamInfoBuilder.withFrameRate(float frameRate) 
+                => this.withFrameRate(frameRate);
+
+            StreamInfoBuilder StreamInfoBuilder.withVideo(string video) 
+                => this.withVideo(video);
         }
     }
 }

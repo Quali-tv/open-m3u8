@@ -1,41 +1,52 @@
-package com.iheartradio.m3u8;
+using System;
+using System.IO;
+using System.Text;
+//import java.io.InputStream;
+//import java.util.Locale;
+//import java.util.Scanner;
 
-import java.io.InputStream;
-import java.util.Locale;
-import java.util.Scanner;
+namespace M3U8Parser
+{
+    public class M3uScanner
+    {
+        private readonly StreamReader mScanner;
+        private readonly bool mSupportsByteOrderMark;
+        private readonly StringBuilder mInput = new StringBuilder();
 
-class M3uScanner {
-    private final Scanner mScanner;
-    private final boolean mSupportsByteOrderMark;
-    private final StringBuilder mInput = new StringBuilder();
+        private bool mCheckedByteOrderMark;
 
-    private boolean mCheckedByteOrderMark;
-
-    M3uScanner(InputStream inputStream, Encoding encoding) {
-        mScanner = new Scanner(inputStream, encoding.value).useLocale(Locale.US).useDelimiter(Constants.PARSE_NEW_LINE);
-        mSupportsByteOrderMark = encoding.supportsByteOrderMark;
-    }
-
-    String getInput() {
-        return mInput.toString();
-    }
-
-    boolean hasNext() {
-        return mScanner.hasNext();
-    }
-
-    String next() throws ParseException {
-        String line = mScanner.next();
-
-        if (mSupportsByteOrderMark && !mCheckedByteOrderMark) {
-            if (!line.isEmpty() && line.charAt(0) == Constants.UNICODE_BOM) {
-                line = line.substring(1);
-            }
-
-            mCheckedByteOrderMark = true;
+        public M3uScanner(Stream inputStream, Encoding encoding)
+        {
+            mScanner = new StreamReader(inputStream, encoding.value);
+            mSupportsByteOrderMark = encoding.supportsByteOrderMark;
         }
 
-        mInput.append(line).append("\n");
-        return line;
+        public String getInput()
+        {
+            return mInput.ToString();
+        }
+
+        public bool hasNext()
+        {
+            return !mScanner.EndOfStream;
+        }
+
+        public String next() //throws ParseException 
+        {
+            String line = mScanner.ReadLine();
+
+            if (mSupportsByteOrderMark && !mCheckedByteOrderMark)
+            {
+                if (!string.IsNullOrEmpty(line) && line.ToCharArray()[0] == Constants.UNICODE_BOM)
+                {
+                    line = line.Substring(1);
+                }
+
+                mCheckedByteOrderMark = true;
+            }
+
+            mInput.Append(line).Append("\n");
+            return line;
+        }
     }
 }

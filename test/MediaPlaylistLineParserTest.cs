@@ -1,107 +1,118 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Xunit;
+// import com.iheartradio.m3u8.data.ByteRange;
+// import com.iheartradio.m3u8.data.EncryptionData;
+// import com.iheartradio.m3u8.data.EncryptionMethod;
+// import com.iheartradio.m3u8.data.MapInfo;
+// import org.junit.Test;
 
-import com.iheartradio.m3u8.data.ByteRange;
-import com.iheartradio.m3u8.data.EncryptionData;
-import com.iheartradio.m3u8.data.EncryptionMethod;
-import com.iheartradio.m3u8.data.MapInfo;
-import org.junit.Test;
+// import java.util.Arrays;
 
-import java.util.Arrays;
+namespace M3U8Parser
+{
+    public class MediaPlaylistLineParserTest : LineParserStateTestCase
+    {
+        [Fact]
+        public void testEXT_X_TARGETDURATION() // throws Exception 
+        {
+            IExtTagParser handler = MediaPlaylistLineParser.EXT_X_TARGETDURATION;
+            String tag = Constants.EXT_X_TARGETDURATION_TAG;
+            String line = "#" + tag + ":60";
 
-public class MediaPlaylistLineParserTest extends LineParserStateTestCase {
-    @Test
-    public void testEXT_X_TARGETDURATION() throws Exception {
-        final IExtTagParser handler = MediaPlaylistLineParser.EXT_X_TARGETDURATION;
-        final String tag = Constants.EXT_X_TARGETDURATION_TAG;
-        final String line = "#" + tag + ":60";
+            Assert.Equal(tag, handler.getTag());
 
-        assertEquals(tag, handler.getTag());
+            handler.parse(line, mParseState);
+            Assert.Equal(60, (int)mParseState.getMedia().targetDuration);
 
-        handler.parse(line, mParseState);
-        assertEquals(60, (int) mParseState.getMedia().targetDuration);
+            assertParseThrows(handler, line, ParseExceptionType.MULTIPLE_EXT_TAG_INSTANCES);
+        }
 
-        assertParseThrows(handler, line, ParseExceptionType.MULTIPLE_EXT_TAG_INSTANCES);
-    }
+        [Fact]
+        public void testEXTINF() // throws Exception 
+        {
+            IExtTagParser handler = MediaPlaylistLineParser.EXTINF;
+            String tag = Constants.EXTINF_TAG;
+            String line = "#" + tag + ":-1,TOP 100";
 
-    @Test
-    public void testEXTINF() throws Exception {
-        final IExtTagParser handler = MediaPlaylistLineParser.EXTINF;
-        final String tag = Constants.EXTINF_TAG;
-        final String line = "#" + tag + ":-1,TOP 100";
+            Assert.Equal(tag, handler.getTag());
 
-        assertEquals(tag, handler.getTag());
+            handler.parse(line, mParseState);
+            Assert.Equal(-1f, mParseState.getMedia().trackInfo.duration);
+            Assert.Equal("TOP 100", mParseState.getMedia().trackInfo.title);
+        }
 
-        handler.parse(line, mParseState);
-        assertEquals(-1f, mParseState.getMedia().trackInfo.duration);
-        assertEquals("TOP 100", mParseState.getMedia().trackInfo.title);
-    }
+        [Fact]
+        public void testEXT_X_KEY() // throws Exception 
+        {
+            IExtTagParser handler = MediaPlaylistLineParser.EXT_X_KEY;
+            String tag = Constants.EXT_X_KEY_TAG;
+            String uri = "http://foo.bar.com/";
+            String format = "format";
 
-    @Test
-    public void testEXT_X_KEY() throws Exception {
-        final IExtTagParser handler = MediaPlaylistLineParser.EXT_X_KEY;
-        final String tag = Constants.EXT_X_KEY_TAG;
-        final String uri = "http://foo.bar.com/";
-        final String format = "format";
+            String line = "#" + tag +
+                    ":METHOD=AES-128" +
+                    ",URI=\"" + uri + "\"" +
+                    ",IV=0x1234abcd5678EF90aabbccddeeff0011" +
+                    ",KEYFORMAT=\"" + format + "\"" +
+                    ",KEYFORMATVERSIONS=\"1/2/3\"";
 
-        final String line = "#" + tag +
-                ":METHOD=AES-128" +
-                ",URI=\"" + uri + "\"" +
-                ",IV=0x1234abcd5678EF90aabbccddeeff0011" +
-                ",KEYFORMAT=\"" + format + "\"" +
-                ",KEYFORMATVERSIONS=\"1/2/3\"";
+            Assert.Equal(tag, handler.getTag());
 
-        assertEquals(tag, handler.getTag());
+            handler.parse(line, mParseState);
+            EncryptionData encryptionData = mParseState.getMedia().encryptionData;
+            Assert.Equal(EncryptionMethod.AES, encryptionData.getMethod());
+            Assert.Equal(uri, encryptionData.getUri());
 
-        handler.parse(line, mParseState);
-        EncryptionData encryptionData = mParseState.getMedia().encryptionData;
-        assertEquals(EncryptionMethod.AES, encryptionData.getMethod());
-        assertEquals(uri, encryptionData.getUri());
+            Assert.Equal(
+                    new List<byte>(){(byte) 0x12, (byte) 0x34, (byte) 0xAB, (byte) 0xCD,
+                                 (byte) 0x56, (byte) 0x78, (byte) 0xEF, (byte) 0x90,
+                                 (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD,
+                                 (byte) 0xEE, (byte) 0xFF, (byte) 0x00, (byte) 0x11},
+                    encryptionData.getInitializationVector());
 
-        assertEquals(
-                Arrays.asList((byte) 0x12, (byte) 0x34, (byte) 0xAB, (byte) 0xCD,
-                              (byte) 0x56, (byte) 0x78, (byte) 0xEF, (byte) 0x90,
-                              (byte) 0xAA, (byte) 0xBB, (byte) 0xCC, (byte) 0xDD,
-                              (byte) 0xEE, (byte) 0xFF, (byte) 0x00, (byte) 0x11),
-                encryptionData.getInitializationVector());
+            Assert.Equal(format, encryptionData.getKeyFormat());
+            Assert.Equal(new List<int>() { 1, 2, 3 }, encryptionData.getKeyFormatVersions());
+        }
 
-        assertEquals(format, encryptionData.getKeyFormat());
-        assertEquals(Arrays.asList(1, 2, 3), encryptionData.getKeyFormatVersions());
-    }
+        [Fact]
+        public void testEXT_X_MAP() // throws Exception 
+        {
+            IExtTagParser handler = MediaPlaylistLineParser.EXT_X_MAP;
+            String tag = Constants.EXT_X_MAP;
+            String uri = "init.mp4";
+            long subRangeLength = 350;
+            long offset = 76L;
 
-    @Test
-    public void testEXT_X_MAP() throws Exception {
-        final IExtTagParser handler = MediaPlaylistLineParser.EXT_X_MAP;
-        final String tag = Constants.EXT_X_MAP;
-        final String uri = "init.mp4";
-        final long subRangeLength = 350;
-        final Long offset = 76L;
+            String line = "#" + tag +
+                    ":URI=\"" + uri + "\"" +
+                    ",BYTERANGE=\"" + subRangeLength + "@" + offset + "\"";
 
-        final String line = "#" + tag +
-                ":URI=\"" + uri + "\"" +
-                ",BYTERANGE=\"" + subRangeLength + "@" + offset + "\"";
+            Assert.Equal(tag, handler.getTag());
+            handler.parse(line, mParseState);
+            MapInfo mapInfo = mParseState.getMedia().mapInfo;
+            Assert.Equal(uri, mapInfo.getUri());
+            Assert.NotNull(mapInfo.getByteRange());
+            Assert.Equal(subRangeLength, mapInfo.getByteRange().getSubRangeLength());
+            Assert.Equal(offset, mapInfo.getByteRange().getOffset());
+        }
 
-        assertEquals(tag, handler.getTag());
-        handler.parse(line, mParseState);
-        MapInfo mapInfo = mParseState.getMedia().mapInfo;
-        assertEquals(uri, mapInfo.getUri());
-        assertNotNull(mapInfo.getByteRange());
-        assertEquals(subRangeLength, mapInfo.getByteRange().getSubRangeLength());
-        assertEquals(offset, mapInfo.getByteRange().getOffset());
-    }
+        [Fact]
+        public void testEXT_X_BYTERANGE() // throws Exception 
+        {
+            IExtTagParser handler = MediaPlaylistLineParser.EXT_X_BYTERANGE;
+            String tag = Constants.EXT_X_BYTERANGE_TAG;
+            long subRangeLength = 350;
+            long offset = 70L;
 
-    @Test
-    public void testEXT_X_BYTERANGE() throws Exception {
-        final IExtTagParser handler = MediaPlaylistLineParser.EXT_X_BYTERANGE;
-        final String tag = Constants.EXT_X_BYTERANGE_TAG;
-        final long subRangeLength = 350;
-        final Long offset = 70L;
+            String line = "#" + tag + ":" + subRangeLength + "@" + offset;
 
-        final String line = "#" + tag + ":" + subRangeLength + "@" + offset;
-
-        assertEquals(tag, handler.getTag());
-        handler.parse(line, mParseState);
-        ByteRange byteRange = mParseState.getMedia().byteRange;
-        assertEquals(subRangeLength, byteRange.getSubRangeLength());
-        assertEquals(offset, byteRange.getOffset());
+            Assert.Equal(tag, handler.getTag());
+            handler.parse(line, mParseState);
+            ByteRange byteRange = mParseState.getMedia().byteRange;
+            Assert.Equal(subRangeLength, byteRange.getSubRangeLength());
+            Assert.Equal(offset, byteRange.getOffset());
+        }
     }
 }

@@ -1,6 +1,11 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
 
-public enum Format {
-    M3U,
-    EXT_M3U;
+namespace M3U8Parser
+{
+    public enum Format
+    {
+        M3U,
+        EXT_M3U
+    }
 }

@@ -1,65 +1,87 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
+namespace M3U8Parser
+{
+    /**
+     * Represents a syntactic error in the input that prevented further parsing.
+     */
+    public class ParseException : Exception
+    {
+        private const long serialVersionUID = -2217152001086567983L;
 
-/**
- * Represents a syntactic error in the input that prevented further parsing.
- */
-public class ParseException extends Exception {
-    private static final long serialVersionUID = -2217152001086567983L;
+        private readonly String mMessageSuffix;
 
-    private final String mMessageSuffix;
+        public readonly ParseExceptionType type;
 
-    public final ParseExceptionType type;
+        private String mInput;
 
-    private String mInput;
-
-    static ParseException create(ParseExceptionType type, String tag) {
-        return create(type, tag, null);
-    }
-
-    static ParseException create(ParseExceptionType type, String tag, String context) {
-        final StringBuilder builder = new StringBuilder();
-
-        if (tag != null) {
-            builder.append(tag);
+        public static ParseException create(ParseExceptionType type, String tag)
+        {
+            return create(type, tag, null);
         }
 
-        if (context != null) {
-            if (builder.length() > 0) {
-                builder.append(" - ");
+        public static ParseException create(ParseExceptionType type, String tag, String context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            if (tag != null)
+            {
+                builder.Append(tag);
             }
 
-            builder.append(context);
+            if (context != null)
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append(" - ");
+                }
+
+                builder.Append(context);
+            }
+
+            if (builder.Length > 0)
+            {
+                return new ParseException(type, builder.ToString());
+            }
+            else
+            {
+                return new ParseException(type);
+            }
         }
 
-        if (builder.length() > 0) {
-            return new ParseException(type, builder.toString());
-        } else {
-            return new ParseException(type);
+        public ParseException(ParseExceptionType type) : this(type, null) { }
+
+        public ParseException(ParseExceptionType type, String messageSuffix)
+        {
+            this.type = type;
+            mMessageSuffix = messageSuffix;
         }
-    }
 
-    ParseException(ParseExceptionType type) {
-        this(type, null);
-    }
+        public String getInput()
+        {
+            return mInput;
+        }
 
-    ParseException(ParseExceptionType type, String messageSuffix) {
-        this.type = type;
-        mMessageSuffix = messageSuffix;
-    }
+        public void setInput(String input)
+        {
+            mInput = input;
+        }
 
-    public String getInput() {
-        return mInput;
-    }
+        public String getMessageSuffix()
+        {
+            return mMessageSuffix;
+        }
 
-    void setInput(String input) {
-        mInput = input;
-    }
-
-    public String getMessage() {
-        if (mMessageSuffix == null) {
-            return type.message;
-        } else {
-            return type.message + ": " + mMessageSuffix;
+        public String getMessage()
+        {
+            if (mMessageSuffix == null)
+            {
+                return type.message;
+            }
+            else
+            {
+                return type.message + ": " + mMessageSuffix;
+            }
         }
     }
 }

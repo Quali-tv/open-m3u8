@@ -1,65 +1,82 @@
-package com.iheartradio.m3u8;
+using System;
+using System.IO;
+using System.Text;
+//import java.io.IOException;
+//import java.io.InputStream;
+//
+//import com.iheartradio.m3u8.data.MediaPlaylist;
+//import com.iheartradio.m3u8.data.Playlist;
 
-import java.io.IOException;
-import java.io.InputStream;
+namespace M3U8Parser
+{
+    public class M3uParser : BaseM3uParser
+    {
+        public M3uParser(Stream inputStream, Encoding encoding) : base(inputStream, encoding) { }
 
-import com.iheartradio.m3u8.data.MediaPlaylist;
-import com.iheartradio.m3u8.data.Playlist;
+        public override Playlist parse() //throws IOException, ParseException, PlaylistException 
+        {
+            validateAvailable();
 
-class M3uParser extends BaseM3uParser {
-    M3uParser(InputStream inputStream, Encoding encoding) {
-        super(inputStream, encoding);
-    }
+            ParseState state = new ParseState(mEncoding);
+            TrackLineParser trackLineParser = new TrackLineParser();
 
-    @Override
-    public Playlist parse() throws IOException, ParseException, PlaylistException {
-        validateAvailable();
+            try
+            {
+                state.setMedia();
 
-        final ParseState state = new ParseState(mEncoding);
-        final TrackLineParser trackLineParser = new TrackLineParser();
+                while (mScanner.hasNext())
+                {
+                    String line = mScanner.next();
+                    validateLine(line);
 
-        try {
-            state.setMedia();
+                    if (line.Length == 0 || isComment(line))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        trackLineParser.parse(line, state);
+                    }
+                }
 
-            while (mScanner.hasNext()) {
-                final String line = mScanner.next();
-                validateLine(line);
+                Playlist playlist = new Playlist.Builder()
+                        .withMediaPlaylist(new MediaPlaylist.Builder()
+                                .withTracks(state.getMedia().tracks)
+                                .build())
+                        .build();
 
-                if (line.length() == 0 || isComment(line)) {
-                    continue;
-                } else {
-                    trackLineParser.parse(line, state);
+                PlaylistValidation validation = PlaylistValidation.from(playlist);
+
+                if (validation.isValid())
+                {
+                    return playlist;
+                }
+                else
+                {
+                    throw new PlaylistException(mScanner.getInput(), validation.getErrors());
                 }
             }
-
-            Playlist playlist = new Playlist.Builder()
-                    .withMediaPlaylist(new MediaPlaylist.Builder()
-                            .withTracks(state.getMedia().tracks)
-                            .build())
-                    .build();
-
-            PlaylistValidation validation = PlaylistValidation.from(playlist);
-
-            if (validation.isValid()) {
-                return playlist;
-            } else {
-                throw new PlaylistException(mScanner.getInput(), validation.getErrors());
-            }
-        } catch (ParseException exception) {
-            exception.setInput(mScanner.getInput());
-            throw exception;
-        }
-    }
-
-    private void validateLine(final String line) throws ParseException {
-        if (!isComment(line)) {
-            if (line.length() != line.trim().length()) {
-                throw ParseException.create(ParseExceptionType.WHITESPACE_IN_TRACK, line, "" + line.length());
+            catch (ParseException exception)
+            {
+                exception.setInput(mScanner.getInput());
+                throw exception;
             }
         }
-    }
 
-    private boolean isComment(final String line) {
-        return line.indexOf(Constants.COMMENT_PREFIX) == 0;
+        private void validateLine(String line) // throws ParseException 
+        {
+            if (!isComment(line))
+            {
+                if (line.Length != line.Trim().Length)
+                {
+                    throw ParseException.create(ParseExceptionType.WHITESPACE_IN_TRACK, line, "" + line.Length);
+                }
+            }
+        }
+
+        private bool isComment(String line)
+        {
+            return line.IndexOf(Constants.COMMENT_PREFIX) == 0;
+        }
     }
 }

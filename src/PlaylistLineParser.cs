@@ -1,18 +1,22 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
+// import com.iheartradio.m3u8.data.PlaylistData;
 
-import com.iheartradio.m3u8.data.PlaylistData;
+namespace M3U8Parser
+{
+    class PlaylistLineParser : LineParser
+    {
+        public void parse(String line, ParseState state)
+        {
+            PlaylistData.Builder builder = new PlaylistData.Builder();
+            MasterParseState masterState = state.getMaster();
 
-class PlaylistLineParser implements LineParser {
-    @Override
-    public void parse(String line, ParseState state) {
-        final PlaylistData.Builder builder = new PlaylistData.Builder();
-        final MasterParseState masterState = state.getMaster();
+            masterState.playlists.Add(builder
+                    .withUri(line)
+                    .withStreamInfo(masterState.streamInfo)
+                    .build());
 
-        masterState.playlists.add(builder
-                .withUri(line)
-                .withStreamInfo(masterState.streamInfo)
-                .build());
-
-        masterState.streamInfo = null;
+            masterState.streamInfo = null;
+        }
     }
 }

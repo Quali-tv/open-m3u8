@@ -1,5 +1,10 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
 
-interface IParseState<T> {
-    T buildPlaylist() throws ParseException;
+namespace M3U8Parser
+{
+    public interface IParseState<T>
+    {
+        T buildPlaylist(); // throws ParseException
+    }
 }

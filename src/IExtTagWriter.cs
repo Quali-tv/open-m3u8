@@ -1,5 +1,10 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
 
-interface IExtTagWriter extends SectionWriter {
-    String getTag();
+namespace M3U8Parser
+{
+    public interface IExtTagWriter : SectionWriter
+    {
+        String getTag();
+    }
 }

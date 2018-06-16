@@ -1,121 +1,127 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.util.regex.Pattern;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
+namespace M3U8Parser
+{
+    public static class Constants
+    {
+        public const String MIME_TYPE = "application/vnd.apple.mpegurl";
+        public const String MIME_TYPE_COMPATIBILITY = "audio/mpegurl";
 
-final class Constants {
-    public static final String MIME_TYPE = "application/vnd.apple.mpegurl";
-    public static final String MIME_TYPE_COMPATIBILITY = "audio/mpegurl";
-    
-    public static final String ATTRIBUTE_SEPARATOR = "=";
-    public static final char COMMA_CHAR = ',';
-    public static final String COMMA = Character.toString(COMMA_CHAR);
-    public static final String ATTRIBUTE_LIST_SEPARATOR = COMMA;
-    public static final String LIST_SEPARATOR = "/";
-    public static final String COMMENT_PREFIX = "#";
-    public static final String EXT_TAG_PREFIX = "#EXT";
-    public static final String EXT_TAG_END = ":";
-    public static final String WRITE_NEW_LINE = "\n";
-    public static final String PARSE_NEW_LINE = "\\r?\\n";
+        public const String ATTRIBUTE_SEPARATOR = "=";
+        public const char COMMA_CHAR = ',';
+        public static readonly String COMMA = COMMA_CHAR.ToString();
+        public static readonly String ATTRIBUTE_LIST_SEPARATOR = COMMA;
+        public const String LIST_SEPARATOR = "/";
+        public const String COMMENT_PREFIX = "#";
+        public const String EXT_TAG_PREFIX = "#EXT";
+        public const String EXT_TAG_END = ":";
+        public const String WRITE_NEW_LINE = "\n";
+        public const String PARSE_NEW_LINE = "\\r?\\n";
 
-    // extension tags
+        // extension tags
 
-    public static final String EXTM3U_TAG = "EXTM3U";
-    public static final String EXT_X_VERSION_TAG = "EXT-X-VERSION";
+        public const String EXTM3U_TAG = "EXTM3U";
+        public const String EXT_X_VERSION_TAG = "EXT-X-VERSION";
 
-    // master playlist tags
+        // master playlist tags
 
-    public static  final String URI = "URI";
-    public static final String BYTERANGE = "BYTERANGE";
+        public const String URI = "URI";
+        public const String BYTERANGE = "BYTERANGE";
 
-    public static final String EXT_X_MEDIA_TAG = "EXT-X-MEDIA";
-    public static  final String TYPE = "TYPE";
-    public static  final String GROUP_ID = "GROUP-ID";
-    public static  final String LANGUAGE = "LANGUAGE";
-    public static  final String ASSOCIATED_LANGUAGE = "ASSOC-LANGUAGE";
-    public static  final String NAME = "NAME";
-    public static  final String DEFAULT = "DEFAULT";
-    public static  final String AUTO_SELECT = "AUTOSELECT";
-    public static  final String FORCED = "FORCED";
-    public static  final String IN_STREAM_ID = "INSTREAM-ID";
-    public static  final String CHARACTERISTICS = "CHARACTERISTICS";
-    public static  final String CHANNELS = "CHANNELS";
-    
-    public static final String EXT_X_STREAM_INF_TAG = "EXT-X-STREAM-INF";
-    public static final String EXT_X_I_FRAME_STREAM_INF_TAG = "EXT-X-I-FRAME-STREAM-INF";
-    public static final String BANDWIDTH = "BANDWIDTH";
-    public static final String AVERAGE_BANDWIDTH = "AVERAGE-BANDWIDTH";
-    public static final String CODECS = "CODECS";
-    public static final String RESOLUTION = "RESOLUTION";
-    public static final String FRAME_RATE = "FRAME-RATE";
-    public static final String VIDEO = "VIDEO";
-    public static final String PROGRAM_ID = "PROGRAM-ID";
+        public const String EXT_X_MEDIA_TAG = "EXT-X-MEDIA";
+        public const String TYPE = "TYPE";
+        public const String GROUP_ID = "GROUP-ID";
+        public const String LANGUAGE = "LANGUAGE";
+        public const String ASSOCIATED_LANGUAGE = "ASSOC-LANGUAGE";
+        public const String NAME = "NAME";
+        public const String DEFAULT = "DEFAULT";
+        public const String AUTO_SELECT = "AUTOSELECT";
+        public const String FORCED = "FORCED";
+        public const String IN_STREAM_ID = "INSTREAM-ID";
+        public const String CHARACTERISTICS = "CHARACTERISTICS";
+        public const String CHANNELS = "CHANNELS";
 
-    public static final String AUDIO = "AUDIO";
-    public static final String SUBTITLES = "SUBTITLES";
-    public static final String CLOSED_CAPTIONS = "CLOSED-CAPTIONS";
-    
+        public const String EXT_X_STREAM_INF_TAG = "EXT-X-STREAM-INF";
+        public const String EXT_X_I_FRAME_STREAM_INF_TAG = "EXT-X-I-FRAME-STREAM-INF";
+        public const String BANDWIDTH = "BANDWIDTH";
+        public const String AVERAGE_BANDWIDTH = "AVERAGE-BANDWIDTH";
+        public const String CODECS = "CODECS";
+        public const String RESOLUTION = "RESOLUTION";
+        public const String FRAME_RATE = "FRAME-RATE";
+        public const String VIDEO = "VIDEO";
+        public const String PROGRAM_ID = "PROGRAM-ID";
 
-    // media playlist tags
-    
-    public static final String EXT_X_PLAYLIST_TYPE_TAG = "EXT-X-PLAYLIST-TYPE";
-    public static final String EXT_X_PROGRAM_DATE_TIME_TAG = "EXT-X-PROGRAM-DATE-TIME";
-    public static final String EXT_X_TARGETDURATION_TAG = "EXT-X-TARGETDURATION";
-    public static final String EXT_X_START_TAG = "EXT-X-START";
-    public static final String TIME_OFFSET = "TIME-OFFSET";
-    public static final String PRECISE = "PRECISE";
-    
-    public static final String EXT_X_MEDIA_SEQUENCE_TAG = "EXT-X-MEDIA-SEQUENCE";
-    public static final String EXT_X_ALLOW_CACHE_TAG = "EXT-X-ALLOW-CACHE";
-    public static final String EXT_X_ENDLIST_TAG = "EXT-X-ENDLIST";
-    public static final String EXT_X_I_FRAMES_ONLY_TAG = "EXT-X-I-FRAMES-ONLY";
-    public static final String EXT_X_DISCONTINUITY_TAG = "EXT-X-DISCONTINUITY";
+        public const String AUDIO = "AUDIO";
+        public const String SUBTITLES = "SUBTITLES";
+        public const String CLOSED_CAPTIONS = "CLOSED-CAPTIONS";
 
-    // media segment tags
 
-    public static final String EXTINF_TAG = "EXTINF";
-    public static final String EXT_X_KEY_TAG = "EXT-X-KEY";
-    public static final String METHOD = "METHOD";
-    public static final String IV = "IV";
-    public static final String KEY_FORMAT = "KEYFORMAT";
-    public static final String KEY_FORMAT_VERSIONS = "KEYFORMATVERSIONS";
-    public static final String EXT_X_MAP = "EXT-X-MAP";
-    public static final String EXT_X_BYTERANGE_TAG = "EXT-X-BYTERANGE";
+        // media playlist tags
 
-    // regular expressions
-    public static final String YES = "YES";
-    public static final String NO = "NO";
-    private static final String INTEGER_REGEX = "\\d+";
-    private static final String SIGNED_FLOAT_REGEX = "-?\\d*\\.?\\d*";
-    private static final String TIMESTAMP_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?(?:Z?|\\+\\d{2}:\\d{2})?";
-    private static final String BYTERANGE_REGEX = "(" + INTEGER_REGEX + ")(?:@(" + INTEGER_REGEX + "))?";
+        public const String EXT_X_PLAYLIST_TYPE_TAG = "EXT-X-PLAYLIST-TYPE";
+        public const String EXT_X_PROGRAM_DATE_TIME_TAG = "EXT-X-PROGRAM-DATE-TIME";
+        public const String EXT_X_TARGETDURATION_TAG = "EXT-X-TARGETDURATION";
+        public const String EXT_X_START_TAG = "EXT-X-START";
+        public const String TIME_OFFSET = "TIME-OFFSET";
+        public const String PRECISE = "PRECISE";
 
-    public static final Pattern HEXADECIMAL_PATTERN = Pattern.compile("^0[x|X]([0-9A-F]+)$");
-    public static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(" + INTEGER_REGEX + ")x(" + INTEGER_REGEX + ")$");
+        public const String EXT_X_MEDIA_SEQUENCE_TAG = "EXT-X-MEDIA-SEQUENCE";
+        public const String EXT_X_ALLOW_CACHE_TAG = "EXT-X-ALLOW-CACHE";
+        public const String EXT_X_ENDLIST_TAG = "EXT-X-ENDLIST";
+        public const String EXT_X_I_FRAMES_ONLY_TAG = "EXT-X-I-FRAMES-ONLY";
+        public const String EXT_X_DISCONTINUITY_TAG = "EXT-X-DISCONTINUITY";
 
-    public static final Pattern EXT_X_VERSION_PATTERN = Pattern.compile("^#" + EXT_X_VERSION_TAG + EXT_TAG_END + "(" + INTEGER_REGEX + ")$");
-    public static final Pattern EXT_X_TARGETDURATION_PATTERN = Pattern.compile("^#" + EXT_X_TARGETDURATION_TAG + EXT_TAG_END + "(" + INTEGER_REGEX + ")$");
-    public static final Pattern EXT_X_MEDIA_SEQUENCE_PATTERN = Pattern.compile("^#" + EXT_X_MEDIA_SEQUENCE_TAG + EXT_TAG_END + "(" + INTEGER_REGEX + ")$");
-    public static final Pattern EXT_X_PLAYLIST_TYPE_PATTERN  = Pattern.compile("^#" + EXT_X_PLAYLIST_TYPE_TAG + EXT_TAG_END + "(EVENT|VOD)$");
-    public static final Pattern EXT_X_PROGRAM_DATE_TIME_PATTERN  = Pattern.compile("^#" + EXT_X_PROGRAM_DATE_TIME_TAG + EXT_TAG_END + "(" + TIMESTAMP_REGEX + ")$");
-    public static final Pattern EXT_X_MEDIA_IN_STREAM_ID_PATTERN = Pattern.compile("^CC[1-4]|SERVICE(?:[1-9]|[1-5]\\d|6[0-3])$");
-    public static final Pattern EXTINF_PATTERN = Pattern.compile("^#" + EXTINF_TAG + EXT_TAG_END + "(" + SIGNED_FLOAT_REGEX + ")(?:,(.+)?)?$");
-    public static final Pattern EXT_X_ENDLIST_PATTERN = Pattern.compile("^#" + EXT_X_ENDLIST_TAG + "$");
-    public static final Pattern EXT_X_I_FRAMES_ONLY_PATTERN = Pattern.compile("^#" + EXT_X_I_FRAMES_ONLY_TAG);
-    public static final Pattern EXT_X_DISCONTINUITY_PATTERN = Pattern.compile("^#" + EXT_X_DISCONTINUITY_TAG + "$");
-    public static final Pattern EXT_X_BYTERANGE_PATTERN = Pattern.compile("^#" + EXT_X_BYTERANGE_TAG + EXT_TAG_END + BYTERANGE_REGEX + "$");
-    public static final Pattern EXT_X_BYTERANGE_VALUE_PATTERN = Pattern.compile("^" + BYTERANGE_REGEX + "$");
+        // media segment tags
 
-    // other
+        public const String EXTINF_TAG = "EXTINF";
+        public const String EXT_X_KEY_TAG = "EXT-X-KEY";
+        public const String METHOD = "METHOD";
+        public const String IV = "IV";
+        public const String KEY_FORMAT = "KEYFORMAT";
+        public const String KEY_FORMAT_VERSIONS = "KEYFORMATVERSIONS";
+        public const String EXT_X_MAP = "EXT-X-MAP";
+        public const String EXT_X_BYTERANGE_TAG = "EXT-X-BYTERANGE";
 
-    public static final int[] UTF_8_BOM_BYTES = {0xEF, 0xBB, 0xBF};
-    public static final char UNICODE_BOM = '\uFEFF';
-    public static final int MAX_COMPATIBILITY_VERSION = 5;
-    public static final int IV_SIZE = 16;
-    //Against the spec but used by Adobe
-    public static final int IV_SIZE_ALTERNATIVE = 32;
-    public static final String DEFAULT_KEY_FORMAT = "identity";
-    public static final String NO_CLOSED_CAPTIONS = "NONE";
-    public static final List<Integer> DEFAULT_KEY_FORMAT_VERSIONS = Arrays.asList(1);
+        // regular expressions
+        public const String YES = "YES";
+        public const String NO = "NO";
+        private const String INTEGER_REGEX = "\\d+";
+        private const String SIGNED_FLOAT_REGEX = "-?\\d*\\.?\\d*";
+        private const String TIMESTAMP_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?(?:Z?|\\+\\d{2}:\\d{2})?";
+        private const String BYTERANGE_REGEX = "(" + INTEGER_REGEX + ")(?:@(" + INTEGER_REGEX + "))?";
+
+        public static readonly Regex HEXADECIMAL_PATTERN = new Regex("^0[x|X]([0-9A-F]+)$");
+        public static readonly Regex RESOLUTION_PATTERN = new Regex("^(" + INTEGER_REGEX + ")x(" + INTEGER_REGEX + ")$");
+
+        public static readonly Regex EXT_X_VERSION_PATTERN = new Regex("^#" + EXT_X_VERSION_TAG + EXT_TAG_END + "(" + INTEGER_REGEX + ")$");
+        public static readonly Regex EXT_X_TARGETDURATION_PATTERN = new Regex("^#" + EXT_X_TARGETDURATION_TAG + EXT_TAG_END + "(" + INTEGER_REGEX + ")$");
+        public static readonly Regex EXT_X_MEDIA_SEQUENCE_PATTERN = new Regex("^#" + EXT_X_MEDIA_SEQUENCE_TAG + EXT_TAG_END + "(" + INTEGER_REGEX + ")$");
+        public static readonly Regex EXT_X_PLAYLIST_TYPE_PATTERN = new Regex("^#" + EXT_X_PLAYLIST_TYPE_TAG + EXT_TAG_END + "(EVENT|VOD)$");
+        public static readonly Regex EXT_X_PROGRAM_DATE_TIME_PATTERN = new Regex("^#" + EXT_X_PROGRAM_DATE_TIME_TAG + EXT_TAG_END + "(" + TIMESTAMP_REGEX + ")$");
+        public static readonly Regex EXT_X_MEDIA_IN_STREAM_ID_PATTERN = new Regex("^CC[1-4]|SERVICE(?:[1-9]|[1-5]\\d|6[0-3])$");
+        public static readonly Regex EXTINF_PATTERN = new Regex("^#" + EXTINF_TAG + EXT_TAG_END + "(" + SIGNED_FLOAT_REGEX + ")(?:,(.+)?)?$");
+        public static readonly Regex EXT_X_ENDLIST_PATTERN = new Regex("^#" + EXT_X_ENDLIST_TAG + "$");
+        public static readonly Regex EXT_X_I_FRAMES_ONLY_PATTERN = new Regex("^#" + EXT_X_I_FRAMES_ONLY_TAG);
+        public static readonly Regex EXT_X_DISCONTINUITY_PATTERN = new Regex("^#" + EXT_X_DISCONTINUITY_TAG + "$");
+        public static readonly Regex EXT_X_BYTERANGE_PATTERN = new Regex("^#" + EXT_X_BYTERANGE_TAG + EXT_TAG_END + BYTERANGE_REGEX + "$");
+        public static readonly Regex EXT_X_BYTERANGE_VALUE_PATTERN = new Regex("^" + BYTERANGE_REGEX + "$");
+
+        // other
+
+        public static readonly byte[] UTF_8_BOM_BYTES = { 0xEF, 0xBB, 0xBF };
+        public const char UNICODE_BOM = '\uFEFF';
+        public const int MAX_COMPATIBILITY_VERSION = 5;
+        public const int IV_SIZE = 16;
+        // Against the spec but used by Adobe
+        public const int IV_SIZE_ALTERNATIVE = 32;
+        public const String DEFAULT_KEY_FORMAT = "identity";
+        public const String NO_CLOSED_CAPTIONS = "NONE";
+        public static readonly List<int> DEFAULT_KEY_FORMAT_VERSIONS = new List<int> { 1 };
+    }
 }

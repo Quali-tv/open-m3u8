@@ -1,255 +1,363 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Globalization;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+//import com.iheartradio.m3u8.data.ByteRange;
+//import com.iheartradio.m3u8.data.Resolution;
+//
+//import java.io.UnsupportedEncodingException;
+//import java.net.URLDecoder;
+//import java.util.*;
+//import java.util.regex.Matcher;
+//import java.util.regex.Pattern;
 
-import com.iheartradio.m3u8.data.ByteRange;
-import com.iheartradio.m3u8.data.Resolution;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-final class ParseUtil {
-    public static int parseInt(String string, String tag) throws ParseException {
-        try {
-            return Integer.parseInt(string);
-        } catch (NumberFormatException exception) {
-            throw ParseException.create(ParseExceptionType.NOT_JAVA_INTEGER, tag, string);
-        }
-    }
-
-    public static <T extends Enum<T>> T parseEnum(String string, Class<T> enumType, String tag) throws ParseException {
-        try {
-            return Enum.valueOf(enumType, string);
-        } catch (IllegalArgumentException exception) {
-            throw ParseException.create(ParseExceptionType.NOT_JAVA_ENUM, tag, string);
-        }
-    }
-
-    public static String parseDateTime(String string, String tag) throws ParseException {
-        Matcher matcher = Constants.EXT_X_PROGRAM_DATE_TIME_PATTERN.matcher(string);
-
-        if (!matcher.matches()) {
-            throw new ParseException(ParseExceptionType.INVALID_DATE_TIME_FORMAT, tag);
+namespace M3U8Parser
+{
+    public sealed class ParseUtil
+    {
+        public static int parseInt(String str, String tag = null) //throws ParseException 
+        {
+            try
+            {
+                return Int32.Parse(str);
+            }
+            catch (FormatException exception)
+            {
+                throw ParseException.create(ParseExceptionType.NOT_JAVA_INTEGER, tag, str);
+            }
         }
 
-        return matcher.group(1);
-    }
+        // THIS WAS ONLY USED IN ONE PLACE. WORKED AROUND IT INSTEAD...
+        //public static <T extends Enum<T>> T parseEnum(String str, Class<T> enumType, String tag = null) // throws ParseException 
+        //{
+        //    try
+        //    {
+        //        return Enum.valueOf(enumType, str);
+        //    }
+        //    catch (IllegalArgumentException exception)
+        //    {
+        //        throw ParseException.create(ParseExceptionType.NOT_JAVA_ENUM, tag, str);
+        //    }
+        //}
 
-    public static float parseFloat(String string, String tag) throws ParseException {
-        try {
-            return Float.parseFloat(string);
-        } catch (NumberFormatException exception) {
-            throw ParseException.create(ParseExceptionType.NOT_JAVA_FLOAT, tag, string);
+        public static String parseDateTime(String str, String tag = null) // throws ParseException 
+        {
+            Match match = Constants.EXT_X_PROGRAM_DATE_TIME_PATTERN.Match(str);
+
+            if (!match.Success)
+            {
+                throw new ParseException(ParseExceptionType.INVALID_DATE_TIME_FORMAT, tag);
+            }
+
+            return match.Groups[1].Value;
         }
-    }
 
-    public static List<Byte> parseHexadecimal(String hexString, String tag) throws ParseException {
-        final List<Byte> bytes = new ArrayList<Byte>();
-        final Matcher matcher = Constants.HEXADECIMAL_PATTERN.matcher(hexString.toUpperCase(Locale.US));
+        public static float parseFloat(String str, String tag = null) // throws ParseException 
+        {
+            try
+            {
+                return float.Parse(str);
+            }
+            catch (FormatException exception)
+            {
+                throw ParseException.create(ParseExceptionType.NOT_JAVA_FLOAT, tag, str);
+            }
+        }
 
-        if (matcher.matches()) {
-            String valueString = matcher.group(1);
-            if (valueString.length() % 2 != 0) {
+        public static List<Byte> parseHexadecimal(String hexString, String tag = null) // throws ParseException 
+        {
+            List<Byte> bytes = new List<Byte>();
+            Match match = Constants.HEXADECIMAL_PATTERN.Match(hexString.ToUpper(CultureInfo.CurrentCulture));
+
+            if (match.Success)
+            {
+                String valueString = match.Groups[1].Value;
+                if (valueString.Length % 2 != 0)
+                {
+                    throw ParseException.create(ParseExceptionType.INVALID_HEXADECIMAL_STRING, tag, hexString);
+                }
+
+                for (int i = 0; i < valueString.Length; i += 2)
+                {
+                    bytes.Add((byte)(Convert.ToInt16(valueString.Substring(i, 2), 16) & 0xFF));
+                }
+
+                return bytes;
+            }
+            else
+            {
                 throw ParseException.create(ParseExceptionType.INVALID_HEXADECIMAL_STRING, tag, hexString);
             }
+        }
 
-            for (int i = 0; i < valueString.length(); i += 2) {
-                bytes.add((byte)(Short.parseShort(valueString.substring(i, i+2), 16) & 0xFF));
+        private static byte hexCharToByte(char hex)
+        {
+            if (hex >= 'A')
+            {
+                return (byte)((hex & 0xF) + 9);
+            }
+            else
+            {
+                return (byte)(hex & 0xF);
+            }
+        }
+
+        public static bool parseYesNo(Attribute attribute, String tag = null) // throws ParseException 
+        {
+            if (attribute.value.Equals(Constants.YES))
+            {
+                return true;
+            }
+            else if (attribute.value.Equals(Constants.NO))
+            {
+                return false;
+            }
+            else
+            {
+                throw ParseException.create(ParseExceptionType.NOT_YES_OR_NO, tag, attribute.ToString());
+            }
+        }
+
+        public static Resolution parseResolution(String resolutionString, String tag = null) // throws ParseException 
+        {
+            Match match = Constants.RESOLUTION_PATTERN.Match(resolutionString);
+
+            if (!match.Success)
+            {
+                throw new ParseException(ParseExceptionType.INVALID_RESOLUTION_FORMAT, tag);
             }
 
-            return bytes;
-        } else {
-            throw ParseException.create(ParseExceptionType.INVALID_HEXADECIMAL_STRING, tag, hexString);
-        }
-    }
-
-    private static byte hexCharToByte(char hex) {
-        if (hex >= 'A') {
-            return (byte) ((hex & 0xF) + 9);
-        } else {
-            return (byte) (hex & 0xF);
-        }
-    }
-
-    public static boolean parseYesNo(Attribute attribute, String tag) throws ParseException {
-        if (attribute.value.equals(Constants.YES)) {
-            return true;
-        } else if (attribute.value.equals(Constants.NO)) {
-            return false;
-        } else {
-            throw ParseException.create(ParseExceptionType.NOT_YES_OR_NO, tag, attribute.toString());
-        }
-    }
-
-    public static Resolution parseResolution(String resolutionString, String tag) throws ParseException {
-        Matcher matcher = Constants.RESOLUTION_PATTERN.matcher(resolutionString);
-
-        if (!matcher.matches()) {
-            throw new ParseException(ParseExceptionType.INVALID_RESOLUTION_FORMAT, tag);
+            return new Resolution(parseInt(match.Groups[1].Value, tag), parseInt(match.Groups[2].Value, tag));
         }
 
-        return new Resolution(parseInt(matcher.group(1), tag), parseInt(matcher.group(2), tag));
-    }
+        public static String parseQuotedString(String quotedString, String tag = null) // throws ParseException 
+        {
+            StringBuilder builder = new StringBuilder();
 
-    public static String parseQuotedString(String quotedString, String tag) throws ParseException {
-        final StringBuilder builder = new StringBuilder();
+            bool isEscaping = false;
+            int quotesFound = 0;
 
-        boolean isEscaping = false;
-        int quotesFound = 0;
+            for (int i = 0; i < quotedString.Length; ++i)
+            {
+                char c = quotedString[i];
 
-        for (int i = 0; i < quotedString.length(); ++i) {
-            final char c = quotedString.charAt(i);
-
-            if (i == 0 && c != '"') {
-                if (isWhitespace(c)) {
-                    throw new ParseException(ParseExceptionType.ILLEGAL_WHITESPACE, tag);
-                } else {
-                    throw new ParseException(ParseExceptionType.INVALID_QUOTED_STRING, tag);
+                if (i == 0 && c != '"')
+                {
+                    if (isWhitespace(c))
+                    {
+                        throw new ParseException(ParseExceptionType.ILLEGAL_WHITESPACE, tag);
+                    }
+                    else
+                    {
+                        throw new ParseException(ParseExceptionType.INVALID_QUOTED_STRING, tag);
+                    }
                 }
-            } else if (quotesFound == 2) {
-                if (isWhitespace(c)) {
-                    throw new ParseException(ParseExceptionType.ILLEGAL_WHITESPACE, tag);
-                } else {
-                    throw new ParseException(ParseExceptionType.INVALID_QUOTED_STRING, tag);
+                else if (quotesFound == 2)
+                {
+                    if (isWhitespace(c))
+                    {
+                        throw new ParseException(ParseExceptionType.ILLEGAL_WHITESPACE, tag);
+                    }
+                    else
+                    {
+                        throw new ParseException(ParseExceptionType.INVALID_QUOTED_STRING, tag);
+                    }
                 }
-            } else if (i == quotedString.length() - 1) {
-                if (c != '"' || isEscaping) {
-                    throw new ParseException(ParseExceptionType.UNCLOSED_QUOTED_STRING, tag);
+                else if (i == quotedString.Length - 1)
+                {
+                    if (c != '"' || isEscaping)
+                    {
+                        throw new ParseException(ParseExceptionType.UNCLOSED_QUOTED_STRING, tag);
+                    }
                 }
-            } else {
-                if (isEscaping) {
-                    builder.append(c);
-                    isEscaping = false;
-                } else {
-                    if (c == '\\') {
-                        isEscaping = true;
-                    } else if (c == '"') {
-                        ++quotesFound;
-                    } else {
-                        builder.append(c);
+                else
+                {
+                    if (isEscaping)
+                    {
+                        builder.Append(c);
+                        isEscaping = false;
+                    }
+                    else
+                    {
+                        if (c == '\\')
+                        {
+                            isEscaping = true;
+                        }
+                        else if (c == '"')
+                        {
+                            ++quotesFound;
+                        }
+                        else
+                        {
+                            builder.Append(c);
+                        }
                     }
                 }
             }
+
+            return builder.ToString();
         }
 
-        return builder.toString();
-    }
-
-    public static ByteRange matchByteRange(Matcher matcher) {
-        long subRangeLength = Long.parseLong(matcher.group(1));
-        Long offset = matcher.group(2) != null ? Long.parseLong(matcher.group(2)) : null;
-        return new ByteRange(subRangeLength, offset);
-    }
-
-    static boolean isWhitespace(char c) {
-        return c == ' ' || c == '\t' || c == '\r' || c == '\n';
-    }
-
-    public static String decodeUri(String encodedUri, Encoding encoding) throws ParseException {
-        try {
-            return URLDecoder.decode(encodedUri.replace("+", "%2B"), encoding.value);
-        } catch (UnsupportedEncodingException exception) {
-            throw new ParseException(ParseExceptionType.INTERNAL_ERROR);
-        }
-    }
-
-    public static Matcher match(Pattern pattern, String line, String tag) throws ParseException {
-        final Matcher matcher = pattern.matcher(line);
-
-        if (!matcher.matches()) {
-            throw ParseException.create(ParseExceptionType.BAD_EXT_TAG_FORMAT, tag, line);
+        public static ByteRange matchByteRange(Match match)
+        {
+            long subRangeLength = long.Parse(match.Groups[1].Value);
+            long? offset = !string.IsNullOrEmpty(match.Groups[2].Value) ? long.Parse(match.Groups[2].Value) : (long?)null;
+            return new ByteRange(subRangeLength, offset);
         }
 
-        return matcher;
-    }
+        public static bool isWhitespace(char c)
+        {
+            return c == ' ' || c == '\t' || c == '\r' || c == '\n';
+        }
 
-    public static <T> void parseAttributes(String line, T builder, ParseState state, Map<String, ? extends AttributeParser<T>> handlers, String tag) throws ParseException {
-        for (Attribute attribute : parseAttributeList(line, tag)) {
-            if (handlers.containsKey(attribute.name)) {
-                handlers.get(attribute.name).parse(attribute, builder, state);
-            } else {
-                throw ParseException.create(ParseExceptionType.INVALID_ATTRIBUTE_NAME, tag, line);
+        public static String decodeUri(String encodedUri, Encoding encoding) // throws ParseException 
+        {
+            try
+            {
+                return System.Net.WebUtility.UrlDecode(encodedUri.Replace("+", "%2B"));
             }
-        }
-    }
-
-    public static List<Attribute> parseAttributeList(String line, String tag) throws ParseException {
-        final List<Attribute> attributes = new ArrayList<Attribute>();
-        final Set<String> attributeNames = new HashSet<String>();
-
-        for (String string : splitAttributeList(line, tag)) {
-            final int separator = string.indexOf(Constants.ATTRIBUTE_SEPARATOR);
-            final int quote = string.indexOf("\"");
-
-            if (separator == -1 || (quote != -1 && quote < separator)) {
-                throw ParseException.create(ParseExceptionType.MISSING_ATTRIBUTE_SEPARATOR, tag, attributes.toString());
-            } else {
-                //Even Apple playlists have sometimes spaces after a ,
-                final String name = string.substring(0, separator).trim();
-                final String value = string.substring(separator + 1);
-
-                if (name.isEmpty()) {
-                    throw ParseException.create(ParseExceptionType.MISSING_ATTRIBUTE_NAME, tag, attributes.toString());
-                }
-
-                if (value.isEmpty()) {
-                    throw ParseException.create(ParseExceptionType.MISSING_ATTRIBUTE_VALUE, tag, attributes.toString());
-                }
-
-                if (!attributeNames.add(name)) {
-                    throw ParseException.create(ParseExceptionType.MULTIPLE_ATTRIBUTE_NAME_INSTANCES, tag, attributes.toString());
-                }
-
-                attributes.add(new Attribute(name, value));
+            catch (Exception exception) // TODO: Was UnsupportedEncodingException; c# equivalent?
+            {
+                throw new ParseException(ParseExceptionType.INTERNAL_ERROR);
             }
         }
 
-        return attributes;
-    }
+        public static Match match(Regex pattern, String line, String tag = null) // throws ParseException 
+        {
+            Match match = pattern.Match(line);
 
-    public static List<String> splitAttributeList(String line, String tag) throws ParseException {
-        final List<Integer> splitIndices = new ArrayList<Integer>();
-        final List<String> attributes = new ArrayList<String>();
+            if (!match.Success)
+            {
+                throw ParseException.create(ParseExceptionType.BAD_EXT_TAG_FORMAT, tag, line);
+            }
 
-        int startIndex = line.indexOf(Constants.EXT_TAG_END) + 1;
-        boolean isQuotedString = false;
-        boolean isEscaping = false;
+            return match;
+        }
 
-        for (int i = startIndex; i < line.length(); i++) {
-            if (isQuotedString) {
-                if (isEscaping) {
-                    isEscaping = false;
-                } else {
-                    char c = line.charAt(i);
-
-                    if (c == '\\') {
-                        isEscaping = true;
-                    } else if (c == '"') {
-                        isQuotedString = false;
+        public static void parseAttributes<T>(String line, T builder, ParseState state, Dictionary<String, AttributeParser<T>> handlers, String tag) // throws ParseException 
+        {
+            foreach (Attribute attribute in parseAttributeList(line, tag))
+            {
+                if (handlers.ContainsKey(attribute.name))
+                {
+                    try
+                    {
+                        handlers[attribute.name].parse(attribute, builder, state);
+                    }
+                    catch(ParseException ex)
+                    {
+                        throw ParseException.create(ex.type, tag, ex.getMessageSuffix());
                     }
                 }
-            } else {
-                char c = line.charAt(i);
-
-                if (c == Constants.COMMA_CHAR) {
-                    splitIndices.add(i);
-                } else if (c == '"') {
-                    isQuotedString = true;
+                else
+                {
+                    throw ParseException.create(ParseExceptionType.INVALID_ATTRIBUTE_NAME, tag, line);
                 }
             }
         }
 
-        if (isQuotedString) {
-            throw new ParseException(ParseExceptionType.UNCLOSED_QUOTED_STRING, tag);
+        public static List<Attribute> parseAttributeList(String line, String tag) // throws ParseException 
+        {
+            List<Attribute> attributes = new List<Attribute>();
+            HashSet<String> attributeNames = new HashSet<String>();
+
+            foreach (String str in splitAttributeList(line, tag))
+            {
+                int separator = str.IndexOf(Constants.ATTRIBUTE_SEPARATOR);
+                int quote = str.IndexOf("\"");
+
+                if (separator == -1 || (quote != -1 && quote < separator))
+                {
+                    throw ParseException.create(ParseExceptionType.MISSING_ATTRIBUTE_SEPARATOR, tag, attributes.ToString());
+                }
+                else
+                {
+                    //Even Apple playlists have sometimes spaces after a ,
+                    String name = str.Substring(0, separator).Trim();
+                    String value = str.Substring(separator + 1);
+
+                    if (name.isEmpty())
+                    {
+                        throw ParseException.create(ParseExceptionType.MISSING_ATTRIBUTE_NAME, tag, attributes.ToString());
+                    }
+
+                    if (value.isEmpty())
+                    {
+                        throw ParseException.create(ParseExceptionType.MISSING_ATTRIBUTE_VALUE, tag, attributes.ToString());
+                    }
+
+                    if (!attributeNames.Add(name))
+                    {
+                        throw ParseException.create(ParseExceptionType.MULTIPLE_ATTRIBUTE_NAME_INSTANCES, tag, attributes.ToString());
+                    }
+
+                    attributes.Add(new Attribute(name, value));
+                }
+            }
+
+            return attributes;
         }
 
-        for (Integer splitIndex : splitIndices) {
-            attributes.add(line.substring(startIndex, splitIndex));
-            startIndex = splitIndex + 1;
-        }
+        public static List<String> splitAttributeList(String line, String tag) // throws ParseException 
+        {
+            List<int> splitIndices = new List<int>();
+            List<String> attributes = new List<String>();
 
-        attributes.add(line.substring(startIndex));
-        return attributes;
+            int startIndex = line.IndexOf(Constants.EXT_TAG_END) + 1;
+            bool isQuotedString = false;
+            bool isEscaping = false;
+
+            for (int i = startIndex; i < line.Length; i++)
+            {
+                if (isQuotedString)
+                {
+                    if (isEscaping)
+                    {
+                        isEscaping = false;
+                    }
+                    else
+                    {
+                        char c = line[i];
+
+                        if (c == '\\')
+                        {
+                            isEscaping = true;
+                        }
+                        else if (c == '"')
+                        {
+                            isQuotedString = false;
+                        }
+                    }
+                }
+                else
+                {
+                    char c = line[i];
+
+                    if (c == Constants.COMMA_CHAR)
+                    {
+                        splitIndices.Add(i);
+                    }
+                    else if (c == '"')
+                    {
+                        isQuotedString = true;
+                    }
+                }
+            }
+
+            if (isQuotedString)
+            {
+                throw new ParseException(ParseExceptionType.UNCLOSED_QUOTED_STRING, tag);
+            }
+
+            foreach (int splitIndex in splitIndices)
+            {
+                attributes.Add(line.Substring(startIndex, splitIndex - startIndex));
+                startIndex = splitIndex + 1;
+            }
+
+            attributes.Add(line.Substring(startIndex));
+            return attributes;
+        }
     }
 }

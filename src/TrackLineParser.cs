@@ -1,31 +1,36 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
+//import com.iheartradio.m3u8.data.TrackData;
 
-import com.iheartradio.m3u8.data.TrackData;
+namespace M3U8Parser
+{
+    class TrackLineParser : LineParser
+    {
+        public void parse(String line, ParseState state) // throws ParseException 
+        {
+            TrackData.Builder builder = new TrackData.Builder();
+            MediaParseState mediaState = state.getMedia();
 
-class TrackLineParser implements LineParser {
-    @Override
-    public void parse(String line, ParseState state) throws ParseException {
-        final TrackData.Builder builder = new TrackData.Builder();
-        final MediaParseState mediaState = state.getMedia();
+            if (state.isExtended() && mediaState.trackInfo == null)
+            {
+                throw ParseException.create(ParseExceptionType.MISSING_TRACK_INFO, line);
+            }
 
-        if (state.isExtended() && mediaState.trackInfo == null) {
-            throw ParseException.create(ParseExceptionType.MISSING_TRACK_INFO, line);
+            mediaState.tracks.Add(builder
+                    .withUri(line)
+                    .withTrackInfo(mediaState.trackInfo)
+                    .withEncryptionData(mediaState.encryptionData)
+                    .withProgramDateTime(mediaState.programDateTime)
+                    .withDiscontinuity(mediaState.hasDiscontinuity)
+                    .withMapInfo(mediaState.mapInfo)
+                    .withByteRange(mediaState.byteRange)
+                    .build());
+
+            mediaState.trackInfo = null;
+            mediaState.programDateTime = null;
+            mediaState.hasDiscontinuity = false;
+            mediaState.mapInfo = null;
+            mediaState.byteRange = null;
         }
-
-        mediaState.tracks.add(builder
-                .withUri(line)
-                .withTrackInfo(mediaState.trackInfo)
-                .withEncryptionData(mediaState.encryptionData)
-                .withProgramDateTime(mediaState.programDateTime)
-                .withDiscontinuity(mediaState.hasDiscontinuity)
-                .withMapInfo(mediaState.mapInfo)
-                .withByteRange(mediaState.byteRange)
-                .build());
-
-        mediaState.trackInfo = null;
-        mediaState.programDateTime = null;
-        mediaState.hasDiscontinuity = false;
-        mediaState.mapInfo = null;
-        mediaState.byteRange = null;
     }
 }

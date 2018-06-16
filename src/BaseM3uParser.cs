@@ -1,25 +1,35 @@
-package com.iheartradio.m3u8;
+using System;
+using System.IO;
+using System.Text;
+//import java.io.EOFException;
+//import java.io.InputStream;
 
-import java.io.EOFException;
-import java.io.InputStream;
+namespace M3U8Parser
+{
+    public abstract class BaseM3uParser : IPlaylistParser
+    {
+        protected readonly M3uScanner mScanner;
+        protected readonly Encoding mEncoding;
 
-abstract class BaseM3uParser implements IPlaylistParser {
-    protected final M3uScanner mScanner;
-    protected final Encoding mEncoding;
+        public BaseM3uParser(Stream inputStream, Encoding encoding)
+        {
+            mScanner = new M3uScanner(inputStream, encoding);
+            mEncoding = encoding;
+        }
 
-    BaseM3uParser(InputStream inputStream, Encoding encoding) {
-        mScanner = new M3uScanner(inputStream, encoding);
-        mEncoding = encoding;
-    }
+        public virtual bool isAvailable()
+        {
+            return mScanner.hasNext();
+        }
 
-    @Override
-    public boolean isAvailable() {
-        return mScanner.hasNext();
-    }
+        public abstract Playlist parse();
 
-    final void validateAvailable() throws EOFException {
-        if (!isAvailable()) {
-            throw new EOFException();
+        protected void validateAvailable() // throws EOFException
+        {
+            if (!isAvailable())
+            {
+                throw new EndOfStreamException();
+            }
         }
     }
 }

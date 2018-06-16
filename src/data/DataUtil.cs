@@ -1,10 +1,16 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
+// import java.util.Collections;
+// import java.util.List;
 
-import java.util.Collections;
-import java.util.List;
-
-class DataUtil {
-    static <T> List<T> emptyOrUnmodifiable(final List<T> list) {
-        return list == null ? Collections.<T>emptyList() : Collections.unmodifiableList(list);
+namespace M3U8Parser
+{
+    public class DataUtil
+    {
+        public static List<T> emptyOrUnmodifiable<T>(List<T> list)
+        {
+            return list == null ? new List<T>() : list; // TODO: .AsReadOnly();
+        }
     }
 }

@@ -1,27 +1,36 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
+using Xunit;
+// import org.junit.Test;
 
-import org.junit.Test;
+// import static org.hamcrest.core.Is.is;
+// import static org.junit.Assert.*;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+namespace M3U8Parser
+{
+    public class WriteUtilTest
+    {
+        [Fact]
+        public void writeQuotedStringShouldIgnoreNullTagValueForOptionalFields() // throws Exception 
+        {
+            String outputString = WriteUtil.writeQuotedString(null, true, "some-key");
 
-public class WriteUtilTest {
+            //Assert.That(outputString,is ("\"\""));
+            Assert.Equal("\"\"", outputString);
+        }
 
-    @Test
-    public void writeQuotedStringShouldIgnoreNullTagValueForOptionalFields() throws Exception {
-            String outputString =WriteUtil.writeQuotedString(null,"some-key", true);
+        [Fact]
+        public void writeQuotedStringShouldNotIgnoreNullTagValue() // throws Exception 
+        {
+            Assert.Throws<NullReferenceException>(() =>
+                WriteUtil.writeQuotedString(null, "some-key"));
+        }
 
-            assertThat(outputString,is("\"\""));
+        [Fact]
+        public void writeQuotedStringShouldNotIgnoreSuppliedOptionalValue() // throws Exception 
+        {
+            //Assert.That(WriteUtil.writeQuotedString("blah", "some-key"),is ("\"blah\""));
+            Assert.Equal("\"blah\"", WriteUtil.writeQuotedString("blah", "some-key"));
+        }
     }
-
-    @Test(expected = NullPointerException.class)
-    public void writeQuotedStringShouldNotIgnoreNullTagValue() throws Exception {
-            WriteUtil.writeQuotedString(null,"some-key");
-    }
-
-    @Test
-    public void writeQuotedStringShouldNotIgnoreSuppliedOptionalValue() throws Exception {
-            assertThat(WriteUtil.writeQuotedString("blah","some-key"),is("\"blah\""));
-    }
-
 }

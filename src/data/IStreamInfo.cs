@@ -1,27 +1,22 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
+// import java.util.List;
 
-import java.util.List;
-
-public interface IStreamInfo {
-    public int getBandwidth();
-
-    boolean hasAverageBandwidth();
-
-    int getAverageBandwidth();
-
-    boolean hasCodecs();
-
-    List<String> getCodecs();
-
-    boolean hasResolution();
-
-    Resolution getResolution();
-
-    boolean hasFrameRate();
-
-    float getFrameRate();
-
-    boolean hasVideo();
-
-    String getVideo();
+namespace M3U8Parser
+{
+    public interface IStreamInfo
+    {
+        int getBandwidth();
+        bool hasAverageBandwidth();
+        int getAverageBandwidth();
+        bool hasCodecs();
+        List<String> getCodecs();
+        bool hasResolution();
+        Resolution getResolution();
+        bool hasFrameRate();
+        float getFrameRate();
+        bool hasVideo();
+        String getVideo();
+    }
 }

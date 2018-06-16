@@ -1,14 +1,19 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-import java.util.List;
-import java.util.Objects;
+
+//import java.util.List;
+//import java.util.Objects;
+namespace M3U8Parser
+{
 
 public class MasterPlaylist {
-    private final List<PlaylistData> mPlaylists;
-    private final List<IFrameStreamInfo> mIFramePlaylists;
-    private final List<MediaData> mMediaData;
-    private final List<String> mUnknownTags;
-    private final StartData mStartData;
+    private readonly List<PlaylistData> mPlaylists;
+    private readonly List<IFrameStreamInfo> mIFramePlaylists;
+    private readonly List<MediaData> mMediaData;
+    private readonly List<String> mUnknownTags;
+    private readonly StartData mStartData;
 
     private MasterPlaylist(List<PlaylistData> playlists, List<IFrameStreamInfo> iFramePlaylists, List<MediaData> mediaData, List<String> unknownTags, StartData startData) {
         mPlaylists = DataUtil.emptyOrUnmodifiable(playlists);
@@ -30,15 +35,15 @@ public class MasterPlaylist {
         return mMediaData;
     }
    
-    public boolean hasUnknownTags() {
-        return mUnknownTags.size() > 0;
+    public bool hasUnknownTags() {
+        return mUnknownTags.Count > 0;
     }
     
     public List<String> getUnknownTags() {
         return mUnknownTags;
     }
 
-    public boolean hasStartData() {
+    public bool hasStartData() {
         return mStartData != null;
     }
 
@@ -50,40 +55,39 @@ public class MasterPlaylist {
         return new Builder(mPlaylists, mIFramePlaylists, mMediaData, mUnknownTags);
     }
     
-    @Override
-    public int hashCode() {
-        return Objects.hash(mMediaData, mPlaylists, mIFramePlaylists, mUnknownTags, mStartData);
+    public override int GetHashCode() {
+        // TODO: Implement
+        //return Objects.hash(mMediaData, mPlaylists, mIFramePlaylists, mUnknownTags, mStartData);
+        return 0;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof MasterPlaylist)) {
+    public override bool Equals(object o) {
+        if (!(o is MasterPlaylist)) {
             return false;
         }
 
         MasterPlaylist other = (MasterPlaylist) o;
         
-        return Objects.equals(mMediaData, other.mMediaData) &&
-               Objects.equals(mPlaylists, other.mPlaylists) &&
-               Objects.equals(mIFramePlaylists, other.mIFramePlaylists) &&
-               Objects.equals(mUnknownTags, other.mUnknownTags) &&
-               Objects.equals(mStartData, other.mStartData);
+        return mMediaData.SequenceEquals(other.mMediaData) &&
+               mPlaylists.SequenceEquals(other.mPlaylists) &&
+               mIFramePlaylists.SequenceEquals(other.mIFramePlaylists) &&
+               mUnknownTags.SequenceEquals(other.mUnknownTags) &&
+               object.Equals(mStartData, other.mStartData);
     }
 
-    @Override
-    public String toString() {
+    public override string ToString() {
         return new StringBuilder()
-                .append("(MasterPlaylist")
-                .append(" mPlaylists=").append(mPlaylists.toString())
-                .append(" mIFramePlaylists=").append(mIFramePlaylists.toString())
-                .append(" mMediaData=").append(mMediaData.toString())
-                .append(" mUnknownTags=").append(mUnknownTags.toString())
-                .append(" mStartData=").append(mStartData.toString())
-                .append(")")
-                .toString();
+                .Append("(MasterPlaylist")
+                .Append(" mPlaylists=").Append(mPlaylists.ToString())
+                .Append(" mIFramePlaylists=").Append(mIFramePlaylists.ToString())
+                .Append(" mMediaData=").Append(mMediaData.ToString())
+                .Append(" mUnknownTags=").Append(mUnknownTags.ToString())
+                .Append(" mStartData=").Append(mStartData.ToString())
+                .Append(")")
+                .ToString();
     }
 
-    public static class Builder {
+    public class Builder {
         private List<PlaylistData> mPlaylists;
         private List<IFrameStreamInfo> mIFramePlaylists;
         private List<MediaData> mMediaData;
@@ -93,14 +97,14 @@ public class MasterPlaylist {
         public Builder() {
         }
 
-        private Builder(List<PlaylistData> playlists, List<IFrameStreamInfo> iFramePlaylists, List<MediaData> mediaData, List<String> unknownTags) {
+        public Builder(List<PlaylistData> playlists, List<IFrameStreamInfo> iFramePlaylists, List<MediaData> mediaData, List<String> unknownTags) {
             mPlaylists = playlists;
             mIFramePlaylists = iFramePlaylists;
             mMediaData = mediaData;
             mUnknownTags = unknownTags;
         }
 
-        private Builder(List<PlaylistData> playlists, List<MediaData> mediaData) {
+        public Builder(List<PlaylistData> playlists, List<MediaData> mediaData) {
             mPlaylists = playlists;
             mMediaData = mediaData;
         }
@@ -134,4 +138,5 @@ public class MasterPlaylist {
             return new MasterPlaylist(mPlaylists, mIFramePlaylists, mMediaData, mUnknownTags, mStartData);
         }
     }
+}
 }

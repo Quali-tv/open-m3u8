@@ -1,343 +1,484 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+// import com.iheartradio.m3u8.data.*;
 
-import com.iheartradio.m3u8.data.*;
+// import java.util.Arrays;
+// import java.util.HashMap;
+// import java.util.Map;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+namespace M3U8Parser
+{
+    public class MasterPlaylistLineParser : LineParser
+    {
+        private readonly IExtTagParser mTagParser;
+        private readonly LineParser mLineParser;
 
-class MasterPlaylistLineParser implements LineParser {
-    private final IExtTagParser mTagParser;
-    private final LineParser mLineParser;
+        MasterPlaylistLineParser(IExtTagParser parser) : this(parser, new ExtLineParser(parser)) { }
 
-    MasterPlaylistLineParser(IExtTagParser parser) {
-        this(parser, new ExtLineParser(parser));
-    }
-
-    MasterPlaylistLineParser(IExtTagParser tagParser, LineParser lineParser) {
-        mTagParser = tagParser;
-        mLineParser = lineParser;
-    }
-
-    @Override
-    public void parse(String line, ParseState state) throws ParseException {
-        if (state.isMedia()) {
-            throw ParseException.create(ParseExceptionType.MASTER_IN_MEDIA, mTagParser.getTag());
+        MasterPlaylistLineParser(IExtTagParser tagParser, LineParser lineParser)
+        {
+            mTagParser = tagParser;
+            mLineParser = lineParser;
         }
 
-        state.setMaster();
-        mLineParser.parse(line, state);
-    }
-
-    // master playlist tags
-
-    static final IExtTagParser EXT_X_MEDIA = new IExtTagParser() {
-        private final LineParser mLineParser = new MasterPlaylistLineParser(this);
-        private final Map<String, AttributeParser<MediaData.Builder>> HANDLERS = new HashMap<String, AttributeParser<MediaData.Builder>>();
-
+        public void parse(String line, ParseState state) //throws ParseException 
         {
-            HANDLERS.put(Constants.TYPE, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    final MediaType type = MediaType.fromValue(attribute.value);
+            if (state.isMedia())
+            {
+                throw ParseException.create(ParseExceptionType.MASTER_IN_MEDIA, mTagParser.getTag());
+            }
 
-                    if (type == null) {
-                        throw ParseException.create(ParseExceptionType.INVALID_MEDIA_TYPE, getTag(), attribute.toString());
-                    } else {
+            state.setMaster();
+            mLineParser.parse(line, state);
+        }
+
+        // master playlist tags
+
+        public static readonly IExtTagParser EXT_X_MEDIA = new EXT_X_MEDIA_CLASS();
+        private class EXT_X_MEDIA_CLASS : IExtTagParser
+        {
+            private readonly LineParser mLineParser;
+            private readonly Dictionary<String, AttributeParser<MediaData.Builder>> HANDLERS =
+                new Dictionary<String, AttributeParser<MediaData.Builder>>();
+
+            public EXT_X_MEDIA_CLASS()
+            {
+                mLineParser = new MasterPlaylistLineParser(this);
+
+                HANDLERS.Add(Constants.TYPE, new TYPE_AttributeParser());
+                HANDLERS.Add(Constants.URI, new URI_AttributeParser());
+                HANDLERS.Add(Constants.GROUP_ID, new GROUP_ID_AttributeParser());
+                HANDLERS.Add(Constants.LANGUAGE, new LANGUAGE_AttributeParser());
+                HANDLERS.Add(Constants.ASSOCIATED_LANGUAGE, new ASSOCIATED_LANGUAGE_AttributeParser());
+                HANDLERS.Add(Constants.NAME, new NAME_AttributeParser());
+                HANDLERS.Add(Constants.DEFAULT, new DEFAULT_AttributeParser());
+                HANDLERS.Add(Constants.AUTO_SELECT, new AUTO_SELECT_AttributeParser());
+                HANDLERS.Add(Constants.FORCED, new FORCED_AttributeParser());
+                HANDLERS.Add(Constants.IN_STREAM_ID, new IN_STREAM_ID_AttributeParser());
+                HANDLERS.Add(Constants.CHARACTERISTICS, new CHARACTERISTICS_AttributeParser());
+                HANDLERS.Add(Constants.CHANNELS, new CHANNELS_AttributeParser());
+            }
+
+            private class TYPE_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) //throws ParseException 
+                {
+                    MediaType type = MediaType.fromValue(attribute.value);
+
+                    if (type == null)
+                    {
+                        throw ParseException.create(ParseExceptionType.INVALID_MEDIA_TYPE, tag: null, context: attribute.ToString());
+                    }
+                    else
+                    {
                         builder.withType(type);
                     }
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.URI, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    builder.withUri(ParseUtil.decodeUri(ParseUtil.parseQuotedString(attribute.value, getTag()), state.encoding));
+
+            private class URI_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    builder.withUri(ParseUtil.decodeUri(ParseUtil.parseQuotedString(attribute.value), state.encoding));
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.GROUP_ID, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    final String groupId = ParseUtil.parseQuotedString(attribute.value, getTag());
 
-                    if (groupId.isEmpty()) {
-                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_GROUP_ID, getTag(), attribute.toString());
-                    } else {
+            private class GROUP_ID_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    String groupId = ParseUtil.parseQuotedString(attribute.value);
+
+                    if (groupId.isEmpty())
+                    {
+                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_GROUP_ID, tag: null, context: attribute.ToString());
+                    }
+                    else
+                    {
                         builder.withGroupId(groupId);
                     }
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.LANGUAGE, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    builder.withLanguage(ParseUtil.parseQuotedString(attribute.value, getTag()));
+
+            private class LANGUAGE_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    builder.withLanguage(ParseUtil.parseQuotedString(attribute.value));
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.ASSOCIATED_LANGUAGE, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    builder.withAssociatedLanguage(ParseUtil.parseQuotedString(attribute.value, getTag()));
+
+            private class ASSOCIATED_LANGUAGE_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    builder.withAssociatedLanguage(ParseUtil.parseQuotedString(attribute.value));
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.NAME, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    final String name = ParseUtil.parseQuotedString(attribute.value, getTag());
 
-                    if (name.isEmpty()) {
-                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_NAME, getTag(), attribute.toString());
-                    } else {
+            private class NAME_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    String name = ParseUtil.parseQuotedString(attribute.value);
+
+                    if (name.isEmpty())
+                    {
+                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_NAME, tag: null, context: attribute.ToString());
+                    }
+                    else
+                    {
                         builder.withName(name);
                     }
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.DEFAULT, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    boolean isDefault = ParseUtil.parseYesNo(attribute, getTag());
+
+            private class DEFAULT_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    bool isDefault = ParseUtil.parseYesNo(attribute);
 
                     builder.withDefault(isDefault);
                     state.getMaster().isDefault = isDefault;
 
-                    if (isDefault) {
-                        if (state.getMaster().isNotAutoSelect) {
-                            throw ParseException.create(ParseExceptionType.AUTO_SELECT_DISABLED_FOR_DEFAULT, getTag(), attribute.toString());
+                    if (isDefault)
+                    {
+                        if (state.getMaster().isNotAutoSelect)
+                        {
+                            throw ParseException.create(ParseExceptionType.AUTO_SELECT_DISABLED_FOR_DEFAULT, tag: null, context: attribute.ToString());
                         }
 
                         builder.withAutoSelect(true);
                     }
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.AUTO_SELECT, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    final boolean isAutoSelect = ParseUtil.parseYesNo(attribute, getTag());
+
+            private class AUTO_SELECT_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    bool isAutoSelect = ParseUtil.parseYesNo(attribute);
 
                     builder.withAutoSelect(isAutoSelect);
                     state.getMaster().isNotAutoSelect = !isAutoSelect;
 
-                    if (state.getMaster().isDefault && !isAutoSelect) {
-                        throw ParseException.create(ParseExceptionType.AUTO_SELECT_DISABLED_FOR_DEFAULT, getTag(), attribute.toString());
+                    if (state.getMaster().isDefault && !isAutoSelect)
+                    {
+                        throw ParseException.create(ParseExceptionType.AUTO_SELECT_DISABLED_FOR_DEFAULT, tag: null, context: attribute.ToString());
                     }
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.FORCED, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    builder.withForced(ParseUtil.parseYesNo(attribute, getTag()));
+
+            private class FORCED_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    builder.withForced(ParseUtil.parseYesNo(attribute));
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.IN_STREAM_ID, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    final String inStreamId = ParseUtil.parseQuotedString(attribute.value, getTag());
 
-                    if (Constants.EXT_X_MEDIA_IN_STREAM_ID_PATTERN.matcher(inStreamId).matches()) {
+            private class IN_STREAM_ID_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    String inStreamId = ParseUtil.parseQuotedString(attribute.value);
+
+                    if (Constants.EXT_X_MEDIA_IN_STREAM_ID_PATTERN.Match(inStreamId).Success)
+                    {
                         builder.withInStreamId(inStreamId);
-                    } else {
-                        throw ParseException.create(ParseExceptionType.INVALID_MEDIA_IN_STREAM_ID, getTag(), attribute.toString());
+                    }
+                    else
+                    {
+                        throw ParseException.create(ParseExceptionType.INVALID_MEDIA_IN_STREAM_ID, tag: null, context: attribute.ToString());
                     }
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.CHARACTERISTICS, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    final String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value, getTag()).split(Constants.COMMA);
 
-                    if (characteristicStrings.length == 0) {
-                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_CHARACTERISTICS, getTag(), attribute.toString());
-                    } else {
-                        builder.withCharacteristics(Arrays.asList(characteristicStrings));
+            private class CHARACTERISTICS_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value).Split(Constants.COMMA);
+
+                    if (characteristicStrings.Length == 0)
+                    {
+                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_CHARACTERISTICS, tag: null, context: attribute.ToString());
+                    }
+                    else
+                    {
+                        builder.withCharacteristics(characteristicStrings.ToList());
                     }
                 }
-            });
+            }
 
-            HANDLERS.put(Constants.CHANNELS, new AttributeParser<MediaData.Builder>() {
-                @Override
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) throws ParseException {
-                    final String[] channelsStrings = ParseUtil.parseQuotedString(attribute.value, getTag()).split(Constants.LIST_SEPARATOR);
 
-                    if (channelsStrings.length == 0 || channelsStrings[0].isEmpty()) {
-                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_CHANNELS, getTag(), attribute.toString());
-                    } else {
-                        final int channelsCount = ParseUtil.parseInt(channelsStrings[0], getTag());
+            private class CHANNELS_AttributeParser : AttributeParser<MediaData.Builder>
+            {
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                {
+                    String[] channelsStrings = ParseUtil.parseQuotedString(attribute.value).Split(Constants.LIST_SEPARATOR);
+
+                    if (channelsStrings.Length == 0 || channelsStrings[0].isEmpty())
+                    {
+                        throw ParseException.create(ParseExceptionType.EMPTY_MEDIA_CHANNELS, tag: null, context: attribute.ToString());
+                    }
+                    else
+                    {
+                        int channelsCount = ParseUtil.parseInt(channelsStrings[0]);
                         builder.withChannels(channelsCount);
                     }
                 }
-            });
+            }
+
+
+            public String getTag()
+            {
+                return Constants.EXT_X_MEDIA_TAG;
+            }
+
+            public bool hasData()
+            {
+                return true;
+            }
+
+            public void parse(String line, ParseState state) //throws ParseException 
+            {
+                mLineParser.parse(line, state);
+
+                MediaData.Builder builder = new MediaData.Builder();
+
+                state.getMaster().clearMediaDataState();
+                ParseUtil.parseAttributes(line, builder, state, HANDLERS, getTag());
+                state.getMaster().mediaData.Add(builder.build());
+            }
         }
 
-        @Override
-        public String getTag() {
-            return Constants.EXT_X_MEDIA_TAG;
-        }
-
-        @Override
-        public boolean hasData() {
-            return true;
-        }
-
-        @Override
-        public void parse(String line, ParseState state) throws ParseException {
-            mLineParser.parse(line, state);
-
-            final MediaData.Builder builder = new MediaData.Builder();
-
-            state.getMaster().clearMediaDataState();
-            ParseUtil.parseAttributes(line, builder, state, HANDLERS, getTag());
-            state.getMaster().mediaData.add(builder.build());
-        }
-    };
-
-    static final IExtTagParser EXT_X_I_FRAME_STREAM_INF = new IExtTagParser() {
-        private final LineParser mLineParser = new MasterPlaylistLineParser(this);
-        private final Map<String, AttributeParser<IFrameStreamInfo.Builder>> HANDLERS = makeExtStreamInfHandlers(getTag());
-
+        public static readonly IExtTagParser EXT_X_I_FRAME_STREAM_INF = new EXT_X_I_FRAME_STREAM_INF_CLASS();
+        private class EXT_X_I_FRAME_STREAM_INF_CLASS : IExtTagParser
         {
-            HANDLERS.put(Constants.URI, new AttributeParser<IFrameStreamInfo.Builder>() {
-                @Override
-                public void parse(Attribute attribute, IFrameStreamInfo.Builder builder, ParseState state) throws ParseException {
-                    builder.withUri(ParseUtil.parseQuotedString(attribute.value, getTag()));
+            private readonly LineParser mLineParser;
+            private readonly Dictionary<String, AttributeParser<IFrameStreamInfo.Builder>> HANDLERS;
+
+            public EXT_X_I_FRAME_STREAM_INF_CLASS()
+            {
+                mLineParser = new MasterPlaylistLineParser(this);
+                HANDLERS = HandlerMaker<IFrameStreamInfo.Builder>.makeExtStreamInfHandlers(getTag());
+                HANDLERS.Add(Constants.URI, new URI_AttributeParser());
+            }
+
+            private class URI_AttributeParser : AttributeParser<IFrameStreamInfo.Builder>
+            {
+                public void parse(Attribute attribute, IFrameStreamInfo.Builder builder, ParseState state) //throws ParseException 
+                {
+                    builder.withUri(ParseUtil.parseQuotedString(attribute.value));
                 }
-            });
+            }
+
+
+            public String getTag()
+            {
+                return Constants.EXT_X_I_FRAME_STREAM_INF_TAG;
+            }
+
+            public bool hasData()
+            {
+                return true;
+            }
+
+            public void parse(String line, ParseState state) // throws ParseException 
+            {
+                mLineParser.parse(line, state);
+
+                IFrameStreamInfo.Builder builder = new IFrameStreamInfo.Builder();
+
+                ParseUtil.parseAttributes(line, builder, state, HANDLERS, getTag());
+                state.getMaster().iFramePlaylists.Add(builder.build());
+            }
         }
 
-        @Override
-        public String getTag() {
-            return Constants.EXT_X_I_FRAME_STREAM_INF_TAG;
-        }
-
-        @Override
-        public boolean hasData() {
-            return true;
-        }
-
-        @Override
-        public void parse(String line, ParseState state) throws ParseException {
-            mLineParser.parse(line, state);
-
-            final IFrameStreamInfo.Builder builder = new IFrameStreamInfo.Builder();
-
-            ParseUtil.parseAttributes(line, builder, state, HANDLERS, getTag());
-            state.getMaster().iFramePlaylists.add(builder.build());
-        }
-    };
-    
-    static final IExtTagParser EXT_X_STREAM_INF = new IExtTagParser() {
-        private final LineParser mLineParser = new MasterPlaylistLineParser(this);
-        private final Map<String, AttributeParser<StreamInfo.Builder>> HANDLERS = makeExtStreamInfHandlers(getTag());
-
+        public static readonly IExtTagParser EXT_X_STREAM_INF = new EXT_X_STREAM_INF_CLASS();
+        private class EXT_X_STREAM_INF_CLASS : IExtTagParser
         {
-            HANDLERS.put(Constants.AUDIO, new AttributeParser<StreamInfo.Builder>() {
-                @Override
-                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) throws ParseException {
-                    builder.withAudio(ParseUtil.parseQuotedString(attribute.value, getTag()));
-                }
-            });
+            private readonly LineParser mLineParser;
+            private readonly Dictionary<String, AttributeParser<StreamInfo.Builder>> HANDLERS;
 
-            HANDLERS.put(Constants.SUBTITLES, new AttributeParser<StreamInfo.Builder>() {
-                @Override
-                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) throws ParseException {
-                    builder.withSubtitles(ParseUtil.parseQuotedString(attribute.value, getTag()));
-                }
-            });
+            public EXT_X_STREAM_INF_CLASS()
+            {
+                mLineParser = new MasterPlaylistLineParser(this);
+                HANDLERS = HandlerMaker<StreamInfo.Builder>.makeExtStreamInfHandlers(getTag());
 
-            HANDLERS.put(Constants.CLOSED_CAPTIONS, new AttributeParser<StreamInfo.Builder>() {
-                @Override
-                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) throws ParseException {
-                    if (!attribute.value.equals(Constants.NO_CLOSED_CAPTIONS)) {
-                        builder.withClosedCaptions(ParseUtil.parseQuotedString(attribute.value, getTag()));
+                HANDLERS.Add(Constants.AUDIO, new AUDIO_AttributeParser());
+                HANDLERS.Add(Constants.SUBTITLES, new SUBTITLES_AttributeParser());
+                HANDLERS.Add(Constants.CLOSED_CAPTIONS, new CLOSED_CAPTIONS_AttributeParser());
+            }
+
+            private class AUDIO_AttributeParser : AttributeParser<StreamInfo.Builder>
+            {
+                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) // throws ParseException 
+                {
+                    builder.withAudio(ParseUtil.parseQuotedString(attribute.value));
+                }
+            }
+
+
+            private class SUBTITLES_AttributeParser : AttributeParser<StreamInfo.Builder>
+            {
+                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) // throws ParseException 
+                {
+                    builder.withSubtitles(ParseUtil.parseQuotedString(attribute.value));
+                }
+            }
+
+
+            private class CLOSED_CAPTIONS_AttributeParser : AttributeParser<StreamInfo.Builder>
+            {
+                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) // throws ParseException 
+                {
+                    if (!attribute.value.Equals(Constants.NO_CLOSED_CAPTIONS))
+                    {
+                        builder.withClosedCaptions(ParseUtil.parseQuotedString(attribute.value));
                     }
                 }
-            });
-        }
-
-        @Override
-        public String getTag() {
-            return Constants.EXT_X_STREAM_INF_TAG;
-        }
-
-        @Override
-        public boolean hasData() {
-            return true;
-        }
-
-        @Override
-        public void parse(String line, ParseState state) throws ParseException {
-            mLineParser.parse(line, state);
-
-            final StreamInfo.Builder builder = new StreamInfo.Builder();
-
-            ParseUtil.parseAttributes(line, builder, state, HANDLERS, getTag());
-            state.getMaster().streamInfo = builder.build();
-        }
-    };
-
-    static <T extends StreamInfoBuilder> Map<String, AttributeParser<T>> makeExtStreamInfHandlers(final String tag) {
-        final Map<String, AttributeParser<T>> handlers = new HashMap<>();
-
-        handlers.put(Constants.BANDWIDTH, new AttributeParser<T>() {
-            @Override
-            public void parse(Attribute attribute, T builder, ParseState state) throws ParseException {
-                builder.withBandwidth(ParseUtil.parseInt(attribute.value, tag));
             }
-        });
 
-        handlers.put(Constants.AVERAGE_BANDWIDTH, new AttributeParser<T>() {
-            @Override
-            public void parse(Attribute attribute, T builder, ParseState state) throws ParseException {
-                builder.withAverageBandwidth(ParseUtil.parseInt(attribute.value, tag));
+
+            public String getTag()
+            {
+                return Constants.EXT_X_STREAM_INF_TAG;
             }
-        });
 
-        handlers.put(Constants.CODECS, new AttributeParser<T>() {
-            @Override
-            public void parse(Attribute attribute, T builder, ParseState state) throws ParseException {
-                final String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value, tag).split(Constants.COMMA);
+            public bool hasData()
+            {
+                return true;
+            }
 
-                if (characteristicStrings.length > 0) {
-                    builder.withCodecs(Arrays.asList(characteristicStrings));
+            public void parse(String line, ParseState state) // throws ParseException 
+            {
+                mLineParser.parse(line, state);
+
+                StreamInfo.Builder builder = new StreamInfo.Builder();
+
+                ParseUtil.parseAttributes(line, builder, state, HANDLERS, getTag());
+                state.getMaster().streamInfo = builder.build();
+            }
+        };
+
+        public class HandlerMaker<T>
+        where T : StreamInfoBuilder
+        {
+            public static Dictionary<String, AttributeParser<T>> makeExtStreamInfHandlers(String tag)
+            {
+                Dictionary<String, AttributeParser<T>> handlers = new Dictionary<String, AttributeParser<T>>();
+
+                handlers.Add(Constants.BANDWIDTH, new BANDWIDTH_AttributeParser(tag));
+                handlers.Add(Constants.AVERAGE_BANDWIDTH, new AVERAGE_BANDWIDTH_AttributeParser(tag));
+                handlers.Add(Constants.CODECS, new CODECS_AttributeParser(tag));
+                handlers.Add(Constants.RESOLUTION, new RESOLUTION_AttributeParser(tag));
+                handlers.Add(Constants.FRAME_RATE, new FRAME_RATE_AttributeParser(tag));
+                handlers.Add(Constants.VIDEO, new VIDEO_AttributeParser(tag));
+                handlers.Add(Constants.PROGRAM_ID, new PROGRAM_ID_AttributeParser(tag));
+                return handlers;
+            }
+
+            abstract class BaseAttributeParser : AttributeParser<T>
+            {
+                protected String tag;
+                public BaseAttributeParser(String sTag)
+                {
+                    tag = sTag;
+                }
+
+                public abstract void parse(Attribute attribute, T builder, ParseState state);
+            }
+
+            private class BANDWIDTH_AttributeParser : BaseAttributeParser
+            {
+                public BANDWIDTH_AttributeParser(String sTag) : base(sTag) { }
+                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                {
+                    builder.withBandwidth(ParseUtil.parseInt(attribute.value, tag));
                 }
             }
-        });
 
-        handlers.put(Constants.RESOLUTION, new AttributeParser<T>() {
-            @Override
-            public void parse(Attribute attribute, T builder, ParseState state) throws ParseException {
-                builder.withResolution(ParseUtil.parseResolution(attribute.value, tag));
+            private class AVERAGE_BANDWIDTH_AttributeParser : BaseAttributeParser
+            {
+                public AVERAGE_BANDWIDTH_AttributeParser(String sTag) : base(sTag) { }
+                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                {
+                    builder.withAverageBandwidth(ParseUtil.parseInt(attribute.value, tag));
+                }
             }
-        });
 
-        handlers.put(Constants.FRAME_RATE, new AttributeParser<T>() {
-            @Override
-            public void parse(Attribute attribute, T builder, ParseState state) throws ParseException {
-                builder.withFrameRate(ParseUtil.parseFloat(attribute.value, tag));
+
+            private class CODECS_AttributeParser : BaseAttributeParser
+            {
+                public CODECS_AttributeParser(String sTag) : base(sTag) { }
+                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                {
+                    String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value, tag).Split(Constants.COMMA);
+
+                    if (characteristicStrings.Length > 0)
+                    {
+                        builder.withCodecs(characteristicStrings.ToList());
+                    }
+                }
             }
-        });
 
-        handlers.put(Constants.VIDEO, new AttributeParser<T>() {
-            @Override
-            public void parse(Attribute attribute, T builder, ParseState state) throws ParseException {
-                builder.withVideo(ParseUtil.parseQuotedString(attribute.value, tag));
+
+            private class RESOLUTION_AttributeParser : BaseAttributeParser
+            {
+                public RESOLUTION_AttributeParser(String sTag) : base(sTag) { }
+                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                {
+                    builder.withResolution(ParseUtil.parseResolution(attribute.value, tag));
+                }
             }
-        });
 
-        handlers.put(Constants.PROGRAM_ID, new AttributeParser<T>() {
-            @Override
-            public void parse(Attribute attribute, T builder, ParseState state) throws ParseException {
-                // deprecated
+
+            private class FRAME_RATE_AttributeParser : BaseAttributeParser
+            {
+                public FRAME_RATE_AttributeParser(String sTag) : base(sTag) { }
+                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                {
+                    builder.withFrameRate(ParseUtil.parseFloat(attribute.value, tag));
+                }
             }
-        });
 
-        return handlers;
+
+            private class VIDEO_AttributeParser : BaseAttributeParser
+            {
+                public VIDEO_AttributeParser(String sTag) : base(sTag) { }
+                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                {
+                    builder.withVideo(ParseUtil.parseQuotedString(attribute.value, tag));
+                }
+            }
+
+
+            class PROGRAM_ID_AttributeParser : BaseAttributeParser
+            {
+                public PROGRAM_ID_AttributeParser(string sTag) : base(sTag) { }
+
+                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                {
+                    // deprecated
+                }
+            }
+
+        }
     }
 }

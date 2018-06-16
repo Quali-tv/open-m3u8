@@ -1,28 +1,39 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Text;
+using Xunit;
+//import junit.framework.TestCase;
+//import org.junit.Test;
 
-import junit.framework.TestCase;
+namespace M3U8Parser
+{
+    public class LineParserStateTestCase // : TestCase // TODO: <--- JUnit stuff
+    {
+        protected ParseState mParseState //; // Replaced setUp method below... should be fine I think
+            = new ParseState(Encoding.UTF_8);
 
-import org.junit.Test;
+        // JUnit specific setUp method... should be fine done as above... I think
+        //protected override void setUp() // throws Exception 
+        //{
+        //    mParseState = new ParseState(Encoding.UTF_8);
+        //}
 
-public class LineParserStateTestCase extends TestCase {
-    protected ParseState mParseState;
-
-    @Override
-    protected void setUp() throws Exception {
-        mParseState = new ParseState(Encoding.UTF_8);
-    }
-
-    protected void assertParseThrows(IExtTagParser handler, String line, ParseExceptionType exceptionType) {
-        try {
-            handler.parse(line, mParseState);
-            assertFalse(true);
-        } catch (ParseException exception) {
-            assertEquals(exceptionType, exception.type);
+        protected void assertParseThrows(IExtTagParser handler, String line, ParseExceptionType exceptionType)
+        {
+            try
+            {
+                handler.parse(line, mParseState);
+                Assert.False(true);
+            }
+            catch (ParseException exception)
+            {
+                Assert.Equal(exceptionType, exception.type);
+            }
         }
-    }
 
-    @Test
-    public void test() {
-        // workaround for no tests found warning
+        //[Fact]
+        //public void test()
+        //{
+        //    // workaround for no tests found warning
+        //}
     }
 }

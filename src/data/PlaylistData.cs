@@ -1,10 +1,15 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-import java.util.Objects;
+namespace M3U8Parser
+{
+
+//import java.util.Objects;
 
 public class PlaylistData {
-    private final String mUri;
-    private final StreamInfo mStreamInfo;
+    private readonly String mUri;
+    private readonly StreamInfo mStreamInfo;
 
     private PlaylistData(String uri, StreamInfo streamInfo) {
         mUri = uri;
@@ -15,7 +20,7 @@ public class PlaylistData {
         return mUri;
     }
 
-    public boolean hasStreamInfo() {
+    public bool hasStreamInfo() {
         return mStreamInfo != null;
     }
 
@@ -27,35 +32,34 @@ public class PlaylistData {
         return new Builder(mUri, mStreamInfo);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(mUri, mStreamInfo);
+    public override int GetHashCode() {
+        // TODO: Implement
+        //return Objects.hash(mUri, mStreamInfo);
+        return 0;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof PlaylistData)) {
+    public override bool Equals(object o) {
+        if (!(o is PlaylistData)) {
             return false;
         }
 
         PlaylistData other = (PlaylistData) o;
-        return Objects.equals(mUri, other.mUri) && Objects.equals(mStreamInfo, other.mStreamInfo);
+        return object.Equals(mUri, other.mUri) && object.Equals(mStreamInfo, other.mStreamInfo);
     }
 
-    @Override
-    public String toString() {
+    public override string ToString() {
         return "PlaylistData [mStreamInfo=" + mStreamInfo
                 + ", mUri=" + mUri + "]";
     }
 
-    public static class Builder {
+    public class Builder {
         private String mUri;
         private StreamInfo mStreamInfo;
 
         public Builder() {
         }
 
-        private Builder(String uri, StreamInfo streamInfo) {
+        public Builder(String uri, StreamInfo streamInfo) {
             mUri = uri;
             mStreamInfo = streamInfo;
         }
@@ -79,4 +83,5 @@ public class PlaylistData {
             return new PlaylistData(mUri, mStreamInfo);
         }
     }
+}
 }

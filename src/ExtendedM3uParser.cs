@@ -1,134 +1,177 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+namespace M3U8Parser
+{
 
-import com.iheartradio.m3u8.data.Playlist;
+    // import com.iheartradio.m3u8.data.Playlist;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
+    // import java.io.IOException;
+    // import java.io.InputStream;
+    // import java.util.HashMap;
+    // import java.util.Map;
 
-class ExtendedM3uParser extends BaseM3uParser {
-    private final ParsingMode mParsingMode;
-    private final Map<String, IExtTagParser> mExtTagParsers = new HashMap<String, IExtTagParser>();
+    public class ExtendedM3uParser : BaseM3uParser
+    {
+        private readonly ParsingMode mParsingMode;
+        private readonly Dictionary<String, IExtTagParser> mExtTagParsers = new Dictionary<String, IExtTagParser>();
 
-    ExtendedM3uParser(InputStream inputStream, Encoding encoding, ParsingMode parsingMode) {
-        super(inputStream, encoding);
-        mParsingMode = parsingMode;
+        public ExtendedM3uParser(Stream inputStream, Encoding encoding, ParsingMode parsingMode) :
+            base(inputStream, encoding)
+        {
 
-        // TODO implement the remaining EXT tag handlers and add them here
-        putParsers(
-                ExtLineParser.EXTM3U_HANDLER,
-                ExtLineParser.EXT_X_VERSION_HANDLER,
-                ExtLineParser.EXT_X_START,
-                MediaPlaylistLineParser.EXT_X_PLAYLIST_TYPE,
-                MediaPlaylistLineParser.EXT_X_PROGRAM_DATE_TIME,
-                MediaPlaylistLineParser.EXT_X_KEY,
-                MediaPlaylistLineParser.EXT_X_TARGETDURATION,
-                MediaPlaylistLineParser.EXT_X_MEDIA_SEQUENCE,
-                MediaPlaylistLineParser.EXT_X_I_FRAMES_ONLY,
-                MasterPlaylistLineParser.EXT_X_MEDIA,
-                MediaPlaylistLineParser.EXT_X_ALLOW_CACHE,
-                MasterPlaylistLineParser.EXT_X_STREAM_INF,
-                MasterPlaylistLineParser.EXT_X_I_FRAME_STREAM_INF,
-                MediaPlaylistLineParser.EXTINF,
-                MediaPlaylistLineParser.EXT_X_ENDLIST,
-                MediaPlaylistLineParser.EXT_X_DISCONTINUITY,
-                MediaPlaylistLineParser.EXT_X_MAP,
-                MediaPlaylistLineParser.EXT_X_BYTERANGE
-        );
-    }
+            mParsingMode = parsingMode;
 
-    @Override
-    public Playlist parse() throws IOException, ParseException, PlaylistException {
-        validateAvailable();
+            // TODO implement the remaining EXT tag handlers and add them here
+            putParsers(
+                    ExtLineParser.EXTM3U_HANDLER,
+                    ExtLineParser.EXT_X_VERSION_HANDLER,
+                    ExtLineParser.EXT_X_START,
+                    MediaPlaylistLineParser.EXT_X_PLAYLIST_TYPE,
+                    MediaPlaylistLineParser.EXT_X_PROGRAM_DATE_TIME,
+                    MediaPlaylistLineParser.EXT_X_KEY,
+                    MediaPlaylistLineParser.EXT_X_TARGETDURATION,
+                    MediaPlaylistLineParser.EXT_X_MEDIA_SEQUENCE,
+                    MediaPlaylistLineParser.EXT_X_I_FRAMES_ONLY,
+                    MasterPlaylistLineParser.EXT_X_MEDIA,
+                    MediaPlaylistLineParser.EXT_X_ALLOW_CACHE,
+                    MasterPlaylistLineParser.EXT_X_STREAM_INF,
+                    MasterPlaylistLineParser.EXT_X_I_FRAME_STREAM_INF,
+                    MediaPlaylistLineParser.EXTINF,
+                    MediaPlaylistLineParser.EXT_X_ENDLIST,
+                    MediaPlaylistLineParser.EXT_X_DISCONTINUITY,
+                    MediaPlaylistLineParser.EXT_X_MAP,
+                    MediaPlaylistLineParser.EXT_X_BYTERANGE
+            );
+        }
 
-        final ParseState state = new ParseState(mEncoding);
-        final LineParser playlistParser = new PlaylistLineParser();
-        final LineParser trackLineParser = new TrackLineParser();
+        public override Playlist parse()
+        { // throws IOException, ParseException, PlaylistException
+            validateAvailable();
 
-        try {
-            while (mScanner.hasNext()) {
-                final String line = mScanner.next();
-                checkWhitespace(line);
+            ParseState state = new ParseState(mEncoding);
+            LineParser playlistParser = new PlaylistLineParser();
+            LineParser trackLineParser = new TrackLineParser();
 
-                if (line.length() == 0 || isComment(line)) {
-                    continue;
-                } else {
-                    if (isExtTag(line)) {
-                        final String tagKey = getExtTagKey(line);
-                        IExtTagParser tagParser = mExtTagParsers.get(tagKey);
+            try
+            {
+                while (mScanner.hasNext())
+                {
+                    String line = mScanner.next();
+                    checkWhitespace(line);
 
-                        if (tagParser == null) {
-                            //To support forward compatibility, when parsing Playlists, Clients
-                            //MUST:
-                            //o  ignore any unrecognized tags.
-                            if (mParsingMode.allowUnknownTags) {
-                                tagParser = ExtLineParser.EXT_UNKNOWN_HANDLER;
-                            } else {
-                                throw ParseException.create(ParseExceptionType.UNSUPPORTED_EXT_TAG_DETECTED, tagKey, line);
+                    if (line.Length == 0 || isComment(line))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (isExtTag(line))
+                        {
+                            String tagKey = getExtTagKey(line);
+                            mExtTagParsers.TryGetValue(tagKey, out IExtTagParser tagParser);
+
+                            if (tagParser == null)
+                            {
+                                //To support forward compatibility, when parsing Playlists, Clients
+                                //MUST:
+                                //o  ignore any unrecognized tags.
+                                if (mParsingMode.allowUnknownTags)
+                                {
+                                    tagParser = ExtLineParser.EXT_UNKNOWN_HANDLER;
+                                }
+                                else
+                                {
+                                    throw ParseException.create(ParseExceptionType.UNSUPPORTED_EXT_TAG_DETECTED, tagKey, line);
+                                }
+                            }
+
+                            tagParser.parse(line, state);
+
+                            if (state.isMedia() && state.getMedia().endOfList)
+                            {
+                                break;
                             }
                         }
-
-                        tagParser.parse(line, state);
-
-                        if (state.isMedia() && state.getMedia().endOfList) {
-                            break;
+                        else if (state.isMaster())
+                        {
+                            playlistParser.parse(line, state);
                         }
-                    } else if (state.isMaster()) {
-                        playlistParser.parse(line, state);
-                    } else if (state.isMedia()) {
-                        trackLineParser.parse(line, state);
-                    } else {
-                        throw ParseException.create(ParseExceptionType.UNKNOWN_PLAYLIST_TYPE, line);
+                        else if (state.isMedia())
+                        {
+                            trackLineParser.parse(line, state);
+                        }
+                        else
+                        {
+                            throw ParseException.create(ParseExceptionType.UNKNOWN_PLAYLIST_TYPE, line);
+                        }
                     }
                 }
+
+                Playlist playlist = state.buildPlaylist();
+                PlaylistValidation validation = PlaylistValidation.from(playlist, mParsingMode);
+
+                if (validation.isValid())
+                {
+                    return playlist;
+                }
+                else
+                {
+                    throw new PlaylistException(mScanner.getInput(), validation.getErrors());
+                }
             }
-
-            final Playlist playlist = state.buildPlaylist();
-            final PlaylistValidation validation = PlaylistValidation.from(playlist, mParsingMode);
-
-            if (validation.isValid()) {
-                return playlist;
-            } else {
-                throw new PlaylistException(mScanner.getInput(), validation.getErrors());
-            }
-        } catch (ParseException exception) {
-            exception.setInput(mScanner.getInput());
-            throw exception;
-        }
-    }
-
-    private void putParsers(IExtTagParser... parsers) {
-        if (parsers != null) {
-            for (IExtTagParser parser : parsers) {
-                mExtTagParsers.put(parser.getTag(), parser);
+            catch (ParseException exception)
+            {
+                exception.setInput(mScanner.getInput());
+                throw exception;
             }
         }
-    }
 
-    private void checkWhitespace(final String line) throws ParseException {
-        if (!isComment(line)) {
-            if (line.length() != line.trim().length()) {
-                throw ParseException.create(ParseExceptionType.WHITESPACE_IN_TRACK, line);
+        private void putParsers(params IExtTagParser[] parsers)
+        {
+            if (parsers != null)
+            {
+                foreach (IExtTagParser parser in parsers)
+                {
+                    mExtTagParsers.Add(parser.getTag(), parser);
+                }
             }
         }
-    }
 
-    private boolean isComment(final String line) {
-        return line.startsWith(Constants.COMMENT_PREFIX) && !isExtTag(line);
-    }
+        private void checkWhitespace(String line)
+        { //throws ParseException
+            if (!isComment(line))
+            {
+                if (line.Length != line.Trim().Length)
+                {
+                    throw ParseException.create(ParseExceptionType.WHITESPACE_IN_TRACK, line);
+                }
+            }
+        }
 
-    private boolean isExtTag(final String line) {
-        return line.startsWith(Constants.EXT_TAG_PREFIX);
-    }
+        private bool isComment(String line)
+        {
+            return line.StartsWith(Constants.COMMENT_PREFIX) && !isExtTag(line);
+        }
 
-    private String getExtTagKey(final String line) {
-        int index = line.indexOf(Constants.EXT_TAG_END);
+        private bool isExtTag(String line)
+        {
+            return line.StartsWith(Constants.EXT_TAG_PREFIX);
+        }
 
-        if (index == -1) {
-            return line.substring(1);
-        } else {
-            return line.substring(1, index);
+        private String getExtTagKey(String line)
+        {
+            int index = line.IndexOf(Constants.EXT_TAG_END);
+
+            if (index == -1)
+            {
+                return line.Substring(1);
+            }
+            else
+            {
+                return line.Substring(1, index - 1);
+            }
         }
     }
 }

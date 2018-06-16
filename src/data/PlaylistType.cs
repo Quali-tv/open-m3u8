@@ -1,30 +1,34 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
+// import java.util.HashMap;
+// import java.util.Map;
 
-import java.util.HashMap;
-import java.util.Map;
+namespace M3U8Parser
+{
+    public class PlaylistType {
+        public static readonly PlaylistType EVENT = new PlaylistType("EVENT");
+        public static readonly PlaylistType VOD = new PlaylistType("VOD");
+        
+        private static readonly Dictionary<String, PlaylistType> sMap = new Dictionary<String, PlaylistType>();
 
-public enum PlaylistType {
-    EVENT("EVENT"), VOD("VOD");
-    
-    private static final Map<String, PlaylistType> sMap = new HashMap<String, PlaylistType>();
+        private readonly String value;
 
-    private final String value;
-
-    static {
-        for (PlaylistType mediaType : PlaylistType.values()) {
-            sMap.put(mediaType.value, mediaType);
+        static PlaylistType() {
+                sMap.Add(EVENT.value, EVENT);
+                sMap.Add(VOD.value, VOD);
         }
-    }
 
-    private PlaylistType(String value) {
-        this.value = value;
-    }
+        private PlaylistType(String value) {
+            this.value = value;
+        }
 
-    public static PlaylistType fromValue(String value) {
-        return sMap.get(value);
-    }
-    
-    public String getValue() {
-        return value;
+        public static PlaylistType fromValue(String value) {
+            return sMap[value];
+        }
+        
+        public String getValue() {
+            return value;
+        }
     }
 }

@@ -1,19 +1,23 @@
-package com.iheartradio.m3u8.data;
+using System;
+using System.Collections.Generic;
+using System.Text;
+// import java.util.List;
+// import java.util.Objects;
 
-import java.util.List;
-import java.util.Objects;
 
+namespace M3U8Parser
+{
 public class MediaPlaylist {
-    private final List<TrackData> mTracks;
-    private final List<String> mUnknownTags;
-    private final int mTargetDuration;
-    private final int mMediaSequenceNumber;
-    private final boolean mIsIframesOnly;
-    private final boolean mIsOngoing;
-    private final PlaylistType mPlaylistType;
-    private final StartData mStartData;
+    private readonly List<TrackData> mTracks;
+    private readonly List<String> mUnknownTags;
+    private readonly int mTargetDuration;
+    private readonly int mMediaSequenceNumber;
+    private readonly bool mIsIframesOnly;
+    private readonly bool mIsOngoing;
+    private readonly PlaylistType mPlaylistType;
+    private readonly StartData mStartData;
 
-    private MediaPlaylist(List<TrackData> tracks, List<String> unknownTags, int targetDuration, StartData startData, int mediaSequenceNumber, boolean isIframesOnly, boolean isOngoing, PlaylistType playlistType) {
+    private MediaPlaylist(List<TrackData> tracks, List<String> unknownTags, int targetDuration, StartData startData, int mediaSequenceNumber, bool isIframesOnly, bool isOngoing, PlaylistType playlistType) {
         mTracks = DataUtil.emptyOrUnmodifiable(tracks);
         mUnknownTags = DataUtil.emptyOrUnmodifiable(unknownTags);
         mTargetDuration = targetDuration;
@@ -24,7 +28,7 @@ public class MediaPlaylist {
         mPlaylistType = playlistType;
     }
 
-    public boolean hasTracks() {
+    public bool hasTracks() {
         return !mTracks.isEmpty();
     }
 
@@ -40,15 +44,15 @@ public class MediaPlaylist {
         return mMediaSequenceNumber;
     }
     
-    public boolean isIframesOnly() {
+    public bool isIframesOnly() {
         return mIsIframesOnly;
     }
 
-    public boolean isOngoing() {
+    public bool isOngoing() {
         return mIsOngoing;
     }
 
-    public boolean hasUnknownTags() {
+    public bool hasUnknownTags() {
         return !mUnknownTags.isEmpty();
     }
     
@@ -60,7 +64,7 @@ public class MediaPlaylist {
         return mStartData;
     }
     
-    public boolean hasStartData() {
+    public bool hasStartData() {
         return mStartData != null;
     }
 
@@ -68,19 +72,19 @@ public class MediaPlaylist {
         return mPlaylistType;
     }
     
-    public boolean hasPlaylistType() {
+    public bool hasPlaylistType() {
         return mPlaylistType != null;
     }
 
-    public int getDiscontinuitySequenceNumber(final int segmentIndex) {
-        if (segmentIndex < 0 || segmentIndex >= mTracks.size()) {
-            throw new IndexOutOfBoundsException();
+    public int getDiscontinuitySequenceNumber(int segmentIndex) {
+        if (segmentIndex < 0 || segmentIndex >= mTracks.Count) {
+            throw new IndexOutOfRangeException();
         }
 
         int discontinuitySequenceNumber = 0;
 
         for (int i = 0; i <= segmentIndex; ++i) {
-            if (mTracks.get(i).hasDiscontinuity()) {
+            if (mTracks[i].hasDiscontinuity()) {
                 ++discontinuitySequenceNumber;
             }
         }
@@ -92,67 +96,66 @@ public class MediaPlaylist {
         return new Builder(mTracks, mUnknownTags, mTargetDuration, mMediaSequenceNumber, mIsIframesOnly, mIsOngoing, mPlaylistType, mStartData);
     }
     
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                mTracks,
-                mUnknownTags,
-                mTargetDuration,
-                mMediaSequenceNumber,
-                mIsIframesOnly,
-                mIsOngoing,
-                mPlaylistType,
-                mStartData);
+    public override int GetHashCode() {
+        // TODO: Implement 
+        //return Objects.hash(
+                // mTracks,
+                // mUnknownTags,
+                // mTargetDuration,
+                // mMediaSequenceNumber,
+                // mIsIframesOnly,
+                // mIsOngoing,
+                // mPlaylistType,
+                // mStartData);
+        return 0;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof MediaPlaylist)) {
+    public override bool Equals(object o) {
+        if (!(o is MediaPlaylist)) {
             return false;
         }
 
         MediaPlaylist other = (MediaPlaylist) o;
 
-        return Objects.equals(mTracks, other.mTracks) &&
-               Objects.equals(mUnknownTags, other.mUnknownTags) &&
+        return mTracks.SequenceEquals(other.mTracks) &&
+               mUnknownTags.SequenceEquals(other.mUnknownTags) &&
                mTargetDuration == other.mTargetDuration &&
                mMediaSequenceNumber == other.mMediaSequenceNumber &&
                mIsIframesOnly == other.mIsIframesOnly &&
                mIsOngoing == other.mIsOngoing &&
-               Objects.equals(mPlaylistType, other.mPlaylistType) &&
-               Objects.equals(mStartData, other.mStartData);
+               object.Equals(mPlaylistType, other.mPlaylistType) &&
+               object.Equals(mStartData, other.mStartData);
     }
 
-    @Override
-    public String toString() {
+    public override string ToString() {
         return new StringBuilder()
-                .append("(MediaPlaylist")
-                .append(" mTracks=").append(mTracks)
-                .append(" mUnknownTags=").append(mUnknownTags)
-                .append(" mTargetDuration=").append(mTargetDuration)
-                .append(" mMediaSequenceNumber=").append(mMediaSequenceNumber)
-                .append(" mIsIframesOnly=").append(mIsIframesOnly)
-                .append(" mIsOngoing=").append(mIsOngoing)
-                .append(" mPlaylistType=").append(mPlaylistType)
-                .append(" mStartData=").append(mStartData)
-                .append(")")
-                .toString();
+                .Append("(MediaPlaylist")
+                .Append(" mTracks=").Append(mTracks)
+                .Append(" mUnknownTags=").Append(mUnknownTags)
+                .Append(" mTargetDuration=").Append(mTargetDuration)
+                .Append(" mMediaSequenceNumber=").Append(mMediaSequenceNumber)
+                .Append(" mIsIframesOnly=").Append(mIsIframesOnly)
+                .Append(" mIsOngoing=").Append(mIsOngoing)
+                .Append(" mPlaylistType=").Append(mPlaylistType)
+                .Append(" mStartData=").Append(mStartData)
+                .Append(")")
+                .ToString();
     }
 
-    public static class Builder {
+    public class Builder {
         private List<TrackData> mTracks;
         private List<String> mUnknownTags;
         private int mTargetDuration;
         private int mMediaSequenceNumber;
-        private boolean mIsIframesOnly;
-        private boolean mIsOngoing;
+        private bool mIsIframesOnly;
+        private bool mIsOngoing;
         private PlaylistType mPlaylistType;
         private StartData mStartData;
 
         public Builder() {
         }
 
-        private Builder(List<TrackData> tracks, List<String> unknownTags, int targetDuration, int mediaSequenceNumber, boolean isIframesOnly, boolean isOngoing, PlaylistType playlistType, StartData startData) {
+        public Builder(List<TrackData> tracks, List<String> unknownTags, int targetDuration, int mediaSequenceNumber, bool isIframesOnly, bool isOngoing, PlaylistType playlistType, StartData startData) {
             mTracks = tracks;
             mUnknownTags = unknownTags;
             mTargetDuration = targetDuration;
@@ -188,12 +191,12 @@ public class MediaPlaylist {
             return this;
         }
         
-        public Builder withIsIframesOnly(boolean isIframesOnly) {
+        public Builder withIsIframesOnly(bool isIframesOnly) {
             mIsIframesOnly = isIframesOnly;
             return this;
         }
 
-        public Builder withIsOngoing(boolean isOngoing) {
+        public Builder withIsOngoing(bool isOngoing) {
             mIsOngoing = isOngoing;
             return this;
         }
@@ -207,4 +210,5 @@ public class MediaPlaylist {
             return new MediaPlaylist(mTracks, mUnknownTags, mTargetDuration, mStartData, mMediaSequenceNumber, mIsIframesOnly, mIsOngoing, mPlaylistType);
         }
     }
+}
 }

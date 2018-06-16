@@ -1,26 +1,34 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Collections.Generic;
+using System.Text;
+//import java.util.Set;
 
-import java.util.Set;
+namespace M3U8Parser
+{
+    /**
+     * Represents a playlist with invalid data.
+     */
+    public class PlaylistException : Exception
+    {
+        private const long serialVersionUID = 7426782115004559238L;
 
-/**
- * Represents a playlist with invalid data.
- */
-public class PlaylistException extends Exception {
-    private static final long serialVersionUID = 7426782115004559238L;
+        private readonly String mInput;
+        private readonly HashSet<PlaylistError> mErrors;
 
-    private final String mInput;
-    private final Set<PlaylistError> mErrors;
+        public PlaylistException(String input, HashSet<PlaylistError> errors)
+        {
+            mInput = input;
+            mErrors = errors;
+        }
 
-    public PlaylistException(String input, Set<PlaylistError> errors) {
-        mInput = input;
-        mErrors = errors;
-    }
+        public String getInput()
+        {
+            return mInput;
+        }
 
-    public String getInput() {
-        return mInput;
-    }
-
-    public Set<PlaylistError> getErrors() {
-        return mErrors;
+        public HashSet<PlaylistError> getErrors()
+        {
+            return mErrors;
+        }
     }
 }

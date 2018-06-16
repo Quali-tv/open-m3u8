@@ -1,18 +1,20 @@
-package com.iheartradio.m3u8;
+using System;
+using System.IO;
+using System.Text;
+//import java.io.IOException;
+//import java.io.OutputStream;
+//
+//import com.iheartradio.m3u8.data.Playlist;
 
-import java.io.IOException;
-import java.io.OutputStream;
+namespace M3U8Parser
+{
+    public class M3uWriter : Writer
+    {
+        public M3uWriter(Stream outputStream, Encoding encoding) : base(outputStream, encoding) { }
 
-import com.iheartradio.m3u8.data.Playlist;
-
-class M3uWriter extends Writer{
-
-    M3uWriter(OutputStream outputStream, Encoding encoding) {
-        super(outputStream, encoding);
-    }
-
-    @Override
-    void doWrite(Playlist playlist) throws IOException {
-        throw new UnsupportedOperationException();
+        public override void doWrite(Playlist playlist) //throws IOException 
+        {
+            throw new InvalidOperationException();
+        }
     }
 }

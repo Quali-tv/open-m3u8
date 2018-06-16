@@ -1,53 +1,59 @@
-package com.iheartradio.m3u8;
+using System;
+using System.Collections.Generic;
+using System.Text;
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//import com.iheartradio.m3u8.data.IFrameStreamInfo;
+//import com.iheartradio.m3u8.data.MasterPlaylist;
+//import com.iheartradio.m3u8.data.MediaData;
+//import com.iheartradio.m3u8.data.PlaylistData;
+//import com.iheartradio.m3u8.data.StartData;
+//import com.iheartradio.m3u8.data.StreamInfo;
 
-import java.util.ArrayList;
-import java.util.List;
+namespace M3U8Parser
+{
+    public class MasterParseState : PlaylistParseState<MasterPlaylist>
+    {
+        private List<String> mUnknownTags;
+        private StartData mStartData;
 
-import com.iheartradio.m3u8.data.IFrameStreamInfo;
-import com.iheartradio.m3u8.data.MasterPlaylist;
-import com.iheartradio.m3u8.data.MediaData;
-import com.iheartradio.m3u8.data.PlaylistData;
-import com.iheartradio.m3u8.data.StartData;
-import com.iheartradio.m3u8.data.StreamInfo;
+        public readonly List<PlaylistData> playlists = new List<PlaylistData>();
+        public readonly List<IFrameStreamInfo> iFramePlaylists = new List<IFrameStreamInfo>();
+        public readonly List<MediaData> mediaData = new List<MediaData>();
 
-class MasterParseState implements PlaylistParseState<MasterPlaylist> {
-    private List<String> mUnknownTags;
-    private StartData mStartData;
+        public StreamInfo streamInfo;
 
-    public final List<PlaylistData> playlists = new ArrayList<>();
-    public final List<IFrameStreamInfo> iFramePlaylists = new ArrayList<>();
-    public final List<MediaData> mediaData = new ArrayList<>();
+        public bool isDefault;
+        public bool isNotAutoSelect;
 
-    public StreamInfo streamInfo;
+        public void clearMediaDataState()
+        {
+            isDefault = false;
+            isNotAutoSelect = false;
+        }
 
-    public boolean isDefault;
-    public boolean isNotAutoSelect;
+        public PlaylistParseState<MasterPlaylist> setUnknownTags(List<String> unknownTags)
+        {
+            mUnknownTags = unknownTags;
+            return this;
+        }
 
-    public void clearMediaDataState() {
-        isDefault = false;
-        isNotAutoSelect = false;
-    }
+        public PlaylistParseState<MasterPlaylist> setStartData(StartData startData)
+        {
+            mStartData = startData;
+            return this;
+        }
 
-    @Override
-    public PlaylistParseState<MasterPlaylist> setUnknownTags(final List<String> unknownTags) {
-        mUnknownTags = unknownTags;
-        return this;
-    }
-
-    @Override
-    public PlaylistParseState<MasterPlaylist> setStartData(final StartData startData) {
-        mStartData = startData;
-        return this;
-    }
-
-    @Override
-    public MasterPlaylist buildPlaylist() throws ParseException {
-        return new MasterPlaylist.Builder()
-                .withPlaylists(playlists)
-                .withIFramePlaylists(iFramePlaylists)
-                .withMediaData(mediaData)
-                .withUnknownTags(mUnknownTags)
-                .withStartData(mStartData)
-                .build();
+        public MasterPlaylist buildPlaylist() //throws ParseException 
+        {
+            return new MasterPlaylist.Builder()
+                    .withPlaylists(playlists)
+                    .withIFramePlaylists(iFramePlaylists)
+                    .withMediaData(mediaData)
+                    .withUnknownTags(mUnknownTags)
+                    .withStartData(mStartData)
+                    .build();
+        }
     }
 }
