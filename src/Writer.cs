@@ -20,29 +20,29 @@ namespace M3U8Parser
             }
         }
 
-        public void writeTagLine(String tag) //throws IOException 
+        public void writeTagLine(String tag)
         {
             writeLine(Constants.COMMENT_PREFIX + tag);
         }
 
-        public void writeTagLine(String tag, Object value) //throws IOException 
+        public void writeTagLine(String tag, Object value)
         {
             writeLine(Constants.COMMENT_PREFIX + tag + Constants.EXT_TAG_END + value);
         }
 
-        public void writeLine(String line) //throws IOException 
+        public void writeLine(String line)
         {
             tagWriter.write(line);
             tagWriter.write("\n");
         }
 
-        public void write(Playlist playlist) //throws IOException, ParseException, PlaylistException 
+        public void write(Playlist playlist)
         {
             doWrite(playlist);
 
             tagWriter.flush();
         }
 
-        public abstract void doWrite(Playlist playlist); // throws IOException, ParseException, PlaylistException;
+        public abstract void doWrite(Playlist playlist);
     }
 }

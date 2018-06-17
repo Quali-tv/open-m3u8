@@ -6,7 +6,7 @@ namespace M3U8Parser
 {
     public abstract class ExtTagWriter : IExtTagWriter
     {
-        public virtual void write(TagWriter tagWriter, Playlist playlist) //throws IOException, ParseException
+        public virtual void write(TagWriter tagWriter, Playlist playlist)
         {
             if (!hasData())
             {
@@ -18,7 +18,7 @@ namespace M3U8Parser
 
         public abstract bool hasData();
 
-        protected void writeAttributes<T>(TagWriter tagWriter, T attributes, Dictionary<String, AttributeWriter<T>> attributeWriters) //throws IOException, ParseException 
+        protected void writeAttributes<T>(TagWriter tagWriter, T attributes, Dictionary<String, AttributeWriter<T>> attributeWriters) 
         {
             StringBuilder sb = new StringBuilder();
 
@@ -75,7 +75,7 @@ namespace M3U8Parser
             }
 
             public override void write(TagWriter tagWriter, Playlist playlist)
-            { // throws IOException
+            {
                 List<String> unknownTags;
                 if (playlist.hasMasterPlaylist() && playlist.getMasterPlaylist().hasUnknownTags())
                 {
@@ -110,7 +110,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public override void write(TagWriter tagWriter, Playlist playlist) // throws IOException 
+            public override void write(TagWriter tagWriter, Playlist playlist) 
             {
                 tagWriter.writeTag(getTag(), playlist.getCompatibilityVersion().ToString());
             }

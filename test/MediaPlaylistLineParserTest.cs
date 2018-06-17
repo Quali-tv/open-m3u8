@@ -8,7 +8,7 @@ namespace M3U8Parser
     public class MediaPlaylistLineParserTest : LineParserStateTestCase
     {
         [Fact]
-        public void testEXT_X_TARGETDURATION() // throws Exception 
+        public void testEXT_X_TARGETDURATION()
         {
             IExtTagParser handler = MediaPlaylistLineParser.EXT_X_TARGETDURATION;
             String tag = Constants.EXT_X_TARGETDURATION_TAG;
@@ -23,7 +23,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testEXTINF() // throws Exception 
+        public void testEXTINF()
         {
             IExtTagParser handler = MediaPlaylistLineParser.EXTINF;
             String tag = Constants.EXTINF_TAG;
@@ -37,7 +37,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testEXT_X_KEY() // throws Exception 
+        public void testEXT_X_KEY()
         {
             IExtTagParser handler = MediaPlaylistLineParser.EXT_X_KEY;
             String tag = Constants.EXT_X_KEY_TAG;
@@ -70,7 +70,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testEXT_X_MAP() // throws Exception 
+        public void testEXT_X_MAP()
         {
             IExtTagParser handler = MediaPlaylistLineParser.EXT_X_MAP;
             String tag = Constants.EXT_X_MAP;
@@ -92,7 +92,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testEXT_X_BYTERANGE() // throws Exception 
+        public void testEXT_X_BYTERANGE()
         {
             IExtTagParser handler = MediaPlaylistLineParser.EXT_X_BYTERANGE;
             String tag = Constants.EXT_X_BYTERANGE_TAG;

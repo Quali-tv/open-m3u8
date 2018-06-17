@@ -40,12 +40,12 @@ namespace M3U8Parser
             return r.width + "x" + r.height;
         }
 
-        public static String writeQuotedString(String unquotedString, String tag = null) // throws ParseException 
+        public static String writeQuotedString(String unquotedString, String tag = null)
         {
             return writeQuotedString(unquotedString, false, tag);
         }
         
-        public static String writeQuotedString(String unquotedString, bool optional, String tag = null) // throws ParseException 
+        public static String writeQuotedString(String unquotedString, bool optional, String tag = null)
         {
             if (unquotedString != null || !optional)
             {
@@ -77,7 +77,7 @@ namespace M3U8Parser
             return "\"\"";
         }
 
-        public static String encodeUri(String decodedUri) // throws ParseException 
+        public static String encodeUri(String decodedUri)
         {
             try
             {

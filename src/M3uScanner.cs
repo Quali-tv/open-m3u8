@@ -28,7 +28,7 @@ namespace M3U8Parser
             return !mScanner.EndOfStream;
         }
 
-        public String next() //throws ParseException 
+        public String next()
         {
             String line = mScanner.ReadLine();
 

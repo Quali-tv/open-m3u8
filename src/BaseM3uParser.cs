@@ -22,7 +22,7 @@ namespace M3U8Parser
 
         public abstract Playlist parse();
 
-        protected void validateAvailable() // throws EOFException
+        protected void validateAvailable()
         {
             if (!isAvailable())
             {

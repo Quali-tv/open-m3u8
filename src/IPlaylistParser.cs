@@ -5,7 +5,7 @@ namespace M3U8Parser
 {
     interface IPlaylistParser
     {
-        Playlist parse(); // throws IOException, ParseException, PlaylistException
+        Playlist parse();
         bool isAvailable();
     }
 }

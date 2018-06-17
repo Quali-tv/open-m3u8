@@ -53,7 +53,7 @@ namespace M3U8Parser
         //[InlineData(new byte[] { -1, -1 }, "0xffff")]
         //[InlineData(new byte[] { -121, -6 }, "0x87fa")]
         [InlineData(new byte[] { 75, 118 }, "0x4b76")]
-        public void writeHexadecimal(byte[] input, String expected) // throws Exception 
+        public void writeHexadecimal(byte[] input, String expected)
         {
             Assert.Equal(expected, WriteUtil.writeHexadecimal(input.ToList()));
         }

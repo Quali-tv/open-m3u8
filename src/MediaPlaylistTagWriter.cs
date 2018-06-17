@@ -6,7 +6,7 @@ namespace M3U8Parser
 {
     public abstract class MediaPlaylistTagWriter : ExtTagWriter
     {
-        public override void write(TagWriter tagWriter, Playlist playlist) // throws IOException, ParseException 
+        public override void write(TagWriter tagWriter, Playlist playlist)
         {
             if (playlist.hasMediaPlaylist())
             {
@@ -14,7 +14,7 @@ namespace M3U8Parser
             }
         }
 
-        public virtual void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException, ParseException 
+        public virtual void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
         {
             tagWriter.writeTag(getTag());
         }
@@ -35,7 +35,7 @@ namespace M3U8Parser
                 return false;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 if (!mediaPlaylist.isOngoing())
                 {
@@ -57,7 +57,7 @@ namespace M3U8Parser
                 return false;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 if (mediaPlaylist.isIframesOnly())
                 {
@@ -79,7 +79,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 if (mediaPlaylist.getPlaylistType() != null)
                 {
@@ -109,7 +109,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(StartData attributes) // throws ParseException
+                public String write(StartData attributes)
                 {
                     return attributes.getTimeOffset().ToString();
                 }
@@ -123,7 +123,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(StartData attributes) // throws ParseException
+                public String write(StartData attributes)
                 {
                     if (attributes.isPrecise())
                     {
@@ -146,7 +146,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 if (mediaPlaylist.hasStartData())
                 {
@@ -169,7 +169,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 tagWriter.writeTag(getTag(), mediaPlaylist.getTargetDuration().ToString());
             }
@@ -188,7 +188,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 tagWriter.writeTag(getTag(), mediaPlaylist.getMediaSequenceNumber().ToString());
             }
@@ -219,7 +219,7 @@ namespace M3U8Parser
         public static readonly SectionWriter MEDIA_SEGMENTS = new MEDIA_SEGMENTS_CLASS();
         private class MEDIA_SEGMENTS_CLASS : SectionWriter
         {
-            public void write(TagWriter tagWriter, Playlist playlist) // throws IOException, ParseException 
+            public void write(TagWriter tagWriter, Playlist playlist)
             {
                 if (playlist.hasMediaPlaylist())
                 {
@@ -248,7 +248,7 @@ namespace M3U8Parser
             }
         }
 
-        private static void writeExtinf(TagWriter tagWriter, Playlist playlist, TrackData trackData) // throws IOException
+        private static void writeExtinf(TagWriter tagWriter, Playlist playlist, TrackData trackData)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -270,7 +270,7 @@ namespace M3U8Parser
             tagWriter.writeTag(Constants.EXTINF_TAG, builder.ToString());
         }
 
-        private static void writeByteRange(TagWriter tagWriter, ByteRange byteRange) // throws IOException
+        private static void writeByteRange(TagWriter tagWriter, ByteRange byteRange)
         {
             String value;
 
@@ -324,7 +324,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(EncryptionData encryptionData) // throws ParseException
+                public String write(EncryptionData encryptionData)
                 {
                     return WriteUtil.writeQuotedString(encryptionData.getUri());
                 }
@@ -350,7 +350,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(EncryptionData encryptionData) // throws ParseException
+                public String write(EncryptionData encryptionData)
                 {
                     //TODO check for version 5
                     return WriteUtil.writeQuotedString(encryptionData.getKeyFormat(), true);
@@ -364,7 +364,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(EncryptionData encryptionData) // throws ParseException
+                public String write(EncryptionData encryptionData)
                 {
                     //TODO check for version 5
                     return WriteUtil.writeQuotedString(WriteUtil.join(encryptionData.getKeyFormatVersions(), Constants.LIST_SEPARATOR), true);
@@ -382,12 +382,12 @@ namespace M3U8Parser
                 return true;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 writeAttributes(tagWriter, mEncryptionData, HANDLERS);
             }
 
-            public void writeTrackData(TagWriter tagWriter, Playlist playlist, TrackData trackData) // throws IOException, ParseException 
+            public void writeTrackData(TagWriter tagWriter, Playlist playlist, TrackData trackData)
             {
                 if (trackData != null && trackData.hasEncryptionData())
                 {
@@ -419,7 +419,7 @@ namespace M3U8Parser
             private class URI_AttributeWriter : AttributeWriter<MapInfo>
             {
 
-                public String write(MapInfo attributes) // throws ParseException
+                public String write(MapInfo attributes)
                 {
                     return WriteUtil.writeQuotedString(attributes.getUri());
                 }
@@ -433,7 +433,7 @@ namespace M3U8Parser
 
             private class BYTERANGE_AttributeWriter : AttributeWriter<MapInfo>
             {
-                public String write(MapInfo attributes) // throws ParseException
+                public String write(MapInfo attributes)
                 {
                     ByteRange byteRange = attributes.getByteRange();
                     String value;
@@ -466,12 +466,12 @@ namespace M3U8Parser
                 return Constants.EXT_X_MAP;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
             {
                 writeAttributes(tagWriter, mMapInfo, HANDLERS);
             }
 
-            public void writeTrackData(TagWriter tagWriter, Playlist playlist, TrackData trackData) // throws IOException, ParseException 
+            public void writeTrackData(TagWriter tagWriter, Playlist playlist, TrackData trackData)
             {
                 if (trackData != null && trackData.getMapInfo() != null)
                 {

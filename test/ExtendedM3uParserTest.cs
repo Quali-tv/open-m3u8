@@ -14,7 +14,7 @@ namespace M3U8Parser
         // }
 
         [Fact]
-        public void testParseMaster() // throws Exception 
+        public void testParseMaster()
         {
             List<MediaData> expectedMediaData = new List<MediaData>();
 
@@ -52,7 +52,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testLenientParsing() // throws Exception 
+        public void testLenientParsing()
         {
             String validData =
                     "#EXTM3U\n" +
@@ -74,7 +74,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testParseMedia() // throws Exception 
+        public void testParseMedia()
         {
             String absolute = "http://www.my.song/file1.mp3";
             String relative = "user1/file2.mp3";
@@ -109,7 +109,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testParsingMultiplePlaylists() // throws Exception 
+        public void testParsingMultiplePlaylists()
         {
             using(Stream inputStream = TestUtil.inputStreamFromResource("twoMediaPlaylists.m3u8"))
             {
@@ -146,7 +146,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testParseDiscontinuity() // throws Exception 
+        public void testParseDiscontinuity()
         {
             String absolute = "http://www.my.song/file1.mp3";
             String relative = "user1/file2.mp3";

@@ -8,7 +8,7 @@ namespace M3U8Parser
     {
         public M3uWriter(Stream outputStream, Encoding encoding) : base(outputStream, encoding) { }
 
-        public override void doWrite(Playlist playlist) //throws IOException 
+        public override void doWrite(Playlist playlist)
         {
             throw new InvalidOperationException();
         }

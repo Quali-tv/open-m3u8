@@ -5,6 +5,6 @@ namespace M3U8Parser
 {
     public interface SectionWriter
     {
-        void write(TagWriter tagWriter, Playlist playlist); // throws IOException, ParseException;
+        void write(TagWriter tagWriter, Playlist playlist);
     }
 }

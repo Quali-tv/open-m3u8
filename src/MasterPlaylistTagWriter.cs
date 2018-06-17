@@ -6,7 +6,7 @@ namespace M3U8Parser
 {
     abstract class MasterPlaylistTagWriter : ExtTagWriter
     {
-        public override void write(TagWriter tagWriter, Playlist playlist) // throws IOException, ParseException 
+        public override void write(TagWriter tagWriter, Playlist playlist)
         {
             if (playlist.hasMasterPlaylist())
             {
@@ -14,7 +14,7 @@ namespace M3U8Parser
             }
         }
 
-        public virtual void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist) // throws IOException, ParseException 
+        public virtual void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist)
         {
             tagWriter.writeTag(getTag());
         }
@@ -49,7 +49,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return mediaData.getType().getValue();
                 }
@@ -62,7 +62,7 @@ namespace M3U8Parser
                     return mediaData.hasUri();
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeQuotedString(mediaData.getUri());
                 }
@@ -75,7 +75,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeQuotedString(mediaData.getGroupId());
                 }
@@ -89,7 +89,7 @@ namespace M3U8Parser
                     return mediaData.hasLanguage();
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeQuotedString(mediaData.getLanguage());
                 }
@@ -102,7 +102,7 @@ namespace M3U8Parser
                     return mediaData.hasAssociatedLanguage();
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeQuotedString(mediaData.getAssociatedLanguage());
                 }
@@ -116,7 +116,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeQuotedString(mediaData.getName());
                 }
@@ -129,7 +129,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeYesNo(mediaData.isDefault());
                 }
@@ -142,7 +142,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeYesNo(mediaData.isAutoSelect());
                 }
@@ -155,7 +155,7 @@ namespace M3U8Parser
                     return true;
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeYesNo(mediaData.isForced());
                 }
@@ -168,7 +168,7 @@ namespace M3U8Parser
                     return mediaData.hasInStreamId();
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeQuotedString(mediaData.getInStreamId());
                 }
@@ -181,7 +181,7 @@ namespace M3U8Parser
                     return mediaData.hasCharacteristics();
                 }
 
-                public String write(MediaData mediaData) // throws ParseException 
+                public String write(MediaData mediaData)
                 {
                     return WriteUtil.writeQuotedString(WriteUtil.join(mediaData.getCharacteristics(), Constants.COMMA));
                 }
@@ -198,7 +198,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist)
             {
                 if (masterPlaylist.getMediaData().Count > 0)
                 {
@@ -261,7 +261,7 @@ namespace M3U8Parser
                     return streamInfo.hasCodecs();
                 }
 
-                public String write(T streamInfo) // throws ParseException 
+                public String write(T streamInfo)
                 {
                     return WriteUtil.writeQuotedString(WriteUtil.join(streamInfo.getCodecs(), Constants.COMMA));
                 }
@@ -274,7 +274,7 @@ namespace M3U8Parser
                     return streamInfo.hasResolution();
                 }
 
-                public String write(T streamInfo) // throws ParseException 
+                public String write(T streamInfo)
                 {
                     return WriteUtil.writeResolution(streamInfo.getResolution());
                 }
@@ -287,7 +287,7 @@ namespace M3U8Parser
                     return streamInfo.hasFrameRate();
                 }
 
-                public String write(T streamInfo) // throws ParseException 
+                public String write(T streamInfo)
                 {
                     return streamInfo.getFrameRate().ToString();
                 }
@@ -300,7 +300,7 @@ namespace M3U8Parser
                     return streamInfo.hasVideo();
                 }
 
-                public String write(T streamInfo) // throws ParseException 
+                public String write(T streamInfo)
                 {
                     return WriteUtil.writeQuotedString(streamInfo.getVideo());
                 }
@@ -326,7 +326,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            //public abstract void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist); // throws IOException, ParseException;
+            //public abstract void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist);
         }
 
         public static readonly IExtTagWriter EXT_X_I_FRAME_STREAM_INF = new EXT_X_I_FRAME_STREAM_INF_CLASS();
@@ -346,7 +346,7 @@ namespace M3U8Parser
                 }
 
 
-                public String write(IFrameStreamInfo streamInfo) // throws ParseException 
+                public String write(IFrameStreamInfo streamInfo)
                 {
                     return WriteUtil.writeQuotedString(streamInfo.getUri());
                 }
@@ -358,7 +358,7 @@ namespace M3U8Parser
                 return Constants.EXT_X_I_FRAME_STREAM_INF_TAG;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist)
             {
                 foreach (IFrameStreamInfo streamInfo in masterPlaylist.getIFramePlaylists())
                 {
@@ -384,7 +384,7 @@ namespace M3U8Parser
                     return streamInfo.hasAudio();
                 }
 
-                public String write(StreamInfo streamInfo) // throws ParseException 
+                public String write(StreamInfo streamInfo)
                 {
                     return WriteUtil.writeQuotedString(streamInfo.getAudio());
                 }
@@ -397,7 +397,7 @@ namespace M3U8Parser
                     return streamInfo.hasSubtitles();
                 }
 
-                public String write(StreamInfo streamInfo) // throws ParseException 
+                public String write(StreamInfo streamInfo)
                 {
                     return WriteUtil.writeQuotedString(streamInfo.getSubtitles());
                 }
@@ -410,7 +410,7 @@ namespace M3U8Parser
                     return streamInfo.hasClosedCaptions();
                 }
 
-                public String write(StreamInfo streamInfo) // throws ParseException 
+                public String write(StreamInfo streamInfo)
                 {
                     return WriteUtil.writeQuotedString(streamInfo.getClosedCaptions());
                 }
@@ -422,7 +422,7 @@ namespace M3U8Parser
                 return Constants.EXT_X_STREAM_INF_TAG;
             }
 
-            public override void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist) // throws IOException, ParseException 
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MasterPlaylist masterPlaylist)
             {
                 foreach (PlaylistData playlistData in masterPlaylist.getPlaylists())
                 {

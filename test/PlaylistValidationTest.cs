@@ -9,7 +9,7 @@ namespace M3U8Parser
     public class PlaylistValidationTest
     {
         [Fact]
-        public void testAllowNegativeNumbersValidation() // throws Exception 
+        public void testAllowNegativeNumbersValidation()
         {
             Playlist playlist = null;
             bool found = false;
@@ -35,7 +35,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testInvalidBytRange() // throws Exception 
+        public void testInvalidBytRange()
         {
             List<PlaylistError> errors = new List<PlaylistError>();
             try

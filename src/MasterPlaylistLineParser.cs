@@ -18,7 +18,7 @@ namespace M3U8Parser
             mLineParser = lineParser;
         }
 
-        public void parse(String line, ParseState state) //throws ParseException 
+        public void parse(String line, ParseState state)
         {
             if (state.isMedia())
             {
@@ -58,7 +58,7 @@ namespace M3U8Parser
             
             private class TYPE_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) //throws ParseException 
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     MediaType type = MediaType.fromValue(attribute.value);
 
@@ -75,7 +75,7 @@ namespace M3U8Parser
 
             private class URI_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     builder.withUri(ParseUtil.decodeUri(ParseUtil.parseQuotedString(attribute.value), state.encoding));
                 }
@@ -83,7 +83,7 @@ namespace M3U8Parser
 
             private class GROUP_ID_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     String groupId = ParseUtil.parseQuotedString(attribute.value);
 
@@ -100,7 +100,7 @@ namespace M3U8Parser
 
             private class LANGUAGE_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     builder.withLanguage(ParseUtil.parseQuotedString(attribute.value));
                 }
@@ -108,7 +108,7 @@ namespace M3U8Parser
 
             private class ASSOCIATED_LANGUAGE_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     builder.withAssociatedLanguage(ParseUtil.parseQuotedString(attribute.value));
                 }
@@ -116,7 +116,7 @@ namespace M3U8Parser
 
             private class NAME_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     String name = ParseUtil.parseQuotedString(attribute.value);
 
@@ -133,7 +133,7 @@ namespace M3U8Parser
 
             private class DEFAULT_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     bool isDefault = ParseUtil.parseYesNo(attribute);
 
@@ -154,7 +154,7 @@ namespace M3U8Parser
 
             private class AUTO_SELECT_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     bool isAutoSelect = ParseUtil.parseYesNo(attribute);
 
@@ -170,7 +170,7 @@ namespace M3U8Parser
 
             private class FORCED_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     builder.withForced(ParseUtil.parseYesNo(attribute));
                 }
@@ -178,7 +178,7 @@ namespace M3U8Parser
 
             private class IN_STREAM_ID_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     String inStreamId = ParseUtil.parseQuotedString(attribute.value);
 
@@ -195,7 +195,7 @@ namespace M3U8Parser
 
             private class CHARACTERISTICS_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value).Split(Constants.COMMA);
 
@@ -212,7 +212,7 @@ namespace M3U8Parser
 
             private class CHANNELS_AttributeParser : AttributeParser<MediaData.Builder>
             {
-                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
+                public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
                     String[] channelsStrings = ParseUtil.parseQuotedString(attribute.value).Split(Constants.LIST_SEPARATOR);
 
@@ -238,7 +238,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) //throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 mLineParser.parse(line, state);
 
@@ -265,7 +265,7 @@ namespace M3U8Parser
 
             private class URI_AttributeParser : AttributeParser<IFrameStreamInfo.Builder>
             {
-                public void parse(Attribute attribute, IFrameStreamInfo.Builder builder, ParseState state) //throws ParseException 
+                public void parse(Attribute attribute, IFrameStreamInfo.Builder builder, ParseState state)
                 {
                     builder.withUri(ParseUtil.parseQuotedString(attribute.value));
                 }
@@ -281,7 +281,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state) 
             {
                 mLineParser.parse(line, state);
 
@@ -310,7 +310,7 @@ namespace M3U8Parser
 
             private class AUDIO_AttributeParser : AttributeParser<StreamInfo.Builder>
             {
-                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) 
                 {
                     builder.withAudio(ParseUtil.parseQuotedString(attribute.value));
                 }
@@ -318,7 +318,7 @@ namespace M3U8Parser
 
             private class SUBTITLES_AttributeParser : AttributeParser<StreamInfo.Builder>
             {
-                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) 
                 {
                     builder.withSubtitles(ParseUtil.parseQuotedString(attribute.value));
                 }
@@ -326,7 +326,7 @@ namespace M3U8Parser
 
             private class CLOSED_CAPTIONS_AttributeParser : AttributeParser<StreamInfo.Builder>
             {
-                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) 
                 {
                     if (!attribute.value.Equals(Constants.NO_CLOSED_CAPTIONS))
                     {
@@ -345,7 +345,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state) 
             {
                 mLineParser.parse(line, state);
 
@@ -387,7 +387,7 @@ namespace M3U8Parser
             private class BANDWIDTH_AttributeParser : BaseAttributeParser
             {
                 public BANDWIDTH_AttributeParser(String sTag) : base(sTag) { }
-                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
                     builder.withBandwidth(ParseUtil.parseInt(attribute.value, tag));
                 }
@@ -396,7 +396,7 @@ namespace M3U8Parser
             private class AVERAGE_BANDWIDTH_AttributeParser : BaseAttributeParser
             {
                 public AVERAGE_BANDWIDTH_AttributeParser(String sTag) : base(sTag) { }
-                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
                     builder.withAverageBandwidth(ParseUtil.parseInt(attribute.value, tag));
                 }
@@ -405,7 +405,7 @@ namespace M3U8Parser
             private class CODECS_AttributeParser : BaseAttributeParser
             {
                 public CODECS_AttributeParser(String sTag) : base(sTag) { }
-                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
                     String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value, tag).Split(Constants.COMMA);
 
@@ -419,7 +419,7 @@ namespace M3U8Parser
             private class RESOLUTION_AttributeParser : BaseAttributeParser
             {
                 public RESOLUTION_AttributeParser(String sTag) : base(sTag) { }
-                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
                     builder.withResolution(ParseUtil.parseResolution(attribute.value, tag));
                 }
@@ -428,7 +428,7 @@ namespace M3U8Parser
             private class FRAME_RATE_AttributeParser : BaseAttributeParser
             {
                 public FRAME_RATE_AttributeParser(String sTag) : base(sTag) { }
-                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
                     builder.withFrameRate(ParseUtil.parseFloat(attribute.value, tag));
                 }
@@ -437,7 +437,7 @@ namespace M3U8Parser
             private class VIDEO_AttributeParser : BaseAttributeParser
             {
                 public VIDEO_AttributeParser(String sTag) : base(sTag) { }
-                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
                     builder.withVideo(ParseUtil.parseQuotedString(attribute.value, tag));
                 }
@@ -447,7 +447,7 @@ namespace M3U8Parser
             {
                 public PROGRAM_ID_AttributeParser(string sTag) : base(sTag) { }
 
-                public override void parse(Attribute attribute, T builder, ParseState state) // throws ParseException 
+                public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
                     // deprecated
                 }

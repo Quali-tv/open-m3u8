@@ -20,7 +20,7 @@ namespace M3U8Parser
             this.lineParser = lineParser;
         }
 
-        public void parse(String line, ParseState state) // throws ParseException 
+        public void parse(String line, ParseState state)
         {
             if (state.isMaster())
             {
@@ -53,7 +53,7 @@ namespace M3U8Parser
                 return false;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -82,7 +82,7 @@ namespace M3U8Parser
                 return false;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -117,7 +117,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -154,7 +154,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -186,7 +186,7 @@ namespace M3U8Parser
 
             private class TIME_OFFSET_AttributeParser : AttributeParser<StartData.Builder>
             {
-                public void parse(Attribute attribute, StartData.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, StartData.Builder builder, ParseState state)
                 {
                     builder.withTimeOffset(ParseUtil.parseFloat(attribute.value));
                 }
@@ -194,7 +194,7 @@ namespace M3U8Parser
 
             private class PRECISE_AttributeParser : AttributeParser<StartData.Builder>
             {
-                public void parse(Attribute attribute, StartData.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, StartData.Builder builder, ParseState state)
                 {
                     builder.withPrecise(ParseUtil.parseYesNo(attribute));
                 }
@@ -211,7 +211,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -244,7 +244,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -279,7 +279,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -314,7 +314,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -344,7 +344,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -374,7 +374,7 @@ namespace M3U8Parser
                 return false;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
                 Match match = ParseUtil.match(Constants.EXT_X_DISCONTINUITY_PATTERN, line, getTag());
@@ -402,7 +402,7 @@ namespace M3U8Parser
 
             private class METHOD_AttributeParser : AttributeParser<EncryptionData.Builder>
             {
-                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state)
                 {
                     EncryptionMethod method = EncryptionMethod.fromValue(attribute.value);
 
@@ -419,7 +419,7 @@ namespace M3U8Parser
 
             private class URI_AttributeParser : AttributeParser<EncryptionData.Builder>
             {
-                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state)
                 {
                     builder.withUri(ParseUtil.decodeUri(ParseUtil.parseQuotedString(attribute.value), state.encoding));
                 }
@@ -427,7 +427,7 @@ namespace M3U8Parser
 
             private class IV_AttributeParser : AttributeParser<EncryptionData.Builder>
             {
-                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state)
                 {
                     List<Byte> initializationVector = ParseUtil.parseHexadecimal(attribute.value);
 
@@ -443,7 +443,7 @@ namespace M3U8Parser
 
             private class KEY_FORMAT_AttributeParser : AttributeParser<EncryptionData.Builder>
             {
-                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state)
                 {
                     builder.withKeyFormat(ParseUtil.parseQuotedString(attribute.value));
                 }
@@ -451,7 +451,7 @@ namespace M3U8Parser
 
             private class KEY_FORMAT_VERSIONS_AttributeParser : AttributeParser<EncryptionData.Builder>
             {
-                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, EncryptionData.Builder builder, ParseState state)
                 {
                     String[] versionStrings = ParseUtil.parseQuotedString(attribute.value).Split(Constants.LIST_SEPARATOR);
                     List<int> versions = new List<int>();
@@ -483,7 +483,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -521,7 +521,7 @@ namespace M3U8Parser
 
             private class URI_AttributeParser : AttributeParser<MapInfo.Builder>
             {
-                public void parse(Attribute attribute, MapInfo.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, MapInfo.Builder builder, ParseState state)
                 {
                     builder.withUri(ParseUtil.decodeUri(ParseUtil.parseQuotedString(attribute.value), state.encoding));
                 }
@@ -529,7 +529,7 @@ namespace M3U8Parser
 
             private class BYTERANGE_AttributeParser : AttributeParser<MapInfo.Builder>
             {
-                public void parse(Attribute attribute, MapInfo.Builder builder, ParseState state) // throws ParseException 
+                public void parse(Attribute attribute, MapInfo.Builder builder, ParseState state)
                 {
                     Match match = Constants.EXT_X_BYTERANGE_VALUE_PATTERN.Match(ParseUtil.parseQuotedString(attribute.value));
                     if (!match.Success)
@@ -552,7 +552,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -583,7 +583,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
                 Match match = ParseUtil.match(Constants.EXT_X_BYTERANGE_PATTERN, line, getTag());

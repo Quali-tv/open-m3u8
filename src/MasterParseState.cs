@@ -36,7 +36,7 @@ namespace M3U8Parser
             return this;
         }
 
-        public MasterPlaylist buildPlaylist() //throws ParseException 
+        public MasterPlaylist buildPlaylist()
         {
             return new MasterPlaylist.Builder()
                     .withPlaylists(playlists)

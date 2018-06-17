@@ -8,7 +8,7 @@ namespace M3U8Parser
     public class ByteOrderMarkTest
     {
         [Fact]
-        public void testParsingByteOrderMark() // throws Exception 
+        public void testParsingByteOrderMark()
         {
             using(Stream inputStream = wrapWithByteOrderMark(TestUtil.inputStreamFromResource("simpleMediaPlaylist.m3u8")))
             {
@@ -20,7 +20,7 @@ namespace M3U8Parser
 
         //@SuppressWarnings("deprecation")
         [Fact]
-        public void testWritingByteOrderMark() // throws Exception 
+        public void testWritingByteOrderMark()
         {
             Playlist playlist1 = null;
             Playlist playlist2 = null;

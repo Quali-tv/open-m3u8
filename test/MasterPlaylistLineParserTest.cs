@@ -8,7 +8,7 @@ namespace M3U8Parser
     public class MasterPlaylistLineParserTest : LineParserStateTestCase
     {
         [Fact]
-        public void testEXT_X_MEDIA() // throws Exception 
+        public void testEXT_X_MEDIA()
         {
             List<MediaData> expectedMediaData = new List<MediaData>();
             IExtTagParser handler = MasterPlaylistLineParser.EXT_X_MEDIA;
@@ -49,7 +49,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testEXT_X_STREAM_INF() // throws Exception 
+        public void testEXT_X_STREAM_INF()
         {
             IExtTagParser handler = MasterPlaylistLineParser.EXT_X_STREAM_INF;
             String tag = Constants.EXT_X_STREAM_INF_TAG;

@@ -9,7 +9,7 @@ namespace M3U8Parser
 {
     public class PlaylistParserWriterTest
     {
-        Playlist readPlaylist(String fileName) // throws IOException, ParseException, PlaylistException 
+        Playlist readPlaylist(String fileName)
         {
             Assert.NotNull(fileName);
 
@@ -20,7 +20,7 @@ namespace M3U8Parser
             }
         }
 
-        String writePlaylist(Playlist playlist) // throws IOException, ParseException, PlaylistException 
+        String writePlaylist(Playlist playlist)
         {
             Assert.NotNull(playlist);
 
@@ -37,7 +37,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void simpleMediaPlaylist() // throws IOException, ParseException, PlaylistException 
+        public void simpleMediaPlaylist()
         {
             Playlist playlist = readPlaylist("simpleMediaPlaylist.m3u8");
 
@@ -47,7 +47,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void liveMediaPlaylist() // throws IOException, ParseException, PlaylistException 
+        public void liveMediaPlaylist()
         {
             Playlist playlist = readPlaylist("liveMediaPlaylist.m3u8");
 
@@ -57,7 +57,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void playlistWithEncryptedMediaSegments() // throws IOException, ParseException, PlaylistException 
+        public void playlistWithEncryptedMediaSegments()
         {
             Playlist playlist = readPlaylist("playlistWithEncryptedMediaSegments.m3u8");
 
@@ -67,7 +67,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void masterPlaylist() // throws IOException, ParseException, PlaylistException 
+        public void masterPlaylist()
         {
             Playlist playlist = readPlaylist("masterPlaylist.m3u8");
 
@@ -77,7 +77,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void masterPlaylistWithIFrames() // throws IOException, ParseException, PlaylistException 
+        public void masterPlaylistWithIFrames()
         {
             Playlist playlist = readPlaylist("masterPlaylistWithIFrames.m3u8");
             Assert.True(playlist.hasMasterPlaylist());
@@ -153,7 +153,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void masterPlaylistWithAlternativeAudio() // throws IOException, ParseException, PlaylistException 
+        public void masterPlaylistWithAlternativeAudio()
         {
             Playlist playlist = readPlaylist("masterPlaylistWithAlternativeAudio.m3u8");
 
@@ -163,7 +163,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void masterPlaylistWithAlternativeVideo() // throws IOException, ParseException, PlaylistException 
+        public void masterPlaylistWithAlternativeVideo()
         {
             Playlist playlist = readPlaylist("masterPlaylistWithAlternativeVideo.m3u8");
 
@@ -173,7 +173,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void discontinutyPlaylist() // throws IOException, ParseException, PlaylistException 
+        public void discontinutyPlaylist()
         {
             Playlist playlist = readPlaylist("withDiscontinuity.m3u8");
             String sPlaylist = writePlaylist(playlist);
@@ -182,7 +182,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void playlistWithByteRanges() // throws Exception 
+        public void playlistWithByteRanges()
         {
             Playlist playlist = TestUtil.parsePlaylistFromResource("mediaPlaylistWithByteRanges.m3u8");
             MediaPlaylist mediaPlaylist = playlist.getMediaPlaylist();

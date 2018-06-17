@@ -38,7 +38,7 @@ namespace M3U8Parser
         }
 
         public override void doWrite(Playlist playlist)
-        { // throws IOException, ParseException, PlaylistException
+        {
             foreach (SectionWriter singleTagWriter in mExtTagWriter)
             {
                 singleTagWriter.write(tagWriter, playlist);

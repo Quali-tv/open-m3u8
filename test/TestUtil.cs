@@ -22,7 +22,7 @@ namespace M3U8Parser
             }
         }
 
-        public static Playlist parsePlaylistFromResource(String fileName) // throws IOException, ParseException, PlaylistException 
+        public static Playlist parsePlaylistFromResource(String fileName)
         {
             Assert.NotNull(fileName);
 

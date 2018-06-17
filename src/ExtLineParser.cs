@@ -14,7 +14,7 @@ namespace M3U8Parser
             mTagParser = tagParser;
         }
 
-        public void parse(String line, ParseState state) // throws ParseException
+        public void parse(String line, ParseState state)
         {
             if (mTagParser.hasData())
             {
@@ -38,7 +38,7 @@ namespace M3U8Parser
                 return false;
             }
 
-            public void parse(String line, ParseState state) //throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 if (state.isExtended())
                 {
@@ -62,7 +62,7 @@ namespace M3U8Parser
                 return false;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException 
+            public void parse(String line, ParseState state)
             {
                 state.unknownTags.Add(line);
             }
@@ -83,7 +83,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException
+            public void parse(String line, ParseState state)
             {
                 lineParser.parse(line, state);
 
@@ -126,7 +126,7 @@ namespace M3U8Parser
 
             private class TIME_OFFSET_AttributeParser : AttributeParser<StartData.Builder>
             {
-                public void parse(Attribute attribute, StartData.Builder builder, ParseState state) //throws ParseException
+                public void parse(Attribute attribute, StartData.Builder builder, ParseState state)
                 {
                     builder.withTimeOffset(ParseUtil.parseFloat(attribute.value));
                 }
@@ -134,7 +134,7 @@ namespace M3U8Parser
 
             private class PRECISE_AttributeParser : AttributeParser<StartData.Builder>
             {
-                public void parse(Attribute attribute, StartData.Builder builder, ParseState state) //throws ParseException
+                public void parse(Attribute attribute, StartData.Builder builder, ParseState state)
                 {
                     builder.withPrecise(ParseUtil.parseYesNo(attribute));
                 }
@@ -151,7 +151,7 @@ namespace M3U8Parser
                 return true;
             }
 
-            public void parse(String line, ParseState state) // throws ParseException
+            public void parse(String line, ParseState state)
             {
                 if (state.startData != null)
                 {

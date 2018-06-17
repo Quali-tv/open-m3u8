@@ -9,7 +9,7 @@ namespace M3U8Parser
     public class M3uParserTest
     {
         [Fact]
-        public void testParse() // throws Exception 
+        public void testParse()
         {
             String absolute = "http://www.my.song/file1.mp3";
             String relative = "user1/file2.mp3";

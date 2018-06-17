@@ -5,6 +5,6 @@ namespace M3U8Parser
 {
     public interface AttributeParser<Builder>
     {
-        void parse(Attribute attribute, Builder builder, ParseState state); // throws ParseException;
+        void parse(Attribute attribute, Builder builder, ParseState state);
     }
 }

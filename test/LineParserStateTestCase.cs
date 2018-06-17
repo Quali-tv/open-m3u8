@@ -10,7 +10,7 @@ namespace M3U8Parser
             = new ParseState(Encoding.UTF_8);
 
         // JUnit specific setUp method... should be fine done as above... I think
-        //protected override void setUp() // throws Exception 
+        //protected override void setUp()
         //{
         //    mParseState = new ParseState(Encoding.UTF_8);
         //}

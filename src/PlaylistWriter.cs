@@ -66,7 +66,7 @@ namespace M3U8Parser
          * @throws PlaylistException if the representation of the playlist is invalid,
          *                           that is, if PlaylistValidation.from(playlist).isValid() == false
          */
-        public void write(Playlist playlist) // throws IOException, ParseException, PlaylistException 
+        public void write(Playlist playlist)
         {
             PlaylistValidation validation = PlaylistValidation.from(playlist);
 
@@ -80,7 +80,7 @@ namespace M3U8Parser
             mFirstWrite = false;
         }
 
-        private void writeByteOrderMark() // throws IOException 
+        private void writeByteOrderMark()
         {
             if (mShouldWriteByteOrderMark && mFirstWrite)
             {

@@ -5,6 +5,6 @@ namespace M3U8Parser
 {
     public interface LineParser
     {
-        void parse(String line, ParseState state); //throws ParseException
+        void parse(String line, ParseState state);
     }
 }

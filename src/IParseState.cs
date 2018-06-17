@@ -5,6 +5,6 @@ namespace M3U8Parser
 {
     public interface IParseState<T>
     {
-        T buildPlaylist(); // throws ParseException
+        T buildPlaylist();
     }
 }

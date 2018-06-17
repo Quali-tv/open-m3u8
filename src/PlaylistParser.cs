@@ -121,7 +121,7 @@ namespace M3U8Parser
          * @throws ParseException if there is a syntactic error in the playlist
          * @throws PlaylistException if the data in the parsed playlist is invalid
          */
-        public Playlist parse() // throws IOException, ParseException, PlaylistException 
+        public Playlist parse()
         {
             return mPlaylistParser.parse();
         }

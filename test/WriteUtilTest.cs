@@ -7,7 +7,7 @@ namespace M3U8Parser
     public class WriteUtilTest
     {
         [Fact]
-        public void writeQuotedStringShouldIgnoreNullTagValueForOptionalFields() // throws Exception 
+        public void writeQuotedStringShouldIgnoreNullTagValueForOptionalFields()
         {
             String outputString = WriteUtil.writeQuotedString(null, true, "some-key");
 
@@ -16,14 +16,14 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void writeQuotedStringShouldNotIgnoreNullTagValue() // throws Exception 
+        public void writeQuotedStringShouldNotIgnoreNullTagValue()
         {
             Assert.Throws<NullReferenceException>(() =>
                 WriteUtil.writeQuotedString(null, "some-key"));
         }
 
         [Fact]
-        public void writeQuotedStringShouldNotIgnoreSuppliedOptionalValue() // throws Exception 
+        public void writeQuotedStringShouldNotIgnoreSuppliedOptionalValue()
         {
             //Assert.That(WriteUtil.writeQuotedString("blah", "some-key"),is ("\"blah\""));
             Assert.Equal("\"blah\"", WriteUtil.writeQuotedString("blah", "some-key"));

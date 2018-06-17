@@ -13,27 +13,27 @@ namespace M3U8Parser
             mWriter = outputStreamWriter;
         }
 
-        public void write(String str) // throws IOException 
+        public void write(String str)
         {
             mWriter.Write(str);
         }
 
-        public void writeLine(String line) // throws IOException 
+        public void writeLine(String line)
         {
             write(line + Constants.WRITE_NEW_LINE);
         }
 
-        public void writeTag(String tag) // throws IOException 
+        public void writeTag(String tag)
         {
             writeLine(Constants.COMMENT_PREFIX + tag);
         }
 
-        public void writeTag(String tag, String value) // throws IOException 
+        public void writeTag(String tag, String value)
         {
             writeLine(Constants.COMMENT_PREFIX + tag + Constants.EXT_TAG_END + value);
         }
 
-        public void flush() // throws IOException 
+        public void flush()
         {
             mWriter.Flush();
         }

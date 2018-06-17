@@ -8,7 +8,7 @@ namespace M3U8Parser
     {
         public M3uParser(Stream inputStream, Encoding encoding) : base(inputStream, encoding) { }
 
-        public override Playlist parse() //throws IOException, ParseException, PlaylistException 
+        public override Playlist parse()
         {
             validateAvailable();
 
@@ -58,7 +58,7 @@ namespace M3U8Parser
             }
         }
 
-        private void validateLine(String line) // throws ParseException 
+        private void validateLine(String line)
         {
             if (!isComment(line))
             {

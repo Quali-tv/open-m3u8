@@ -7,7 +7,7 @@ namespace M3U8Parser
     public class MasterPlaylistParserTest
     {
         [Fact]
-        public void test() // throws Exception 
+        public void test()
         {
             Playlist playlist = TestUtil.parsePlaylistFromResource("masterPlaylist.m3u8");
             MasterPlaylist masterPlaylist = playlist.getMasterPlaylist();

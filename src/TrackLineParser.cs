@@ -5,7 +5,7 @@ namespace M3U8Parser
 {
     class TrackLineParser : LineParser
     {
-        public void parse(String line, ParseState state) // throws ParseException 
+        public void parse(String line, ParseState state)
         {
             TrackData.Builder builder = new TrackData.Builder();
             MediaParseState mediaState = state.getMedia();

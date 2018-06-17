@@ -33,7 +33,7 @@ namespace M3U8Parser
             return mMasterParseState;
         }
 
-        public void setMaster() //throws ParseException 
+        public void setMaster()
         {
             if (isMedia())
             {
@@ -56,7 +56,7 @@ namespace M3U8Parser
             return mMediaParseState;
         }
 
-        public void setMedia() // throws ParseException 
+        public void setMedia()
         {
             if (mMediaParseState == null)
             {
@@ -74,7 +74,7 @@ namespace M3U8Parser
             mIsExtended = true;
         }
 
-        public void setIsIframesOnly() // throws ParseException 
+        public void setIsIframesOnly()
         {
             if (isMaster())
             {
@@ -95,7 +95,7 @@ namespace M3U8Parser
         }
 
 
-        public Playlist buildPlaylist() // throws ParseException 
+        public Playlist buildPlaylist()
         {
             Playlist.Builder playlistBuilder = new Playlist.Builder();
 
@@ -119,7 +119,7 @@ namespace M3U8Parser
                     .build();
         }
 
-        private T buildInnerPlaylist<T>(PlaylistParseState<T> innerParseState) // throws ParseException 
+        private T buildInnerPlaylist<T>(PlaylistParseState<T> innerParseState)
         {
             return innerParseState
                     .setUnknownTags(unknownTags)

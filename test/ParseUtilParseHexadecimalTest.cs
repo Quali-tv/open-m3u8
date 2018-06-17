@@ -54,7 +54,7 @@ namespace M3U8Parser
         //[InlineData(new byte[] { -1, -1 }, "0xffff")]
         //[InlineData(new byte[] { -121, -6 }, "0x87fa")]
         [InlineData(new byte[] { 75, 118 }, "0x4b76")]
-        public void parseHexadecimal(byte[] expected, String input) // throws Exception 
+        public void parseHexadecimal(byte[] expected, String input)
         {
             var actual = ParseUtil.parseHexadecimal(input, "");
             Assert.Equal(expected.ToList(), actual);

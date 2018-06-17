@@ -40,7 +40,7 @@ namespace M3U8Parser
         }
 
         public override Playlist parse()
-        { // throws IOException, ParseException, PlaylistException
+        {
             validateAvailable();
 
             ParseState state = new ParseState(mEncoding);
@@ -133,7 +133,7 @@ namespace M3U8Parser
         }
 
         private void checkWhitespace(String line)
-        { //throws ParseException
+        {
             if (!isComment(line))
             {
                 if (line.Length != line.Trim().Length)

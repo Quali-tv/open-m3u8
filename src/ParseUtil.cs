@@ -8,7 +8,7 @@ namespace M3U8Parser
 {
     public sealed class ParseUtil
     {
-        public static int parseInt(String str, String tag = null) //throws ParseException 
+        public static int parseInt(String str, String tag = null)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace M3U8Parser
         }
 
         // THIS WAS ONLY USED IN ONE PLACE. WORKED AROUND IT INSTEAD...
-        //public static <T extends Enum<T>> T parseEnum(String str, Class<T> enumType, String tag = null) // throws ParseException 
+        //public static <T extends Enum<T>> T parseEnum(String str, Class<T> enumType, String tag = null)
         //{
         //    try
         //    {
@@ -33,7 +33,7 @@ namespace M3U8Parser
         //    }
         //}
 
-        public static String parseDateTime(String str, String tag = null) // throws ParseException 
+        public static String parseDateTime(String str, String tag = null)
         {
             Match match = Constants.EXT_X_PROGRAM_DATE_TIME_PATTERN.Match(str);
 
@@ -45,7 +45,7 @@ namespace M3U8Parser
             return match.Groups[1].Value;
         }
 
-        public static float parseFloat(String str, String tag = null) // throws ParseException 
+        public static float parseFloat(String str, String tag = null)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace M3U8Parser
             }
         }
 
-        public static List<Byte> parseHexadecimal(String hexString, String tag = null) // throws ParseException 
+        public static List<Byte> parseHexadecimal(String hexString, String tag = null)
         {
             List<Byte> bytes = new List<Byte>();
             Match match = Constants.HEXADECIMAL_PATTERN.Match(hexString.ToUpper(CultureInfo.CurrentCulture));
@@ -95,7 +95,7 @@ namespace M3U8Parser
             }
         }
 
-        public static bool parseYesNo(Attribute attribute, String tag = null) // throws ParseException 
+        public static bool parseYesNo(Attribute attribute, String tag = null)
         {
             if (attribute.value.Equals(Constants.YES))
             {
@@ -111,7 +111,7 @@ namespace M3U8Parser
             }
         }
 
-        public static Resolution parseResolution(String resolutionString, String tag = null) // throws ParseException 
+        public static Resolution parseResolution(String resolutionString, String tag = null)
         {
             Match match = Constants.RESOLUTION_PATTERN.Match(resolutionString);
 
@@ -123,7 +123,7 @@ namespace M3U8Parser
             return new Resolution(parseInt(match.Groups[1].Value, tag), parseInt(match.Groups[2].Value, tag));
         }
 
-        public static String parseQuotedString(String quotedString, String tag = null) // throws ParseException 
+        public static String parseQuotedString(String quotedString, String tag = null)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -203,7 +203,7 @@ namespace M3U8Parser
             return c == ' ' || c == '\t' || c == '\r' || c == '\n';
         }
 
-        public static String decodeUri(String encodedUri, Encoding encoding) // throws ParseException 
+        public static String decodeUri(String encodedUri, Encoding encoding)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace M3U8Parser
             }
         }
 
-        public static Match match(Regex pattern, String line, String tag = null) // throws ParseException 
+        public static Match match(Regex pattern, String line, String tag = null)
         {
             Match match = pattern.Match(line);
 
@@ -227,7 +227,7 @@ namespace M3U8Parser
             return match;
         }
 
-        public static void parseAttributes<T>(String line, T builder, ParseState state, Dictionary<String, AttributeParser<T>> handlers, String tag) // throws ParseException 
+        public static void parseAttributes<T>(String line, T builder, ParseState state, Dictionary<String, AttributeParser<T>> handlers, String tag)
         {
             foreach (Attribute attribute in parseAttributeList(line, tag))
             {
@@ -249,7 +249,7 @@ namespace M3U8Parser
             }
         }
 
-        public static List<Attribute> parseAttributeList(String line, String tag) // throws ParseException 
+        public static List<Attribute> parseAttributeList(String line, String tag)
         {
             List<Attribute> attributes = new List<Attribute>();
             HashSet<String> attributeNames = new HashSet<String>();
@@ -291,7 +291,7 @@ namespace M3U8Parser
             return attributes;
         }
 
-        public static List<String> splitAttributeList(String line, String tag) // throws ParseException 
+        public static List<String> splitAttributeList(String line, String tag)
         {
             List<int> splitIndices = new List<int>();
             List<String> attributes = new List<String>();

@@ -7,7 +7,7 @@ namespace M3U8Parser
     public class ExtLineParserTest : LineParserStateTestCase
     {
         [Fact]
-        public void testEXTM3U() // throws Exception 
+        public void testEXTM3U()
         {
             IExtTagParser handler = ExtLineParser.EXTM3U_HANDLER;
             String tag = Constants.EXTM3U_TAG;
@@ -22,7 +22,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testEXT_X_VERSION() // throws Exception 
+        public void testEXT_X_VERSION()
         {
             IExtTagParser handler = ExtLineParser.EXT_X_VERSION_HANDLER;
             String tag = Constants.EXT_X_VERSION_TAG;
@@ -39,7 +39,7 @@ namespace M3U8Parser
         }
 
         [Fact]
-        public void testEXT_X_START() // throws Exception 
+        public void testEXT_X_START()
         {
             IExtTagParser parser = ExtLineParser.EXT_X_START;
             String tag = Constants.EXT_X_START_TAG;
