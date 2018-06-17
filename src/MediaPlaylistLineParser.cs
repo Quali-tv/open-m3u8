@@ -462,7 +462,7 @@ namespace M3U8Parser
                         {
                             versions.Add(Int32.Parse(version));
                         }
-                        catch (FormatException exception)
+                        catch (FormatException)
                         {
                             throw ParseException.create(ParseExceptionType.INVALID_KEY_FORMAT_VERSIONS, tag: null, context: attribute.ToString());
                         }

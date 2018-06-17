@@ -81,25 +81,14 @@ namespace M3U8Parser
         public PlaylistParser(Stream inputStream, Format format, Encoding encoding, ParsingMode parsingMode)
         {
             if (inputStream == null)
-            {
                 throw new ArgumentNullException("inputStream is null");
-            }
-
-            if (format == null)
-            {
-                throw new ArgumentNullException("format is null");
-            }
-
+            
             if (encoding == null)
-            {
                 throw new ArgumentNullException("encoding is null");
-            }
-
+            
             if (parsingMode == null && format != Format.M3U)
-            {
                 throw new ArgumentNullException("parsingMode is null");
-            }
-
+            
             switch (format)
             {
                 case Format.M3U:

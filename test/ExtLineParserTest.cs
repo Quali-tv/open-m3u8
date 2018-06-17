@@ -52,7 +52,7 @@ namespace M3U8Parser
 
             parser.parse(line, mParseState);
             Assert.Equal(-4.5, mParseState.startData.getTimeOffset(), 12);
-            Assert.Equal(true, mParseState.startData.isPrecise());
+            Assert.True(mParseState.startData.isPrecise());
 
             assertParseThrows(parser, line, ParseExceptionType.MULTIPLE_EXT_TAG_INSTANCES);
         }

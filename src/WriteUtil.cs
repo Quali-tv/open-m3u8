@@ -83,7 +83,7 @@ namespace M3U8Parser
             {
                 return System.Web.HttpUtility.UrlEncode(decodedUri.Replace("%2B", "+"), System.Text.Encoding.UTF8);
             }
-            catch (Exception exception) // TODO: Was UnsupportedEncodingException. c# equivalent?
+            catch (Exception) // TODO: Was UnsupportedEncodingException. c# equivalent?
             {
                 throw new ParseException(ParseExceptionType.INTERNAL_ERROR);
             }

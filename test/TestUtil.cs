@@ -16,7 +16,7 @@ namespace M3U8Parser
             {
                 return new FileStream("resources/" + fileName, FileMode.Open);
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 throw new Exception("failed to open playlist file: " + fileName);
             }

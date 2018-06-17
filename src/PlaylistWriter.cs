@@ -28,20 +28,11 @@ namespace M3U8Parser
         private PlaylistWriter(Stream outputStream, Format format, Encoding encoding, bool useByteOrderMark)
         {
             if (outputStream == null)
-            {
                 throw new ArgumentNullException("outputStream is null");
-            }
-
-            if (format == null)
-            {
-                throw new ArgumentNullException("format is null");
-            }
-
+            
             if (encoding == null)
-            {
                 throw new ArgumentNullException("encoding is null");
-            }
-
+            
             mOutputStream = outputStream;
             mShouldWriteByteOrderMark = encoding.supportsByteOrderMark && useByteOrderMark;
 

@@ -14,7 +14,7 @@ namespace M3U8Parser
             {
                 return Int32.Parse(str);
             }
-            catch (FormatException exception)
+            catch (FormatException)
             {
                 throw ParseException.create(ParseExceptionType.NOT_JAVA_INTEGER, tag, str);
             }
@@ -51,7 +51,7 @@ namespace M3U8Parser
             {
                 return float.Parse(str);
             }
-            catch (FormatException exception)
+            catch (FormatException)
             {
                 throw ParseException.create(ParseExceptionType.NOT_JAVA_FLOAT, tag, str);
             }
@@ -209,7 +209,7 @@ namespace M3U8Parser
             {
                 return System.Net.WebUtility.UrlDecode(encodedUri.Replace("+", "%2B"));
             }
-            catch (Exception exception) // TODO: Was UnsupportedEncodingException; c# equivalent?
+            catch (Exception) // TODO: Was UnsupportedEncodingException; c# equivalent?
             {
                 throw new ParseException(ParseExceptionType.INTERNAL_ERROR);
             }

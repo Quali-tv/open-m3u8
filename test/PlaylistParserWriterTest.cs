@@ -115,7 +115,7 @@ namespace M3U8Parser
             Assert.NotNull(audioXStreamInf.getStreamInfo());
             Assert.Equal(65000, audioXStreamInf.getStreamInfo().getBandwidth());
             Assert.NotNull(audioXStreamInf.getStreamInfo().getCodecs());
-            Assert.Equal(1, audioXStreamInf.getStreamInfo().getCodecs().Count);
+            Assert.Single(audioXStreamInf.getStreamInfo().getCodecs());
             Assert.Equal("mp4a.40.5", audioXStreamInf.getStreamInfo().getCodecs()[0]);
             Assert.Equal("audio-only.m3u8", audioXStreamInf.getUri());
 
