@@ -2,16 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+
 namespace M3U8Parser
 {
-
-    // import com.iheartradio.m3u8.data.Playlist;
-
-    // import java.io.IOException;
-    // import java.io.InputStream;
-    // import java.util.HashMap;
-    // import java.util.Map;
-
     public class ExtendedM3uParser : BaseM3uParser
     {
         private readonly ParsingMode mParsingMode;

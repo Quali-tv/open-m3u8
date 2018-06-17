@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-// package com.iheartradio.m3u8.data;
-
-// import java.util.List;
 
 namespace M3U8Parser
 {

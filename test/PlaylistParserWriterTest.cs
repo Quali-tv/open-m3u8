@@ -7,20 +7,6 @@ using Xunit;
 
 namespace M3U8Parser
 {
-
-    // import com.iheartradio.m3u8.data.*;
-    // import org.junit.Test;
-
-    // import java.io.ByteArrayOutputStream;
-    // import java.io.FileInputStream;
-    // import java.io.IOException;
-    // import java.io.InputStream;
-    // import java.util.ArrayList;
-    // import java.util.Arrays;
-    // import java.util.List;
-
-    // import static org.junit.Assert.*;
-
     public class PlaylistParserWriterTest
     {
         Playlist readPlaylist(String fileName) // throws IOException, ParseException, PlaylistException 

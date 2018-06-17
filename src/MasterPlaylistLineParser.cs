@@ -2,11 +2,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-// import com.iheartradio.m3u8.data.*;
-
-// import java.util.Arrays;
-// import java.util.HashMap;
-// import java.util.Map;
 
 namespace M3U8Parser
 {
@@ -60,7 +55,7 @@ namespace M3U8Parser
                 HANDLERS.Add(Constants.CHARACTERISTICS, new CHARACTERISTICS_AttributeParser());
                 HANDLERS.Add(Constants.CHANNELS, new CHANNELS_AttributeParser());
             }
-
+            
             private class TYPE_AttributeParser : AttributeParser<MediaData.Builder>
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) //throws ParseException 
@@ -78,7 +73,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class URI_AttributeParser : AttributeParser<MediaData.Builder>
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
@@ -86,7 +80,6 @@ namespace M3U8Parser
                     builder.withUri(ParseUtil.decodeUri(ParseUtil.parseQuotedString(attribute.value), state.encoding));
                 }
             }
-
 
             private class GROUP_ID_AttributeParser : AttributeParser<MediaData.Builder>
             {
@@ -105,7 +98,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class LANGUAGE_AttributeParser : AttributeParser<MediaData.Builder>
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
@@ -114,7 +106,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class ASSOCIATED_LANGUAGE_AttributeParser : AttributeParser<MediaData.Builder>
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
@@ -122,7 +113,6 @@ namespace M3U8Parser
                     builder.withAssociatedLanguage(ParseUtil.parseQuotedString(attribute.value));
                 }
             }
-
 
             private class NAME_AttributeParser : AttributeParser<MediaData.Builder>
             {
@@ -140,7 +130,6 @@ namespace M3U8Parser
                     }
                 }
             }
-
 
             private class DEFAULT_AttributeParser : AttributeParser<MediaData.Builder>
             {
@@ -163,7 +152,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class AUTO_SELECT_AttributeParser : AttributeParser<MediaData.Builder>
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
@@ -180,7 +168,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class FORCED_AttributeParser : AttributeParser<MediaData.Builder>
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
@@ -188,7 +175,6 @@ namespace M3U8Parser
                     builder.withForced(ParseUtil.parseYesNo(attribute));
                 }
             }
-
 
             private class IN_STREAM_ID_AttributeParser : AttributeParser<MediaData.Builder>
             {
@@ -207,7 +193,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class CHARACTERISTICS_AttributeParser : AttributeParser<MediaData.Builder>
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state) // throws ParseException
@@ -224,7 +209,6 @@ namespace M3U8Parser
                     }
                 }
             }
-
 
             private class CHANNELS_AttributeParser : AttributeParser<MediaData.Builder>
             {
@@ -243,7 +227,6 @@ namespace M3U8Parser
                     }
                 }
             }
-
 
             public String getTag()
             {
@@ -287,7 +270,6 @@ namespace M3U8Parser
                     builder.withUri(ParseUtil.parseQuotedString(attribute.value));
                 }
             }
-
 
             public String getTag()
             {
@@ -334,7 +316,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class SUBTITLES_AttributeParser : AttributeParser<StreamInfo.Builder>
             {
                 public void parse(Attribute attribute, StreamInfo.Builder builder, ParseState state) // throws ParseException 
@@ -342,7 +323,6 @@ namespace M3U8Parser
                     builder.withSubtitles(ParseUtil.parseQuotedString(attribute.value));
                 }
             }
-
 
             private class CLOSED_CAPTIONS_AttributeParser : AttributeParser<StreamInfo.Builder>
             {
@@ -354,7 +334,6 @@ namespace M3U8Parser
                     }
                 }
             }
-
 
             public String getTag()
             {
@@ -378,7 +357,7 @@ namespace M3U8Parser
         };
 
         public class HandlerMaker<T>
-        where T : StreamInfoBuilder
+            where T : StreamInfoBuilder
         {
             public static Dictionary<String, AttributeParser<T>> makeExtStreamInfHandlers(String tag)
             {
@@ -423,7 +402,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class CODECS_AttributeParser : BaseAttributeParser
             {
                 public CODECS_AttributeParser(String sTag) : base(sTag) { }
@@ -438,7 +416,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class RESOLUTION_AttributeParser : BaseAttributeParser
             {
                 public RESOLUTION_AttributeParser(String sTag) : base(sTag) { }
@@ -447,7 +424,6 @@ namespace M3U8Parser
                     builder.withResolution(ParseUtil.parseResolution(attribute.value, tag));
                 }
             }
-
 
             private class FRAME_RATE_AttributeParser : BaseAttributeParser
             {
@@ -458,7 +434,6 @@ namespace M3U8Parser
                 }
             }
 
-
             private class VIDEO_AttributeParser : BaseAttributeParser
             {
                 public VIDEO_AttributeParser(String sTag) : base(sTag) { }
@@ -467,7 +442,6 @@ namespace M3U8Parser
                     builder.withVideo(ParseUtil.parseQuotedString(attribute.value, tag));
                 }
             }
-
 
             class PROGRAM_ID_AttributeParser : BaseAttributeParser
             {
@@ -478,7 +452,6 @@ namespace M3U8Parser
                     // deprecated
                 }
             }
-
         }
     }
 }

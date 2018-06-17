@@ -1,11 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-// import java.io.UnsupportedEncodingException;
-// import java.net.URLEncoder;
-// import java.util.List;
-
-// import com.iheartradio.m3u8.data.Resolution;
 
 namespace M3U8Parser
 {

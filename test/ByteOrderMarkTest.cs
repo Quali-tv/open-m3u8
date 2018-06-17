@@ -2,17 +2,6 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
-// import com.iheartradio.m3u8.data.Playlist;
-// import org.junit.Test;
-
-// import java.io.ByteArrayInputStream;
-// import java.io.ByteArrayOutputStream;
-// import java.io.IOException;
-// import java.io.InputStream;
-
-// import static com.iheartradio.m3u8.TestUtil.inputStreamFromResource;
-// import static com.iheartradio.m3u8.Constants.UTF_8_BOM_BYTES;
-// import static org.junit.Assert.*;
 
 namespace M3U8Parser
 {

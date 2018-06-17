@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-//import com.iheartradio.m3u8.data.TrackData;
 
 namespace M3U8Parser
 {

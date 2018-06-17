@@ -2,9 +2,6 @@ using System.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Text;
-//import java.util.HashMap;
-//import java.util.Locale;
-//import java.util.Map;
 
 namespace M3U8Parser
 {

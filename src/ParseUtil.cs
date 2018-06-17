@@ -3,14 +3,6 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-//import com.iheartradio.m3u8.data.ByteRange;
-//import com.iheartradio.m3u8.data.Resolution;
-//
-//import java.io.UnsupportedEncodingException;
-//import java.net.URLDecoder;
-//import java.util.*;
-//import java.util.regex.Matcher;
-//import java.util.regex.Pattern;
 
 namespace M3U8Parser
 {

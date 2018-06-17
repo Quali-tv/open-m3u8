@@ -1,10 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-// import java.io.IOException;
-// import java.io.InputStream;
-
-// import com.iheartradio.m3u8.data.Playlist;
 
 namespace M3U8Parser
 {

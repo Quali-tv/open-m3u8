@@ -3,14 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Xunit;
-// import com.iheartradio.m3u8.data.Playlist;
-
-// import java.io.FileInputStream;
-// import java.io.FileNotFoundException;
-// import java.io.IOException;
-// import java.io.InputStream;
-
-// import static org.junit.Assert.assertNotNull;
 
 namespace M3U8Parser
 {

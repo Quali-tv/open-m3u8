@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 namespace M3U8Parser
 {
-
-    // import com.iheartradio.m3u8.data.*;
-
-    // import java.util.ArrayList;
-    // import java.util.List;
-
     public class MediaParseState : PlaylistParseState<MediaPlaylist>
     {
         private List<String> mUnknownTags;

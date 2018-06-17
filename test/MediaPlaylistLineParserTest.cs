@@ -2,13 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
-// import com.iheartradio.m3u8.data.ByteRange;
-// import com.iheartradio.m3u8.data.EncryptionData;
-// import com.iheartradio.m3u8.data.EncryptionMethod;
-// import com.iheartradio.m3u8.data.MapInfo;
-// import org.junit.Test;
-
-// import java.util.Arrays;
 
 namespace M3U8Parser
 {

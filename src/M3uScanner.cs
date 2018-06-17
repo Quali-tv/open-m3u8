@@ -1,9 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-//import java.io.InputStream;
-//import java.util.Locale;
-//import java.util.Scanner;
 
 namespace M3U8Parser
 {

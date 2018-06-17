@@ -3,24 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-// import com.iheartradio.m3u8.data.MediaData;
-// import com.iheartradio.m3u8.data.MediaPlaylist;
-// import com.iheartradio.m3u8.data.MediaType;
-// import com.iheartradio.m3u8.data.Playlist;
-// import com.iheartradio.m3u8.data.StreamInfo;
-// import com.iheartradio.m3u8.data.TrackData;
-// import com.iheartradio.m3u8.data.TrackInfo;
-
-// import org.junit.Test;
-
-// import java.io.ByteArrayInputStream;
-// import java.io.InputStream;
-// import java.util.ArrayList;
-// import java.util.Arrays;
-// import java.util.List;
-
-// import static com.iheartradio.m3u8.TestUtil.inputStreamFromResource;
-// import static org.junit.Assert.*;
 
 namespace M3U8Parser
 {

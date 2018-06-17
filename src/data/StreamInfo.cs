@@ -2,14 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-// package com.iheartradio.m3u8.data;
-
-// import java.util.List;
-// import java.util.Objects;
 namespace M3U8Parser
 {
-
-
     public class StreamInfo : IStreamInfo
     {
         public const int NO_BANDWIDTH = -1;
@@ -287,22 +281,22 @@ namespace M3U8Parser
                         mClosedCaptions);
             }
 
-            StreamInfoBuilder StreamInfoBuilder.withBandwidth(int bandwidth) 
+            StreamInfoBuilder StreamInfoBuilder.withBandwidth(int bandwidth)
                 => this.withBandwidth(bandwidth);
-            
-            StreamInfoBuilder StreamInfoBuilder.withAverageBandwidth(int averageBandwidth) 
+
+            StreamInfoBuilder StreamInfoBuilder.withAverageBandwidth(int averageBandwidth)
                 => this.withAverageBandwidth(averageBandwidth);
 
-            StreamInfoBuilder StreamInfoBuilder.withCodecs(List<string> codecs) 
+            StreamInfoBuilder StreamInfoBuilder.withCodecs(List<string> codecs)
                 => this.withCodecs(codecs);
 
-            StreamInfoBuilder StreamInfoBuilder.withResolution(Resolution resolution) 
+            StreamInfoBuilder StreamInfoBuilder.withResolution(Resolution resolution)
                 => this.withResolution(resolution);
 
-            StreamInfoBuilder StreamInfoBuilder.withFrameRate(float frameRate) 
+            StreamInfoBuilder StreamInfoBuilder.withFrameRate(float frameRate)
                 => this.withFrameRate(frameRate);
 
-            StreamInfoBuilder StreamInfoBuilder.withVideo(string video) 
+            StreamInfoBuilder StreamInfoBuilder.withVideo(string video)
                 => this.withVideo(video);
         }
     }

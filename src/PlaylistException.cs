@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-//import java.util.Set;
 
 namespace M3U8Parser
 {

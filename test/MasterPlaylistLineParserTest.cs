@@ -2,16 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
-    // import com.iheartradio.m3u8.data.MediaData;
-    // import com.iheartradio.m3u8.data.MediaType;
-    // import com.iheartradio.m3u8.data.Resolution;
-    // import com.iheartradio.m3u8.data.StreamInfo;
-
-    // import org.junit.Test;
-
-    // import java.util.ArrayList;
-    // import java.util.Arrays;
-    // import java.util.List;
 
 namespace M3U8Parser
 {

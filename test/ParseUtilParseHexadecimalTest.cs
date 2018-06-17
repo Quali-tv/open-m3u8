@@ -10,14 +10,6 @@ using Xunit;
 
 namespace M3U8Parser
 {
-
-    // import java.util.Arrays;
-    // import java.util.List;
-    // import org.junit.Assert;
-    // import org.junit.Test;
-    // import org.junit.runner.RunWith;
-    // import org.junit.runners.Parameterized;
-
     /**
      * @author Raniz
      * @since 02/08/17.

@@ -3,17 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Xunit;
-// import com.iheartradio.m3u8.data.Playlist;
-// import org.junit.Test;
-
-// import java.io.InputStream;
-// import java.util.ArrayList;
-// import java.util.Collections;
-// import java.util.List;
-
-// import static com.iheartradio.m3u8.TestUtil.inputStreamFromResource;
-// import static org.junit.Assert.assertEquals;
-// import static org.junit.Assert.assertTrue;
 
 namespace M3U8Parser
 {

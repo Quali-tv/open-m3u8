@@ -2,12 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-//import java.util.HashMap;
-//import java.util.Map;
-//import java.util.regex.Matcher;
-//
-//import com.iheartradio.m3u8.data.Playlist;
-//import com.iheartradio.m3u8.data.StartData;
 
 namespace M3U8Parser
 {

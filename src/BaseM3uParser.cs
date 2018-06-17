@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-//import java.io.EOFException;
-//import java.io.InputStream;
 
 namespace M3U8Parser
 {
