@@ -14,7 +14,7 @@ namespace M3U8Parser
         public const char COMMA_CHAR = ',';
         public static readonly String COMMA = COMMA_CHAR.ToString();
         public static readonly String ATTRIBUTE_LIST_SEPARATOR = COMMA;
-        public const String LIST_SEPARATOR = "/";
+        public const char LIST_SEPARATOR = '/';
         public const String COMMENT_PREFIX = "#";
         public const String EXT_TAG_PREFIX = "#EXT";
         public const String EXT_TAG_END = ":";

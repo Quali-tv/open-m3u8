@@ -197,7 +197,7 @@ namespace M3U8Parser
             {
                 public void parse(Attribute attribute, MediaData.Builder builder, ParseState state)
                 {
-                    String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value).Split(Constants.COMMA);
+                    String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value).Split(Constants.COMMA_CHAR);
 
                     if (characteristicStrings.Length == 0)
                     {
@@ -407,7 +407,7 @@ namespace M3U8Parser
                 public CODECS_AttributeParser(String sTag) : base(sTag) { }
                 public override void parse(Attribute attribute, T builder, ParseState state) 
                 {
-                    String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value, tag).Split(Constants.COMMA);
+                    String[] characteristicStrings = ParseUtil.parseQuotedString(attribute.value, tag).Split(Constants.COMMA_CHAR);
 
                     if (characteristicStrings.Length > 0)
                     {

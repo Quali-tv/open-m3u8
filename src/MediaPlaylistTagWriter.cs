@@ -367,7 +367,7 @@ namespace M3U8Parser
                 public String write(EncryptionData encryptionData)
                 {
                     //TODO check for version 5
-                    return WriteUtil.writeQuotedString(WriteUtil.join(encryptionData.getKeyFormatVersions(), Constants.LIST_SEPARATOR), true);
+                    return WriteUtil.writeQuotedString(WriteUtil.join(encryptionData.getKeyFormatVersions(), Constants.LIST_SEPARATOR.ToString()), true);
                 }
             }
 
