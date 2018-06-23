@@ -1,38 +1,15 @@
-# Open M3U8 (working name)
+# Open M3U8 (C# library)
+## (forked from the iHeartRadio Java library [here](https://github.com/iheartradio/open-m3u8))
+
+---
 
 ## Description
 
-This is an open source M3U8 playlist parser and writer java library that attempts to conform to this specification:
+This is an open source C# M3U8 playlist parser and writer library that attempts to conform to this specification:
 
 http://tools.ietf.org/html/draft-pantos-http-live-streaming-16
 
-Currently the functionality is more than sufficient for our needs. However, there is still a lot of work to be done before we have full compliance. Pull requests are welcome!
-
-## Rationale
-
-We would like to give back to the open source community surrounding Android that has helped make iHeartRadio a success. By using the MIT license we hope to make this code as usable as possible.
-
-## Artifacts
-
-We now have artifacts in Maven Central! Artifacts are typically built with Java 7.
-
-### Gradle
-
-```
-dependencies {
-  compile 'com.iheartradio.m3u8:open-m3u8:0.2.4'
-}
-```
-
-### Maven
-
-```
-<dependency>
-  <groupId>com.iheartradio.m3u8</groupId>
-  <artifactId>open-m3u8</artifactId>
-  <version>0.2.4</version>
-</dependency>
-```
+Currently the functionality is more than sufficient for many/most(?) needs. However, there is still a lot of work to be done before the library attains full compliance. Pull requests are welcome!
 
 ## Getting started
 
@@ -40,7 +17,7 @@ Important: The public API is still volatile. It will remain subject to frequent 
 
 Getting started with parsing is quite easy: Get a `PlaylistParser` and specify the format.
 
-```java
+```csharp
 InputStream inputStream = ...
 PlaylistParser parser = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8);
 Playlist playlist = parser.parse();
@@ -48,7 +25,7 @@ Playlist playlist = parser.parse();
 
 Creating a new `Playlist` works via `Builder`s and their fluent `with*()` methods. On each `build()` method the provided parameters are validated:
 
-```java
+```csharp
 TrackData trackData = new TrackData.Builder()
     .withTrackInfo(new TrackInfo(3.0f, "Example Song"))
     .withPath("example.mp3")
@@ -73,7 +50,7 @@ The Playlist is similar to a C style union of a `MasterPlaylist` and `MediaPlayl
 
 Modifying an existing `Playlist` works similar to creating via the `Builder`s. Also, each data class provides a `buildUpon()` method to generate a new `Builder` with all the data from the object itself:
 
-```java
+```csharp
 TrackData additionalTrack = new TrackData.Builder()
     .withTrackInfo(new TrackInfo(3.0f, "Additional Song"))
     .withPath("additional.mp3")
@@ -94,7 +71,7 @@ Playlist updatedPlaylist = playlist.buildUpon()
 
 A `PlaylistWriter` can be obtained directly or via its builder.
 
-```java
+```csharp
 OutputStream outputStream = ...
 
 PlaylistWriter writer = new PlaylistWriter(outputStream, Format.EXT_M3U, Encoding.UTF_8);
@@ -132,12 +109,12 @@ Currently, writing multiple playlists with the same writer is not supported.
 The parser supports a mode configuration - by default it operats in a `strict` mode which attemps to adhere to the specification as much as possible.
 
 Providing the parser a `ParsingMode` you can relax some of the requirements. Two parsing modes are made available, or you can build your own custom mode.
-```java
+```csharp
 ParsingMode.LENIENT // lenient about everything
 ParsingMode.STRICT // strict about everything
 ```
 Example:
-```java
+```csharp
 InputStream inputStream = ...
 PlaylistParser parser = new PlaylistParser(inputStream, Format.EXT_M3U, Encoding.UTF_8, ParsingMode.LENIENT);
 Playlist playlist = parser.parse();
@@ -153,21 +130,21 @@ if (playlist.hasMasterPlaylist() && playlist.getMasterPlaylist().hasUnknownTags(
 ```
 
 =======
-## Build
+## Build & Test
 
-This is a Gradle project. Known compatible gradle versions:
+This library targets .NET Standard 2.0; the XUnit test project targets .NET Core 2.0
 
-- 2.1
-- 2.4
+Build the library:
+```
+dotnet build src/open-m3u8.csproj
+```
 
-Build and test via:
+Run the XUnit tests:
 ```
-gradle build
+dotnet test test/tests.csproj
 ```
-The output can be found in the generated /build/libs/ dir.
 
-Cobertura is configured to report the line coverage:
+Create library as a NuGet package:
 ```
-gradle cobertura
+dotnet pack src/open-m3u8.csproj
 ```
-producing the coverage report at `build/reports/cobertura/index.html`
