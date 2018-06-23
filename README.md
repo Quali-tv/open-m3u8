@@ -1,7 +1,5 @@
 # Open M3U8 (C# library)
-## (forked from the iHeartRadio Java library [here](https://github.com/iheartradio/open-m3u8))
-
----
+### (forked from the iHeartRadio Java library [here](https://github.com/iheartradio/open-m3u8))
 
 ## Description
 
@@ -11,9 +9,13 @@ http://tools.ietf.org/html/draft-pantos-http-live-streaming-16
 
 Currently the functionality is more than sufficient for many/most(?) needs. However, there is still a lot of work to be done before the library attains full compliance. Pull requests are welcome!
 
+## NuGet Packages
+
+NuGet Packages can be found on MyGet [here](https://www.myget.org/feed/open-m3u8-cs/package/nuget/open-m3u8).
+
 ## Getting started
 
-Important: The public API is still volatile. It will remain subject to frequent change until a 1.0.0 release is made.
+Important: The public API is still volatile. It will remain subject to change until a 1.0.0 release is made.
 
 Getting started with parsing is quite easy: Get a `PlaylistParser` and specify the format.
 
