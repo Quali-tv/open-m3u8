@@ -19,6 +19,7 @@ namespace M3U8Parser
                     MediaPlaylistTagWriter.EXT_X_TARGETDURATION,
                     MediaPlaylistTagWriter.EXT_X_START,
                     MediaPlaylistTagWriter.EXT_X_MEDIA_SEQUENCE,
+                    MediaPlaylistTagWriter.EXT_X_DISCONTINUITY_SEQUENCE,
                     MediaPlaylistTagWriter.EXT_X_I_FRAMES_ONLY,
                     MasterPlaylistTagWriter.EXT_X_MEDIA,
                     MediaPlaylistTagWriter.EXT_X_ALLOW_CACHE,

@@ -68,6 +68,7 @@ namespace M3U8Parser
         public const String TIME_OFFSET = "TIME-OFFSET";
         public const String PRECISE = "PRECISE";
 
+        public const String EXT_X_DISCONTINUITY_SEQUENCE_TAG = "EXT-X-DISCONTINUITY-SEQUENCE";
         public const String EXT_X_MEDIA_SEQUENCE_TAG = "EXT-X-MEDIA-SEQUENCE";
         public const String EXT_X_ALLOW_CACHE_TAG = "EXT-X-ALLOW-CACHE";
         public const String EXT_X_ENDLIST_TAG = "EXT-X-ENDLIST";

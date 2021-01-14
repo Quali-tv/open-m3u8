@@ -9,17 +9,19 @@ namespace M3U8Parser
         private readonly List<TrackData> mTracks;
         private readonly List<String> mUnknownTags;
         private readonly int mTargetDuration;
+        private readonly int? mDiscontinuitySequenceNumber;
         private readonly int mMediaSequenceNumber;
         private readonly bool mIsIframesOnly;
         private readonly bool mIsOngoing;
         private readonly PlaylistType mPlaylistType;
         private readonly StartData mStartData;
 
-        private MediaPlaylist(List<TrackData> tracks, List<String> unknownTags, int targetDuration, StartData startData, int mediaSequenceNumber, bool isIframesOnly, bool isOngoing, PlaylistType playlistType)
+        private MediaPlaylist(List<TrackData> tracks, List<String> unknownTags, int targetDuration, StartData startData, int? discontinuitySequence, int mediaSequenceNumber, bool isIframesOnly, bool isOngoing, PlaylistType playlistType)
         {
             mTracks = DataUtil.emptyOrUnmodifiable(tracks);
             mUnknownTags = DataUtil.emptyOrUnmodifiable(unknownTags);
             mTargetDuration = targetDuration;
+            mDiscontinuitySequenceNumber = discontinuitySequence;
             mMediaSequenceNumber = mediaSequenceNumber;
             mIsIframesOnly = isIframesOnly;
             mIsOngoing = isOngoing;
@@ -40,6 +42,11 @@ namespace M3U8Parser
         public int getTargetDuration()
         {
             return mTargetDuration;
+        }
+
+        public int getDiscontinuitySequenceNumber()
+        {
+            return mDiscontinuitySequenceNumber.GetValueOrDefault();
         }
 
         public int getMediaSequenceNumber()
@@ -87,63 +94,9 @@ namespace M3U8Parser
             return mPlaylistType != null;
         }
 
-        public int getDiscontinuitySequenceNumber(int segmentIndex)
-        {
-            if (segmentIndex < 0 || segmentIndex >= mTracks.Count)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            int discontinuitySequenceNumber = 0;
-
-            for (int i = 0; i <= segmentIndex; ++i)
-            {
-                if (mTracks[i].hasDiscontinuity())
-                {
-                    ++discontinuitySequenceNumber;
-                }
-            }
-
-            return discontinuitySequenceNumber;
-        }
-
         public Builder buildUpon()
         {
             return new Builder(mTracks, mUnknownTags, mTargetDuration, mMediaSequenceNumber, mIsIframesOnly, mIsOngoing, mPlaylistType, mStartData);
-        }
-
-        public override int GetHashCode()
-        {
-            // TODO: Implement 
-            //return Objects.hash(
-            // mTracks,
-            // mUnknownTags,
-            // mTargetDuration,
-            // mMediaSequenceNumber,
-            // mIsIframesOnly,
-            // mIsOngoing,
-            // mPlaylistType,
-            // mStartData);
-            return 0;
-        }
-
-        public override bool Equals(object o)
-        {
-            if (!(o is MediaPlaylist))
-            {
-                return false;
-            }
-
-            MediaPlaylist other = (MediaPlaylist)o;
-
-            return mTracks.SequenceEquals(other.mTracks) &&
-                   mUnknownTags.SequenceEquals(other.mUnknownTags) &&
-                   mTargetDuration == other.mTargetDuration &&
-                   mMediaSequenceNumber == other.mMediaSequenceNumber &&
-                   mIsIframesOnly == other.mIsIframesOnly &&
-                   mIsOngoing == other.mIsOngoing &&
-                   object.Equals(mPlaylistType, other.mPlaylistType) &&
-                   object.Equals(mStartData, other.mStartData);
         }
 
         public override string ToString()
@@ -153,6 +106,7 @@ namespace M3U8Parser
                     .Append(" mTracks=").Append(mTracks)
                     .Append(" mUnknownTags=").Append(mUnknownTags)
                     .Append(" mTargetDuration=").Append(mTargetDuration)
+                    .Append(" mDiscontinuitySequenceNumber=").Append(mDiscontinuitySequenceNumber)
                     .Append(" mMediaSequenceNumber=").Append(mMediaSequenceNumber)
                     .Append(" mIsIframesOnly=").Append(mIsIframesOnly)
                     .Append(" mIsOngoing=").Append(mIsOngoing)
@@ -168,6 +122,7 @@ namespace M3U8Parser
             private List<String> mUnknownTags;
             private int mTargetDuration;
             private int mMediaSequenceNumber;
+            private int? mDiscontinuitySequenceNumber;
             private bool mIsIframesOnly;
             private bool mIsOngoing;
             private PlaylistType mPlaylistType;
@@ -219,6 +174,12 @@ namespace M3U8Parser
                 return this;
             }
 
+            public Builder withDiscontinuitySequenceNumber(int discontinuitySequence)
+            {
+                mDiscontinuitySequenceNumber = discontinuitySequence;
+                return this;
+            }
+
             public Builder withIsIframesOnly(bool isIframesOnly)
             {
                 mIsIframesOnly = isIframesOnly;
@@ -239,7 +200,7 @@ namespace M3U8Parser
 
             public MediaPlaylist build()
             {
-                return new MediaPlaylist(mTracks, mUnknownTags, mTargetDuration, mStartData, mMediaSequenceNumber, mIsIframesOnly, mIsOngoing, mPlaylistType);
+                return new MediaPlaylist(mTracks, mUnknownTags, mTargetDuration, mStartData, mDiscontinuitySequenceNumber, mMediaSequenceNumber, mIsIframesOnly, mIsOngoing, mPlaylistType);
             }
         }
     }

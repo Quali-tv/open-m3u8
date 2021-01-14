@@ -54,7 +54,7 @@ namespace M3U8Parser
 
         public bool hasProgramDateTime()
         {
-            return mProgramDateTime != null && mProgramDateTime.Length > 0;
+            return !string.IsNullOrEmpty(mProgramDateTime);
         }
 
         public String getProgramDateTime()
@@ -94,28 +94,7 @@ namespace M3U8Parser
 
         public Builder buildUpon()
         {
-            return new Builder(getUri(), mTrackInfo, mEncryptionData, mHasDiscontinuity, mMapInfo, mByteRange);
-        }
-
-        public override bool Equals(object o)
-        {
-            if (this == o) return true;
-            if (o == null || GetType() != o.GetType()) return false;
-            TrackData trackData = (TrackData)o;
-            return mHasDiscontinuity == trackData.mHasDiscontinuity &&
-                   object.Equals(mUri, trackData.mUri) &&
-                   object.Equals(mTrackInfo, trackData.mTrackInfo) &&
-                   object.Equals(mEncryptionData, trackData.mEncryptionData) &&
-                   object.Equals(mProgramDateTime, trackData.mProgramDateTime) &&
-                   object.Equals(mMapInfo, trackData.mMapInfo) &&
-                   object.Equals(mByteRange, trackData.mByteRange);
-        }
-
-        public override int GetHashCode()
-        {
-            // TODO: Implement
-            //return Objects.hash(mUri, mTrackInfo, mEncryptionData, mProgramDateTime, mHasDiscontinuity, mMapInfo, mByteRange);
-            return 0;
+            return new Builder(getUri(), mTrackInfo, mEncryptionData, mHasDiscontinuity, mProgramDateTime, mMapInfo, mByteRange);
         }
 
         public override string ToString()
@@ -145,12 +124,13 @@ namespace M3U8Parser
             {
             }
 
-            public Builder(String uri, TrackInfo trackInfo, EncryptionData encryptionData, bool hasDiscontinuity, MapInfo mapInfo, ByteRange byteRange)
+            public Builder(String uri, TrackInfo trackInfo, EncryptionData encryptionData, bool hasDiscontinuity, String programDateTime, MapInfo mapInfo, ByteRange byteRange)
             {
                 mUri = uri;
                 mTrackInfo = trackInfo;
                 mEncryptionData = encryptionData;
                 mHasDiscontinuity = hasDiscontinuity;
+                mProgramDateTime = programDateTime;
                 mMapInfo = mapInfo;
                 mByteRange = byteRange;
             }

@@ -175,6 +175,25 @@ namespace M3U8Parser
             }
         }
 
+        public static readonly IExtTagWriter EXT_X_DISCONTINUITY_SEQUENCE = new EXT_X_DISCONTINUITY_SEQUENCE_CLASS();
+        private class EXT_X_DISCONTINUITY_SEQUENCE_CLASS : MediaPlaylistTagWriter
+        {
+            public override String getTag()
+            {
+                return Constants.EXT_X_DISCONTINUITY_SEQUENCE_TAG;
+            }
+
+            public override bool hasData()
+            {
+                return true;
+            }
+
+            public override void doWrite(TagWriter tagWriter, Playlist playlist, MediaPlaylist mediaPlaylist)
+            {
+                tagWriter.writeTag(getTag(), mediaPlaylist.getDiscontinuitySequenceNumber().ToString());
+            }
+        }
+
         public static readonly IExtTagWriter EXT_X_MEDIA_SEQUENCE = new EXT_X_MEDIA_SEQUENCE_CLASS();
         private class EXT_X_MEDIA_SEQUENCE_CLASS : MediaPlaylistTagWriter
         {
@@ -225,9 +244,15 @@ namespace M3U8Parser
                 {
                     KeyWriter keyWriter = new KeyWriter();
                     MapInfoWriter mapInfoWriter = new MapInfoWriter();
+                    int trackDataIndex = 0;
 
                     foreach (TrackData trackData in playlist.getMediaPlaylist().getTracks())
                     {
+                        if (trackDataIndex++ == 0 && trackData.hasProgramDateTime())
+                        {
+                            tagWriter.writeTag(Constants.EXT_X_PROGRAM_DATE_TIME_TAG, trackData.getProgramDateTime());
+                        }
+
                         if (trackData.hasDiscontinuity())
                         {
                             tagWriter.writeTag(Constants.EXT_X_DISCONTINUITY_TAG);
